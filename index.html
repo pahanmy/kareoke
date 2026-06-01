@@ -3,150 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Pertandingan Karaoke</title>
+    <title>Senarai Peserta Karaoke</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 <body class="bg-gray-100 font-sans antialiased text-gray-900">
 
     <nav class="bg-indigo-600 p-4 text-white shadow-md">
-        <div class="container mx-auto flex flex-wrap justify-between items-center">
-            <h1 class="text-xl font-bold tracking-wider">🎤 KAREOKE APP</h1>
-            <div class="flex space-x-2 mt-2 sm:mt-0 flex-wrap">
-                <button onclick="tukarTab('tab-daftar-peserta')" class="px-3 py-1 rounded hover:bg-indigo-700 bg-indigo-800 focus:outline-none text-sm font-medium">1. Daftar Peserta</button>
-                <button onclick="tukarTab('tab-daftar-hakim')" class="px-3 py-1 rounded hover:bg-indigo-700 focus:outline-none text-sm font-medium">2. Daftar Hakim</button>
-                <button onclick="tukarTab('tab-penilaian')" class="px-3 py-1 rounded hover:bg-indigo-700 focus:outline-none text-sm font-medium">3. Penilaian Hakim</button>
-                <button onclick="tukarTab('tab-urus-final')" class="px-3 py-1 rounded hover:bg-indigo-700 focus:outline-none text-sm font-medium">4. Urus Saringan (Top 15)</button>
-                <button onclick="tukarTab('tab-keputusan')" class="px-3 py-1 rounded hover:bg-indigo-700 focus:outline-none text-sm font-medium">5. Keputusan Final (Urusetia/MC)</button>
-            </div>
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold tracking-wider">🎤 KAREOKE LIVERBOARD</h1>
+            <a href="admin.html" class="bg-white text-indigo-600 px-3 py-1 rounded font-bold text-sm hover:bg-gray-200">Ke Paparan Admin</a>
         </div>
     </nav>
 
-    <div class="container mx-auto p-4 max-w-4xl">
-
-        <div id="tab-daftar-peserta" class="tab-content bg-white p-6 rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold mb-4 text-indigo-600">Pendaftaran Peserta</h2>
-            <form id="form-peserta" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium">Nama Peserta</label>
-                    <input type="text" id="nama-peserta" required class="w-full border p-2 rounded mt-1 border-gray-300 focus:ring-2 focus:ring-indigo-500">
-                </div>
-                <div id="ruangan-lagu" class="space-y-2">
-                    <label class="block text-sm font-medium">Lagu & Pautan YouTube</label>
-                    <div class="flex space-x-2 item-lagu">
-                        <input type="text" placeholder="Tajuk Lagu" required class="w-1/2 border p-2 rounded border-gray-300">
-                        <input type="url" placeholder="Pautan YouTube" required class="w-1/2 border p-2 rounded border-gray-300">
-                    </div>
-                </div>
-                <button type="button" onclick="tambahInputLagu()" class="text-indigo-600 text-sm font-semibold hover:underline">+ Tambah Lagu Lain</button>
-                <br>
-                <button type="submit" class="w-full bg-indigo-600 text-white p-2 rounded hover:bg-indigo-700 font-bold">Daftar & Dapatkan No. Giliran</button>
-            </form>
-            
-            <div id="info-giliran" class="mt-4 p-4 bg-green-100 text-green-800 rounded hidden text-center font-bold text-lg"></div>
-        </div>
-
-        <div id="tab-daftar-hakim" class="tab-content bg-white p-6 rounded-lg shadow-md hidden">
-            <h2 class="text-2xl font-bold mb-4 text-indigo-600">Pendaftaran Hakim</h2>
-            <form id="form-hakim" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium">Nama Hakim</label>
-                    <input type="text" id="nama-hakim" required class="w-full border p-2 rounded mt-1 border-gray-300">
-                </div>
-                <button type="submit" class="w-full bg-indigo-600 text-white p-2 rounded hover:bg-indigo-700 font-bold">Daftar Hakim</button>
-            </form>
-            <div id="senarai-hakim" class="mt-4 space-y-1 text-sm text-gray-600"></div>
-        </div>
-
-        <div id="tab-penilaian" class="tab-content bg-white p-6 rounded-lg shadow-md hidden">
-            <h2 class="text-2xl font-bold mb-4 text-indigo-600">Borang Penilaian Hakim</h2>
-            <div class="space-y-4">
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium">Pilih Hakim</label>
-                        <select id="pilih-hakim" class="w-full border p-2 rounded mt-1 border-gray-300"></select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium">Tahap Pertandingan</label>
-                        <select id="pilih-tahap" onchange="muatNaikPesertaPenilaian()" class="w-full border p-2 rounded mt-1 border-gray-300">
-                            <option value="Saringan">Saringan</option>
-                            <option value="Final">Final</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium">Pilih Peserta</label>
-                        <select id="pilih-peserta" onchange="paparLaguPeserta()" class="w-full border p-2 rounded mt-1 border-gray-300"></select>
-                    </div>
-                </div>
-
-                <div id="info-lagu-peserta" class="p-3 bg-indigo-50 rounded text-sm text-indigo-900 hidden"></div>
-
-                <div class="border-t pt-4 space-y-4">
-                    <h3 class="font-bold text-lg">Kemasukan Markah (0-100 untuk setiap kriteria)</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium">Vokal (Wajaran: 50%)</label>
-                            <input type="number" id="m-vokal" min="0" max="100" value="0" oninput="kiraMarkah()" class="w-full border p-2 rounded mt-1 border-gray-300">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium">Persembahan (Wajaran: 30%)</label>
-                            <input type="number" id="m-persembahan" min="0" max="100" value="0" oninput="kiraMarkah()" class="w-full border p-2 rounded mt-1 border-gray-300">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium">Penghayatan (Wajaran: 20%)</label>
-                            <input type="number" id="m-penghayatan" min="0" max="100" value="0" oninput="kiraMarkah()" class="w-full border p-2 rounded mt-1 border-gray-300">
-                        </div>
-                    </div>
-
-                    <div class="bg-gray-100 p-4 rounded text-center">
-                        <span class="text-sm font-medium block">Jumlah Markah Akhir (Peratus Automatik):</span>
-                        <span id="jumlah-markah-keseluruhan" class="text-3xl font-black text-indigo-600">0.00%</span>
-                    </div>
-
-                    <button type="button" onclick="hantarMarkah()" class="w-full bg-green-600 text-white p-3 rounded hover:bg-green-700 font-bold text-lg">Hantar Keputusan Penilaian</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="tab-urus-final" class="tab-content bg-white p-6 rounded-lg shadow-md hidden">
-            <h2 class="text-2xl font-bold mb-2 text-indigo-600">Pengurusan Saringan</h2>
-            <p class="text-sm text-gray-500 mb-4">Senarai di bawah menunjukkan kedudukan peserta saringan (Markah Purata daripada semua Hakim).</p>
-            <button onclick="muatNaikCartaSaringan()" class="bg-indigo-100 text-indigo-700 px-4 py-2 rounded mb-4 font-semibold text-sm">🔄 Kemaskini Kedudukan Saringan</button>
+    <div class="container mx-auto p-4 max-w-5xl mt-6">
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-2xl font-bold mb-2 text-indigo-600">Senarai Rasmi Peserta</h2>
+            <p class="text-sm text-gray-500 mb-6">Senarai keseluruhan peserta pertandingan dan status semasa mereka.</p>
             
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse text-sm">
                     <thead>
-                        <tr class="bg-gray-200">
-                            <th class="p-2 border">Ked.</th>
-                            <th class="p-2 border">No. Giliran</th>
-                            <th class="p-2 border">Nama Peserta</th>
-                            <th class="p-2 border">Purata Markah Saringan</th>
-                            <th class="p-2 border">Status</th>
-                            <th class="p-2 border">Tindakan</th>
+                        <tr class="bg-indigo-100 text-indigo-900">
+                            <th class="p-3 border font-semibold">Giliran</th>
+                            <th class="p-3 border font-semibold">Nama Peserta</th>
+                            <th class="p-3 border font-semibold">Pilihan Lagu</th>
+                            <th class="p-3 border font-semibold text-center">Status Tahap</th>
                         </tr>
                     </thead>
-                    <tbody id="tabel-saringan"></tbody>
+                    <tbody id="senarai-awam">
+                        <tr><td colspan="4" class="p-4 text-center text-gray-500">Memuatkan data...</td></tr>
+                    </tbody>
                 </table>
             </div>
         </div>
-
-        <div id="tab-keputusan" class="tab-content bg-white p-6 rounded-lg shadow-md hidden text-center">
-            <h2 class="text-2xl font-bold mb-2 text-indigo-600">🏆 KEPUTUSAN MUKTAMAD (FINAL)</h2>
-            <p class="text-sm text-gray-500 mb-6">Paparan khas untuk Pengacara Majlis. Markah dirahsiakan, hanya nama disusun mengikut kedudukan tertinggi.</p>
-            <button onclick="muatNaikKeputusanFinal()" class="bg-green-600 text-white px-6 py-2 rounded-full mb-6 font-bold shadow hover:bg-green-700">🔄 Ambil Keputusan Terkini</button>
-
-            <div id="papan-pemenang" class="space-y-3 max-w-md mx-auto">
-                </div>
-        </div>
-
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, query, where, orderBy, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Konfigurasi Firebase Anda
         const firebaseConfig = {
-            apiKey: "AIzaSyCwDP8KCl2r6QL1DOAQTMGx-pcwub9mYM",
+            apiKey: "AIzaSyCwDP8KCl2r6QL1DOAQTMGx5-pcwub9mYM",
             authDomain: "kareoke-83a74.firebaseapp.com",
             projectId: "kareoke-83a74",
             storageBucket: "kareoke-83a74.firebasestorage.app",
@@ -154,315 +51,59 @@
             appId: "1:740423962434:web:f3460cc576f33574e802db"
         };
 
-        // Initialize Firebase & Firestore
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Global variables/cache data
-        let senaraiPesertaGlobal = [];
-
-        // --- SISTEM TABS ---
-        window.tukarTab = function(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById(tabId).classList.remove('hidden');
-            
-            // Highlight butang menu yang aktif
-            event.currentTarget.parentNode.querySelectorAll('button').forEach(btn => btn.classList.remove('bg-indigo-800'));
-            event.currentTarget.classList.add('bg-indigo-800');
-
-            // Trigger data load mengikut tab
-            if(tabId === 'tab-penilaian') { muatNaikHakim(); muatNaikPesertaPenilaian(); }
-            if(tabId === 'tab-daftar-hakim') { paparSenaraiHakim(); }
-            if(tabId === 'tab-urus-final') { muatNaikCartaSaringan(); }
-            if(tabId === 'tab-keputusan') { muatNaikKeputusanFinal(); }
-        }
-
-        // --- TAB 1: LOGIK DAFTAR PESERTA ---
-        window.tambahInputLagu = function() {
-            const div = document.createElement('div');
-            div.className = "flex space-x-2 item-lagu mt-2";
-            div.innerHTML = `
-                <input type="text" placeholder="Tajuk Lagu" required class="w-1/2 border p-2 rounded border-gray-300">
-                <input type="url" placeholder="Pautan YouTube" required class="w-1/2 border p-2 rounded border-gray-300">
-            `;
-            document.getElementById('ruangan-lagu').appendChild(div);
-        }
-
-        document.getElementById('form-peserta').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const nama = document.getElementById('nama-peserta').value;
-            
-            // Ambil semua input lagu
-            const laguElems = document.querySelectorAll('.item-lagu');
-            let senaraiLagu = [];
-            laguElems.forEach(el => {
-                const inputs = el.querySelectorAll('input');
-                if(inputs[0].value) {
-                    senaraiLagu.push({ tajuk: inputs[0].value, link: inputs[1].value });
-                }
-            });
-
+        async function muatNaikPaparanAwam() {
             try {
-                // Auto No Giliran berdasarkan jumlah peserta semasa di Firestore
-                const q = query(collection(db, "peserta"));
+                const q = query(collection(db, "peserta"), orderBy("no_giliran", "asc"));
                 const snap = await getDocs(q);
-                const noGiliran = snap.size + 1;
+                const tbody = document.getElementById('senarai-awam');
+                tbody.innerHTML = "";
 
-                // Simpan ke Firestore
-                await addDoc(collection(db, "peserta"), {
-                    nama: nama,
-                    no_giliran: noGiliran,
-                    lagu: senaraiLagu,
-                    status: "Saringan", // Secara lalai, bermula dengan Saringan
-                    markah_saringan: {}, // Map menyimpan markah dari hakim: { namaHakim: peratus }
-                    markah_final: {}
-                });
-
-                const infoBox = document.getElementById('info-giliran');
-                infoBox.innerText = `Pendaftaran Berjaya! No Giliran: ${noGiliran}`;
-                infoBox.classList.remove('hidden');
-                
-                // Reset form
-                document.getElementById('form-peserta').reset();
-                document.getElementById('ruangan-lagu').innerHTML = `
-                    <label class="block text-sm font-medium">Lagu & Pautan YouTube</label>
-                    <div class="flex space-x-2 item-lagu"><input type="text" placeholder="Tajuk Lagu" required class="w-1/2 border p-2 rounded border-gray-300"><input type="url" placeholder="Pautan YouTube" required class="w-1/2 border p-2 rounded border-gray-300"></div>`;
-            } catch (err) {
-                alert("Ralat pendaftaran: " + err.message);
-            }
-        });
-
-        // --- TAB 2: LOGIK DAFTAR HAKIM ---
-        document.getElementById('form-hakim').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const nama = document.getElementById('nama-hakim').value;
-            try {
-                await addDoc(collection(db, "hakim"), { nama: nama });
-                alert(`Hakim ${nama} didaftarkan.`);
-                document.getElementById('form-hakim').reset();
-                paparSenaraiHakim();
-            } catch(err) { alert(err.message); }
-        });
-
-        async function paparSenaraiHakim() {
-            const snap = await getDocs(collection(db, "hakim"));
-            let html = "<strong>Senarai Hakim Berdaftar:</strong>";
-            snap.forEach(doc => { html += `<div>• ${doc.data().nama}</div>`; });
-            document.getElementById('senarai-hakim').innerHTML = html;
-        }
-
-        // --- TAB 3: LOGIK BORANG PENILAIAN HAKIM ---
-        async function muatNaikHakim() {
-            const snap = await getDocs(collection(db, "hakim"));
-            const select = document.getElementById('pilih-hakim');
-            select.innerHTML = "";
-            snap.forEach(doc => {
-                let opt = document.createElement('option');
-                opt.value = doc.data().nama;
-                opt.innerText = doc.data().nama;
-                select.appendChild(opt);
-            });
-        }
-
-        window.muatNaikPesertaPenilaian = async function() {
-            const tahap = document.getElementById('pilih-tahap').value;
-            const q = query(collection(db, "peserta"), where("status", "==", tahap));
-            const snap = await getDocs(q);
-            const select = document.getElementById('pilih-peserta');
-            select.innerHTML = "<option value=''>-- Pilih Peserta --</option>";
-            
-            senaraiPesertaGlobal = [];
-            snap.forEach(d => {
-                let data = d.data();
-                data.id = d.id;
-                senaraiPesertaGlobal.push(data);
-
-                let opt = document.createElement('option');
-                opt.value = d.id;
-                opt.innerText = `[No.${data.no_giliran}] ${data.nama}`;
-                select.appendChild(opt);
-            });
-        }
-
-        window.paparLaguPeserta = function() {
-            const idPeserta = document.getElementById('pilih-peserta').value;
-            const peserta = senaraiPesertaGlobal.find(p => p.id === idPeserta);
-            const divLagu = document.getElementById('info-lagu-peserta');
-            
-            if(peserta && peserta.lagu && peserta.lagu.length > 0) {
-                let html = "<strong>Senarai Pilihan Lagu:</strong><ul class='list-disc pl-4'>";
-                peserta.lagu.forEach(l => {
-                    html += `<li>${l.tajuk} - <a href="${l.link}" target="_blank" class="text-blue-600 underline">Buka YouTube</a></li>`;
-                });
-                html += "</ul>";
-                divLagu.innerHTML = html;
-                divLagu.classList.remove('hidden');
-            } else {
-                divLagu.classList.add('hidden');
-            }
-        }
-
-        // Formula pengiraan kewajaran peratus automatik
-        window.kiraMarkah = function() {
-            const vokal = parseFloat(document.getElementById('m-vokal').value) || 0;
-            const persembahan = parseFloat(document.getElementById('m-persembahan').value) || 0;
-            const penghayatan = parseFloat(document.getElementById('m-penghayatan').value) || 0;
-
-            // Pengiraan mengikut kewajaran peratus (Wajaran: Vokal 50%, Persembahan 30%, Penghayatan 20%)
-            const totalPeratus = (vokal * 0.50) + (persembahan * 0.30) + (penghayatan * 0.20);
-            document.getElementById('jumlah-markah-keseluruhan').innerText = totalPeratus.toFixed(2) + "%";
-            return totalPeratus;
-        }
-
-        window.hantarMarkah = async function() {
-            const hakim = document.getElementById('pilih-hakim').value;
-            const tahap = document.getElementById('pilih-tahap').value;
-            const idPeserta = document.getElementById('pilih-peserta').value;
-            const markahAkhir = kiraMarkah();
-
-            if(!hakim || !idPeserta) {
-                alert("Sila pastikan Hakim dan Peserta telah dipilih!");
-                return;
-            }
-
-            try {
-                const docRef = doc(db, "peserta", idPeserta);
-                const medanKemaskini = {};
-                
-                // Masukkan markah mengikut nama hakim secara dinamik dalam Firebase Map
-                if(tahap === "Saringan") {
-                    medanKemaskini[`markah_saringan.${hakim}`] = markahAkhir;
-                } else {
-                    medanKemaskini[`markah_final.${hakim}`] = markahAkhir;
+                if(snap.empty) {
+                    tbody.innerHTML = "<tr><td colspan='4' class='p-4 text-center text-gray-500'>Belum ada peserta didaftarkan.</td></tr>";
+                    return;
                 }
 
-                await updateDoc(docRef, medanKemaskini);
-                alert("Markah berjaya dihantar ke database!");
-                
-                // Reset input markah
-                document.getElementById('m-vokal').value = 0;
-                document.getElementById('m-persembahan').value = 0;
-                document.getElementById('m-penghayatan').value = 0;
-                document.getElementById('jumlah-markah-keseluruhan').innerText = "0.00%";
+                snap.forEach(d => {
+                    let p = d.data();
+                    
+                    // Format senarai lagu
+                    let laguHTML = "<ul class='list-disc pl-4'>";
+                    if(p.lagu && p.lagu.length > 0) {
+                        p.lagu.forEach(l => {
+                            laguHTML += `<li>${l.tajuk} <a href="${l.link}" target="_blank" class="text-blue-500 text-xs hover:underline">(Buka YT)</a></li>`;
+                        });
+                    } else {
+                        laguHTML += "<li>Tiada maklumat lagu</li>";
+                    }
+                    laguHTML += "</ul>";
+
+                    // Gaya visual khas jika layak ke Final
+                    let trClass = p.status === 'Final' ? 'bg-green-50 border-green-200' : 'hover:bg-gray-50';
+                    let statusBadge = p.status === 'Final' 
+                        ? `<span class="bg-green-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-sm flex items-center justify-center gap-1">🌟 FINALIS</span>` 
+                        : `<span class="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-xs font-bold">Saringan</span>`;
+
+                    let tr = document.createElement('tr');
+                    tr.className = trClass;
+                    tr.innerHTML = `
+                        <td class="p-3 border font-bold text-center text-lg">${p.no_giliran}</td>
+                        <td class="p-3 border font-bold text-gray-800 uppercase">${p.nama}</td>
+                        <td class="p-3 border">${laguHTML}</td>
+                        <td class="p-3 border text-center">${statusBadge}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
             } catch(err) {
-                alert("Ralat penghantaran markah: " + err.message);
+                console.error(err);
+                document.getElementById('senarai-awam').innerHTML = "<tr><td colspan='4' class='p-4 text-center text-red-500'>Ralat memuatkan data. Sila refresh.</td></tr>";
             }
         }
 
-        // --- TAB 4: URUS SARINGAN (KIRA PURATA & PILIH TOP 15) ---
-        window.muatNaikCartaSaringan = async function() {
-            const q = query(collection(db, "peserta"));
-            const snap = await getDocs(q);
-            let senarai = [];
-
-            snap.forEach(d => {
-                let data = d.data();
-                data.id = d.id;
-                
-                // Kira purata markah daripada semua hakim yang menilai
-                let total = 0;
-                let bilanganHakim = 0;
-                if(data.markah_saringan) {
-                    for(let h in data.markah_saringan) {
-                        total += data.markah_saringan[h];
-                        bilanganHakim++;
-                    }
-                }
-                data.purataSaringan = bilanganHakim > 0 ? (total / bilanganHakim) : 0;
-                senarai.push(data);
-            });
-
-            // Susun dari markah tertinggi ke terendah
-            senarai.sort((a,b) => b.purataSaringan - a.purataSaringan);
-
-            const tbody = document.getElementById('tabel-saringan');
-            tbody.innerHTML = "";
-            
-            senarai.forEach((p, index) => {
-                let tr = document.createElement('tr');
-                tr.className = index < 15 && p.status === 'Saringan' ? "bg-yellow-50 hover:bg-gray-50" : "hover:bg-gray-50";
-                
-                // Butang tindakan untuk tukar status ke Final
-                let butangAksi = "";
-                if(p.status === 'Saringan') {
-                    butangAksi = `<button onclick="setKeFinal('${p.id}', true)" class="bg-indigo-600 text-white px-2 py-1 rounded text-xs hover:bg-indigo-700">Lolos ke Final</button>`;
-                } else {
-                    butangAksi = `<button onclick="setKeFinal('${p.id}', false)" class="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600">Turun Saringan</button>`;
-                }
-
-                tr.innerHTML = `
-                    <td class="p-2 border font-bold">${index + 1}</td>
-                    <td class="p-2 border">${p.no_giliran}</td>
-                    <td class="p-2 border font-medium">${p.nama}</td>
-                    <td class="p-2 border text-indigo-600 font-bold">${p.purataSaringan.toFixed(2)}%</td>
-                    <td class="p-2 border"><span class="px-2 py-0.5 text-xs rounded font-bold ${p.status === 'Final' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">${p.status}</span></td>
-                    <td class="p-2 border">${butangAksi}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        window.setKeFinal = async function(id, layak) {
-            try {
-                const docRef = doc(db, "peserta", id);
-                await updateDoc(docRef, { status: layak ? "Final" : "Saringan" });
-                muatNaikCartaSaringan();
-            } catch(err) { alert(err.message); }
-        }
-
-        // --- TAB 5: KEPUTUSAN FINAL (UNTUK PENGACARA / MC) ---
-        window.muatNaikKeputusanFinal = async function() {
-            const q = query(collection(db, "peserta"), where("status", "==", "Final"));
-            const snap = await getDocs(q);
-            let senaraiFinal = [];
-
-            snap.forEach(d => {
-                let data = d.data();
-                
-                // Kira purata markah pusingan Final
-                let total = 0;
-                let bilanganHakim = 0;
-                if(data.markah_final) {
-                    for(let h in data.markah_final) {
-                        total += data.markah_final[h];
-                        bilanganHakim++;
-                    }
-                }
-                data.purataFinal = bilanganHakim > 0 ? (total / bilanganHakim) : 0;
-                senaraiFinal.push(data);
-            });
-
-            // Susun mengikut markah Final tertinggi ke terendah
-            senaraiFinal.sort((a,b) => b.purataFinal - a.purataFinal);
-
-            const container = document.getElementById('papan-pemenang');
-            container.innerHTML = "";
-
-            if(senaraiFinal.length === 0) {
-                container.innerHTML = "<p class='text-gray-500'>Tiada peserta di peringkat Final atau belum dinilai oleh hakim.</p>";
-                return;
-            }
-
-            senaraiFinal.forEach((p, index) => {
-                let div = document.createElement('div');
-                
-                // Rekabentuk khas kedudukan top 3 untuk kecantikan visual MC membaca
-                let bgStyle = "bg-gray-50 border border-gray-200 text-gray-800";
-                let tittlePrefix = `Kedudukan ${index + 1}`;
-                
-                if(index === 0) { bgStyle = "bg-amber-100 border-2 border-amber-400 text-amber-900 font-black text-xl shadow-md"; tittlePrefix = "🥇 JOHAN"; }
-                else if(index === 1) { bgStyle = "bg-slate-100 border border-slate-300 text-slate-900 font-bold text-lg shadow-sm"; tittlePrefix = "🥈 NAIB JOHAN"; }
-                else if(index === 2) { bgStyle = "bg-orange-100 border border-orange-300 text-orange-900 font-bold text-lg shadow-sm"; tittlePrefix = "🥉 TEMPAT KETIGA"; }
-
-                div.className = `${bgStyle} p-4 rounded-lg flex justify-between items-center transform hover:scale-105 transition-all`;
-                div.innerHTML = `
-                    <span class="tracking-wide">${tittlePrefix}</span>
-                    <span class="uppercase">${p.nama}</span>
-                `;
-                container.appendChild(div);
-            });
-        }
-
+        // Muat naik automatik bila halaman dibuka
+        muatNaikPaparanAwam();
     </script>
 </body>
 </html>
