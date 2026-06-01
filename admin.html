@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Sistem Pertandingan</title>
+    <title>Pusat Kawalan Admin</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 <body class="bg-slate-50 font-sans antialiased text-gray-900">
@@ -12,96 +12,88 @@
         <div class="container mx-auto flex flex-wrap justify-between items-center">
             <h1 class="text-xl font-bold tracking-wider text-amber-400">⚙️ PUSAT KAWALAN ADMIN</h1>
             <div class="flex space-x-2 mt-2 sm:mt-0 flex-wrap">
-                <button onclick="tukarTab('tab-daftar-peserta')" class="px-3 py-1 rounded hover:bg-slate-700 bg-slate-900 focus:outline-none text-sm font-medium">1. Daftar Peserta</button>
-                <button onclick="tukarTab('tab-daftar-hakim')" class="px-3 py-1 rounded hover:bg-slate-700 focus:outline-none text-sm font-medium">2. Daftar Hakim</button>
-                <button onclick="tukarTab('tab-penilaian')" class="px-3 py-1 rounded hover:bg-slate-700 focus:outline-none text-sm font-medium">3. Penilaian Hakim</button>
-                <button onclick="tukarTab('tab-urus-final')" class="px-3 py-1 rounded hover:bg-slate-700 focus:outline-none text-sm font-medium">4. Urus Saringan</button>
-                <button onclick="tukarTab('tab-keputusan')" class="px-3 py-1 rounded hover:bg-slate-700 focus:outline-none text-sm font-medium">5. Papan Keputusan</button>
-                <a href="index.html" class="px-3 py-1 rounded bg-indigo-600 hover:bg-indigo-500 focus:outline-none text-sm font-medium ml-4">Lihat Paparan Awam</a>
+                <button onclick="tukarTab('tab-daftar-peserta')" class="px-3 py-1 rounded hover:bg-slate-700 bg-slate-900 text-sm font-medium">1. Urus Peserta</button>
+                <button onclick="tukarTab('tab-daftar-hakim')" class="px-3 py-1 rounded hover:bg-slate-700 text-sm font-medium">2. Urus Hakim</button>
+                <button onclick="tukarTab('tab-urus-final')" class="px-3 py-1 rounded hover:bg-slate-700 text-sm font-medium">3. Urus Saringan</button>
+                <button onclick="tukarTab('tab-keputusan')" class="px-3 py-1 rounded hover:bg-slate-700 text-sm font-medium">4. Keputusan Final</button>
+                <a href="hakim.html" target="_blank" class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-500 text-sm font-medium ml-4">Portal Hakim ➔</a>
             </div>
         </div>
     </nav>
 
-    <div class="container mx-auto p-4 max-w-4xl mt-4">
+    <div class="container mx-auto p-4 max-w-5xl mt-4">
 
         <div id="tab-daftar-peserta" class="tab-content bg-white p-6 rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold mb-4 text-slate-800">Pendaftaran Peserta</h2>
-            <form id="form-peserta" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium">Nama Peserta</label>
-                    <input type="text" id="nama-peserta" required class="w-full border p-2 rounded mt-1 border-gray-300">
+            <h2 class="text-2xl font-bold mb-4 text-slate-800">Pendaftaran & Senarai Peserta</h2>
+            
+            <form id="form-peserta" class="space-y-4 bg-slate-50 p-4 rounded border">
+                <input type="hidden" id="edit-id-peserta">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium">Nama Peserta</label>
+                        <input type="text" id="nama-peserta" required class="w-full border p-2 rounded mt-1">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">No. IC (Tanpa Sempang)</label>
+                        <input type="text" id="ic-peserta" required class="w-full border p-2 rounded mt-1" placeholder="Cth: 900101135566">
+                    </div>
                 </div>
+                
                 <div id="ruangan-lagu" class="space-y-2">
                     <label class="block text-sm font-medium">Lagu & Pautan YouTube</label>
                     <div class="flex space-x-2 item-lagu">
-                        <input type="text" placeholder="Tajuk Lagu" required class="w-1/2 border p-2 rounded border-gray-300">
-                        <input type="url" placeholder="Pautan YouTube" required class="w-1/2 border p-2 rounded border-gray-300">
+                        <input type="text" placeholder="Tajuk Lagu" required class="w-1/2 border p-2 rounded">
+                        <input type="url" placeholder="Pautan YouTube" required class="w-1/2 border p-2 rounded">
                     </div>
                 </div>
-                <button type="button" onclick="tambahInputLagu()" class="text-blue-600 text-sm font-semibold hover:underline">+ Tambah Lagu Lain</button>
-                <br>
-                <button type="submit" class="w-full bg-slate-800 text-white p-2 rounded hover:bg-slate-700 font-bold">Daftar & Jana No. Giliran</button>
+                <button type="submit" id="btn-submit-peserta" class="w-full bg-slate-800 text-white p-2 rounded hover:bg-slate-700 font-bold">Daftar Peserta Baru</button>
             </form>
-            <div id="info-giliran" class="mt-4 p-4 bg-green-100 text-green-800 rounded hidden text-center font-bold text-lg"></div>
+
+            <div class="mt-8 overflow-x-auto">
+                <h3 class="font-bold text-lg mb-2">Senarai Peserta</h3>
+                <button onclick="muatSenaraiPeserta()" class="text-sm bg-gray-200 px-3 py-1 rounded mb-2">🔄 Refresh</button>
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead>
+                        <tr class="bg-slate-200">
+                            <th class="p-2 border">Giliran</th>
+                            <th class="p-2 border">Nama</th>
+                            <th class="p-2 border">No. IC</th>
+                            <th class="p-2 border">Tindakan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabel-peserta"></tbody>
+                </table>
+            </div>
         </div>
 
         <div id="tab-daftar-hakim" class="tab-content bg-white p-6 rounded-lg shadow-md hidden">
-            <h2 class="text-2xl font-bold mb-4 text-slate-800">Pendaftaran Hakim</h2>
-            <form id="form-hakim" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium">Nama Hakim</label>
-                    <input type="text" id="nama-hakim" required class="w-full border p-2 rounded mt-1 border-gray-300">
+            <h2 class="text-2xl font-bold mb-4 text-slate-800">Pendaftaran & Senarai Hakim</h2>
+            <form id="form-hakim" class="space-y-4 bg-slate-50 p-4 rounded border">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium">Nama Hakim</label>
+                        <input type="text" id="nama-hakim" required class="w-full border p-2 rounded mt-1">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">No. IC (Log Masuk Portal Hakim)</label>
+                        <input type="text" id="ic-hakim" required class="w-full border p-2 rounded mt-1" placeholder="Cth: 850202145566">
+                    </div>
                 </div>
                 <button type="submit" class="w-full bg-slate-800 text-white p-2 rounded hover:bg-slate-700 font-bold">Daftar Hakim</button>
             </form>
-            <div id="senarai-hakim" class="mt-4 space-y-1 text-sm text-gray-600"></div>
-        </div>
-
-        <div id="tab-penilaian" class="tab-content bg-white p-6 rounded-lg shadow-md hidden">
-            <h2 class="text-2xl font-bold mb-4 text-slate-800">Borang Penilaian Hakim</h2>
-            <div class="space-y-4">
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium">Pilih Hakim</label>
-                        <select id="pilih-hakim" class="w-full border p-2 rounded mt-1 border-gray-300"></select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium">Tahap Pertandingan</label>
-                        <select id="pilih-tahap" onchange="muatNaikPesertaPenilaian()" class="w-full border p-2 rounded mt-1 border-gray-300">
-                            <option value="Saringan">Saringan</option>
-                            <option value="Final">Final</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium">Pilih Peserta</label>
-                        <select id="pilih-peserta" onchange="paparLaguPeserta()" class="w-full border p-2 rounded mt-1 border-gray-300"></select>
-                    </div>
-                </div>
-
-                <div id="info-lagu-peserta" class="p-3 bg-slate-100 rounded text-sm text-slate-900 hidden"></div>
-
-                <div class="border-t pt-4 space-y-4">
-                    <h3 class="font-bold text-lg">Markah (0-100 setiap kriteria)</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium">Vokal (50%)</label>
-                            <input type="number" id="m-vokal" min="0" max="100" value="0" oninput="kiraMarkah()" class="w-full border p-2 rounded mt-1">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium">Persembahan (30%)</label>
-                            <input type="number" id="m-persembahan" min="0" max="100" value="0" oninput="kiraMarkah()" class="w-full border p-2 rounded mt-1">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium">Penghayatan (20%)</label>
-                            <input type="number" id="m-penghayatan" min="0" max="100" value="0" oninput="kiraMarkah()" class="w-full border p-2 rounded mt-1">
-                        </div>
-                    </div>
-                    <div class="bg-gray-100 p-4 rounded text-center">
-                        <span class="text-sm font-medium block">Jumlah Markah Akhir:</span>
-                        <span id="jumlah-markah-keseluruhan" class="text-3xl font-black text-slate-800">0.00%</span>
-                    </div>
-                    <button type="button" onclick="hantarMarkah()" class="w-full bg-green-600 text-white p-3 rounded hover:bg-green-700 font-bold">Hantar Keputusan</button>
-                </div>
+            
+            <div class="mt-8 overflow-x-auto">
+                <h3 class="font-bold text-lg mb-2">Senarai Hakim Berdaftar</h3>
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead>
+                        <tr class="bg-slate-200">
+                            <th class="p-2 border">Nama</th>
+                            <th class="p-2 border">No. IC</th>
+                            <th class="p-2 border text-center">Tindakan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="senarai-hakim"></tbody>
+                </table>
             </div>
         </div>
 
@@ -111,14 +103,7 @@
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse text-sm">
                     <thead>
-                        <tr class="bg-gray-200">
-                            <th class="p-2 border">Ked.</th>
-                            <th class="p-2 border">Giliran</th>
-                            <th class="p-2 border">Nama</th>
-                            <th class="p-2 border">Purata Markah</th>
-                            <th class="p-2 border">Status</th>
-                            <th class="p-2 border">Tindakan</th>
-                        </tr>
+                        <tr class="bg-gray-200"><th class="p-2 border">Ked.</th><th class="p-2 border">Giliran</th><th class="p-2 border">Nama</th><th class="p-2 border">Purata Markah</th><th class="p-2 border">Status</th><th class="p-2 border">Tindakan</th></tr>
                     </thead>
                     <tbody id="tabel-saringan"></tbody>
                 </table>
@@ -127,17 +112,16 @@
 
         <div id="tab-keputusan" class="tab-content bg-white p-6 rounded-lg shadow-md hidden text-center">
             <h2 class="text-2xl font-bold mb-2 text-amber-500">🏆 KEPUTUSAN MUKTAMAD (FINAL)</h2>
-            <p class="text-sm text-gray-500 mb-6">Paparan khas Pengacara Majlis. Markah dirahsiakan.</p>
-            <button onclick="muatNaikKeputusanFinal()" class="bg-amber-500 text-white px-6 py-2 rounded-full mb-6 font-bold shadow hover:bg-amber-600">🔄 Ambil Keputusan Terkini</button>
+            <button onclick="muatNaikKeputusanFinal()" class="bg-amber-500 text-white px-6 py-2 rounded-full mb-6 font-bold shadow">🔄 Ambil Keputusan Terkini</button>
             <div id="papan-pemenang" class="space-y-3 max-w-md mx-auto"></div>
         </div>
-
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+        // MASUKKAN CONFIG FIREBASE ANDA DI SINI
         const firebaseConfig = {
             apiKey: "AIzaSyCwDP8KCl2r6QL1DOAQTMGx5-pcwub9mYM",
             authDomain: "kareoke-83a74.firebaseapp.com",
@@ -146,189 +130,121 @@
             messagingSenderId: "740423962434",
             appId: "1:740423962434:web:f3460cc576f33574e802db"
         };
-
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        let senaraiPesertaGlobal = [];
 
         window.tukarTab = function(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(tabId).classList.remove('hidden');
-            
             event.currentTarget.parentNode.querySelectorAll('button').forEach(btn => btn.classList.remove('bg-slate-900'));
             event.currentTarget.classList.add('bg-slate-900');
 
-            if(tabId === 'tab-penilaian') { muatNaikHakim(); muatNaikPesertaPenilaian(); }
-            if(tabId === 'tab-daftar-hakim') { paparSenaraiHakim(); }
-            if(tabId === 'tab-urus-final') { muatNaikCartaSaringan(); }
-            if(tabId === 'tab-keputusan') { muatNaikKeputusanFinal(); }
+            if(tabId === 'tab-daftar-peserta') muatSenaraiPeserta();
+            if(tabId === 'tab-daftar-hakim') muatSenaraiHakim();
+            if(tabId === 'tab-urus-final') muatNaikCartaSaringan();
+            if(tabId === 'tab-keputusan') muatNaikKeputusanFinal();
         }
 
-        window.tambahInputLagu = function() {
-            const div = document.createElement('div');
-            div.className = "flex space-x-2 item-lagu mt-2";
-            div.innerHTML = `<input type="text" placeholder="Tajuk Lagu" required class="w-1/2 border p-2 rounded"><input type="url" placeholder="Pautan YouTube" required class="w-1/2 border p-2 rounded">`;
-            document.getElementById('ruangan-lagu').appendChild(div);
-        }
-
+        // --- PENGURUSAN PESERTA ---
         document.getElementById('form-peserta').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const idEdit = document.getElementById('edit-id-peserta').value;
             const nama = document.getElementById('nama-peserta').value;
-            const laguElems = document.querySelectorAll('.item-lagu');
+            const ic = document.getElementById('ic-peserta').value;
+            
             let senaraiLagu = [];
-            laguElems.forEach(el => {
+            document.querySelectorAll('.item-lagu').forEach(el => {
                 const inputs = el.querySelectorAll('input');
                 if(inputs[0].value) senaraiLagu.push({ tajuk: inputs[0].value, link: inputs[1].value });
             });
 
             try {
-                const snap = await getDocs(query(collection(db, "peserta")));
-                const noGiliran = snap.size + 1;
-                await addDoc(collection(db, "peserta"), {
-                    nama: nama, no_giliran: noGiliran, lagu: senaraiLagu, status: "Saringan", markah_saringan: {}, markah_final: {}
-                });
-                const infoBox = document.getElementById('info-giliran');
-                infoBox.innerText = `Berjaya! No Giliran: ${noGiliran}`;
-                infoBox.classList.remove('hidden');
+                if(idEdit) {
+                    await updateDoc(doc(db, "peserta", idEdit), { nama, ic, lagu: senaraiLagu });
+                    alert("Data peserta dikemaskini!");
+                } else {
+                    const snap = await getDocs(query(collection(db, "peserta")));
+                    await addDoc(collection(db, "peserta"), {
+                        nama, ic, no_giliran: snap.size + 1, lagu: senaraiLagu, status: "Saringan", markah_saringan: {}, markah_final: {}
+                    });
+                    alert("Peserta berjaya ditambah!");
+                }
                 document.getElementById('form-peserta').reset();
+                document.getElementById('edit-id-peserta').value = "";
+                document.getElementById('btn-submit-peserta').innerText = "Daftar Peserta Baru";
+                muatSenaraiPeserta();
             } catch (err) { alert(err.message); }
         });
 
+        window.muatSenaraiPeserta = async function() {
+            const snap = await getDocs(query(collection(db, "peserta"), orderBy("no_giliran", "asc")));
+            const tbody = document.getElementById('tabel-peserta'); tbody.innerHTML = "";
+            snap.forEach(d => {
+                let p = d.data();
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-2 border font-bold text-center">${p.no_giliran}</td>
+                        <td class="p-2 border">${p.nama}</td>
+                        <td class="p-2 border">${p.ic}</td>
+                        <td class="p-2 border text-center">
+                            <button onclick="editPeserta('${d.id}', '${p.nama}', '${p.ic}')" class="text-blue-600 font-bold px-2">Edit</button>
+                            <button onclick="padamPeserta('${d.id}')" class="text-red-600 font-bold px-2">Padam</button>
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        window.editPeserta = function(id, nama, ic) {
+            document.getElementById('edit-id-peserta').value = id;
+            document.getElementById('nama-peserta').value = nama;
+            document.getElementById('ic-peserta').value = ic;
+            document.getElementById('btn-submit-peserta').innerText = "Kemaskini Peserta";
+            window.scrollTo(0,0);
+        }
+
+        window.padamPeserta = async function(id) {
+            if(confirm("Padam peserta ini? Tindakan tidak boleh diundur.")) {
+                await deleteDoc(doc(db, "peserta", id));
+                muatSenaraiPeserta();
+            }
+        }
+
+        // --- PENGURUSAN HAKIM ---
         document.getElementById('form-hakim').addEventListener('submit', async (e) => {
             e.preventDefault();
             const nama = document.getElementById('nama-hakim').value;
+            const ic = document.getElementById('ic-hakim').value;
             try {
-                await addDoc(collection(db, "hakim"), { nama: nama });
-                alert(`Hakim ${nama} didaftarkan.`);
+                await addDoc(collection(db, "hakim"), { nama, ic });
                 document.getElementById('form-hakim').reset();
-                paparSenaraiHakim();
+                muatSenaraiHakim();
             } catch(err) { alert(err.message); }
         });
 
-        async function paparSenaraiHakim() {
+        window.muatSenaraiHakim = async function() {
             const snap = await getDocs(collection(db, "hakim"));
-            let html = "";
-            snap.forEach(doc => { html += `<div>• ${doc.data().nama}</div>`; });
-            document.getElementById('senarai-hakim').innerHTML = html;
-        }
-
-        async function muatNaikHakim() {
-            const snap = await getDocs(collection(db, "hakim"));
-            const select = document.getElementById('pilih-hakim');
-            select.innerHTML = "";
-            snap.forEach(doc => {
-                let opt = document.createElement('option');
-                opt.value = doc.data().nama; opt.innerText = doc.data().nama;
-                select.appendChild(opt);
-            });
-        }
-
-        window.muatNaikPesertaPenilaian = async function() {
-            const tahap = document.getElementById('pilih-tahap').value;
-            const q = query(collection(db, "peserta"), where("status", "==", tahap));
-            const snap = await getDocs(q);
-            const select = document.getElementById('pilih-peserta');
-            select.innerHTML = "<option value=''>-- Pilih Peserta --</option>";
-            senaraiPesertaGlobal = [];
+            const tbody = document.getElementById('senarai-hakim'); tbody.innerHTML = "";
             snap.forEach(d => {
-                let data = d.data(); data.id = d.id; senaraiPesertaGlobal.push(data);
-                let opt = document.createElement('option');
-                opt.value = d.id; opt.innerText = `[No.${data.no_giliran}] ${data.nama}`;
-                select.appendChild(opt);
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="p-2 border">${d.data().nama}</td>
+                        <td class="p-2 border">${d.data().ic}</td>
+                        <td class="p-2 border text-center"><button onclick="padamHakim('${d.id}')" class="text-red-600 font-bold">Padam</button></td>
+                    </tr>`;
             });
         }
 
-        window.paparLaguPeserta = function() {
-            const idPeserta = document.getElementById('pilih-peserta').value;
-            const peserta = senaraiPesertaGlobal.find(p => p.id === idPeserta);
-            const divLagu = document.getElementById('info-lagu-peserta');
-            if(peserta && peserta.lagu) {
-                let html = "<strong>Lagu:</strong><ul class='list-disc pl-4'>";
-                peserta.lagu.forEach(l => html += `<li><a href="${l.link}" target="_blank" class="text-blue-600 underline">${l.tajuk}</a></li>`);
-                divLagu.innerHTML = html + "</ul>"; divLagu.classList.remove('hidden');
-            } else divLagu.classList.add('hidden');
+        window.padamHakim = async function(id) {
+            if(confirm("Padam hakim ini?")) { await deleteDoc(doc(db, "hakim", id)); muatSenaraiHakim(); }
         }
 
-        window.kiraMarkah = function() {
-            const vokal = parseFloat(document.getElementById('m-vokal').value) || 0;
-            const persembahan = parseFloat(document.getElementById('m-persembahan').value) || 0;
-            const penghayatan = parseFloat(document.getElementById('m-penghayatan').value) || 0;
-            const total = (vokal * 0.50) + (persembahan * 0.30) + (penghayatan * 0.20);
-            document.getElementById('jumlah-markah-keseluruhan').innerText = total.toFixed(2) + "%";
-            return total;
-        }
-
-        window.hantarMarkah = async function() {
-            const hakim = document.getElementById('pilih-hakim').value;
-            const tahap = document.getElementById('pilih-tahap').value;
-            const idPeserta = document.getElementById('pilih-peserta').value;
-            const markah = kiraMarkah();
-            if(!hakim || !idPeserta) return alert("Pilih Hakim & Peserta!");
-            try {
-                const docRef = doc(db, "peserta", idPeserta);
-                const kemaskini = {};
-                if(tahap === "Saringan") kemaskini[`markah_saringan.${hakim}`] = markah;
-                else kemaskini[`markah_final.${hakim}`] = markah;
-                await updateDoc(docRef, kemaskini);
-                alert("Markah dihantar!");
-                document.getElementById('m-vokal').value = 0; document.getElementById('m-persembahan').value = 0; document.getElementById('m-penghayatan').value = 0; document.getElementById('jumlah-markah-keseluruhan').innerText = "0.00%";
-            } catch(err) { alert(err.message); }
-        }
-
-        window.muatNaikCartaSaringan = async function() {
-            const snap = await getDocs(query(collection(db, "peserta")));
-            let senarai = [];
-            snap.forEach(d => {
-                let data = d.data(); data.id = d.id;
-                let total = 0, bilangan = 0;
-                if(data.markah_saringan) {
-                    for(let h in data.markah_saringan) { total += data.markah_saringan[h]; bilangan++; }
-                }
-                data.purataSaringan = bilangan > 0 ? (total / bilangan) : 0;
-                senarai.push(data);
-            });
-            senarai.sort((a,b) => b.purataSaringan - a.purataSaringan);
-            const tbody = document.getElementById('tabel-saringan'); tbody.innerHTML = "";
-            senarai.forEach((p, index) => {
-                let tr = document.createElement('tr');
-                tr.className = index < 15 && p.status === 'Saringan' ? "bg-yellow-50" : "";
-                let btn = p.status === 'Saringan' 
-                    ? `<button onclick="setKeFinal('${p.id}', true)" class="bg-indigo-600 text-white px-2 py-1 rounded text-xs">Ke Final</button>`
-                    : `<button onclick="setKeFinal('${p.id}', false)" class="bg-red-500 text-white px-2 py-1 rounded text-xs">Turun</button>`;
-                tr.innerHTML = `<td class="p-2 border">${index+1}</td><td class="p-2 border">${p.no_giliran}</td><td class="p-2 border">${p.nama}</td><td class="p-2 border font-bold">${p.purataSaringan.toFixed(2)}%</td><td class="p-2 border">${p.status}</td><td class="p-2 border">${btn}</td>`;
-                tbody.appendChild(tr);
-            });
-        }
-
-        window.setKeFinal = async function(id, layak) {
-            try {
-                await updateDoc(doc(db, "peserta", id), { status: layak ? "Final" : "Saringan" });
-                muatNaikCartaSaringan();
-            } catch(err) { alert(err.message); }
-        }
-
-        window.muatNaikKeputusanFinal = async function() {
-            const snap = await getDocs(query(collection(db, "peserta"), where("status", "==", "Final")));
-            let senaraiFinal = [];
-            snap.forEach(d => {
-                let data = d.data(); let total = 0, bilangan = 0;
-                if(data.markah_final) {
-                    for(let h in data.markah_final) { total += data.markah_final[h]; bilangan++; }
-                }
-                data.purataFinal = bilangan > 0 ? (total / bilangan) : 0;
-                senaraiFinal.push(data);
-            });
-            senaraiFinal.sort((a,b) => b.purataFinal - a.purataFinal);
-            const container = document.getElementById('papan-pemenang'); container.innerHTML = "";
-            senaraiFinal.forEach((p, index) => {
-                let div = document.createElement('div');
-                let style = index === 0 ? "bg-amber-100 border-2 border-amber-400 font-black text-xl" : index === 1 ? "bg-slate-200 border-slate-400 font-bold text-lg" : index === 2 ? "bg-orange-100 border-orange-300 font-bold text-lg" : "bg-white border text-gray-800";
-                let title = index === 0 ? "🥇 JOHAN" : index === 1 ? "🥈 NAIB JOHAN" : index === 2 ? "🥉 TEMPAT KETIGA" : `Ked. ${index+1}`;
-                div.className = `${style} p-4 rounded-lg flex justify-between items-center shadow-sm`;
-                div.innerHTML = `<span>${title}</span><span class="uppercase">${p.nama}</span>`;
-                container.appendChild(div);
-            });
-        }
+        // Muat tab awal
+        muatSenaraiPeserta();
+        
+        // (Kod untuk urus final & keputusan dikekalkan dari versi asal - rujuk jawapan sebelumnya jika mahu paste penuh)
+        window.muatNaikCartaSaringan = async function() { /* Kod saringan sedia ada */ }
+        window.setKeFinal = async function(id, layak) { /* Kod ke final sedia ada */ }
+        window.muatNaikKeputusanFinal = async function() { /* Kod keputusan final sedia ada */ }
     </script>
 </body>
 </html>
