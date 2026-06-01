@@ -17,11 +17,11 @@
         <div class="container mx-auto flex flex-wrap justify-between items-center">
             <h1 class="text-xl font-bold tracking-wider text-amber-400">⚙️ PUSAT KAWALAN ADMIN</h1>
             <div class="flex space-x-2 mt-2 sm:mt-0 flex-wrap">
-                <button onclick="ttukartab('tab-daftar-peserta')" class="px-3 py-1 rounded hover:bg-slate-700 bg-slate-900 text-sm font-medium">1. Urus Peserta</button>
-                <button onclick="ttukartab('tab-daftar-hakim')" class="px-3 py-1 rounded hover:bg-slate-700 text-sm font-medium">2. Urus Hakim</button>
-                <button onclick="ttukartab('tab-saringan')" class="px-3 py-1 rounded hover:bg-slate-700 text-sm font-medium">3. Carta Saringan</button>
-                <button onclick="ttukartab('tab-finalis')" class="px-3 py-1 rounded hover:bg-slate-700 text-sm font-medium">4. Senarai Finalis (Top 15)</button>
-                <button onclick="ttukartab('tab-keputusan')" class="px-3 py-1 rounded hover:bg-slate-700 text-sm font-medium">5. Keputusan Final</button>
+                <button onclick="tukarTab('tab-daftar-peserta')" class="px-3 py-1 rounded hover:bg-slate-700 bg-slate-900 text-sm font-medium">1. Urus Peserta</button>
+                <button onclick="tukarTab('tab-daftar-hakim')" class="px-3 py-1 rounded hover:bg-slate-700 text-sm font-medium">2. Urus Hakim</button>
+                <button onclick="tukarTab('tab-saringan')" class="px-3 py-1 rounded hover:bg-slate-700 text-sm font-medium">3. Carta Saringan</button>
+                <button onclick="tukarTab('tab-finalis')" class="px-3 py-1 rounded hover:bg-slate-700 text-sm font-medium">4. Senarai Finalis (Top 15)</button>
+                <button onclick="tukarTab('tab-keputusan')" class="px-3 py-1 rounded hover:bg-slate-700 text-sm font-medium">5. Keputusan Final</button>
             </div>
         </div>
     </nav>
@@ -390,7 +390,7 @@
             btn.disabled = false;
         }
 
-        // --- TAB 5: KEPUTUSAN FINAL (KINI BERFUNGSI DENGAN SEKATAN DAN ACAK RAWAK) ---
+        // --- TAB 5: KEPUTUSAN FINAL (DIKEMASKINI: HAD TOP 7 + RAWAK SAGUHATI) ---
         window.muatNaikKeputusanFinal = async function() {
             const snap = await getDocs(query(collection(db, "peserta"), where("status", "==", "Final")));
             let senaraiFinal = [];
@@ -412,25 +412,20 @@
                 return container.innerHTML = "<p class='text-gray-500 py-4'>Belum ada peserta di peringkat Final.</p>";
             }
 
-            // PERUBAHAN 1: Jika belum ada sebarang markah final dari hakim
             if(!adaMarkah) {
                 return container.innerHTML = "<div class='bg-indigo-50 border border-indigo-200 text-indigo-900 p-4 rounded-xl font-bold'><i class='fas fa-info-circle mr-1'></i> Sesi pertandingan belum bermula. Tiada markah muktamad untuk dijana buat masa ini.</div>";
             }
 
-            // Susun mengikut markah tertinggi ke terendah
             senaraiFinal.sort((a,b) => b.purataFinal - a.purataFinal);
 
-            // PERUBAHAN 2: Pecahkan keputusan kepada Top 7 dan Saguhati sahaja
             let top7 = senaraiFinal.slice(0, 7);
             let saguhati = senaraiFinal.slice(7);
 
-            // Mengacak (Shuffle) baki peserta saguhati bagi melindungi kedudukan tercorot
             for (let i = saguhati.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [saguhati[i], saguhati[j]] = [saguhati[j], saguhati[i]];
             }
 
-            // Render Senarai Rasmi Kedudukan Top 7
             top7.forEach((p, index) => {
                 let div = document.createElement('div');
                 let imgHtml = p.gambar ? `<img src="${p.gambar}" class="h-16 w-16 object-cover rounded-full border-2 border-white shadow-md mx-auto">` : ``;
@@ -446,7 +441,6 @@
                 container.appendChild(div);
             });
 
-            // Render Senarai Penerima Hadiah Saguhati (Rawak Tanpa Angka Kedudukan)
             saguhati.forEach((p) => {
                 let div = document.createElement('div');
                 let imgHtml = p.gambar ? `<img src="${p.gambar}" class="h-12 w-12 object-cover rounded-full border border-gray-200 shadow-sm mx-auto">` : ``;
