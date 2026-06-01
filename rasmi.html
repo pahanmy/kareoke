@@ -30,72 +30,39 @@
     <main class="container mx-auto p-4 max-w-4xl flex-grow mt-6">
         
         <div class="flex justify-center border-b-2 border-slate-200 mb-6">
-            <button onclick="tukarTabUtama('papan-final', this)" class="tab-btn aktif px-4 sm:px-6 py-3 text-base sm:text-lg font-bold text-slate-500 uppercase tracking-wider transition-colors hover:text-yellow-600">🏆 Peringkat Final</button>
-            <button onclick="tukarTabUtama('papan-saringan', this)" class="tab-btn px-4 sm:px-6 py-3 text-base sm:text-lg font-bold text-slate-500 uppercase tracking-wider transition-colors hover:text-yellow-600">🎤 Peringkat Saringan</button>
+            <button onclick="tukarTabUtama('papan-saringan', this)" class="tab-btn aktif px-4 sm:px-6 py-3 text-base sm:text-lg font-bold text-slate-500 uppercase tracking-wider transition-colors hover:text-yellow-600">🎤 Peringkat Saringan</button>
+            <button onclick="tukarTabUtama('papan-final', this)" class="tab-btn px-4 sm:px-6 py-3 text-base sm:text-lg font-bold text-slate-500 uppercase tracking-wider transition-colors hover:text-yellow-600">🏆 Peringkat Final</button>
         </div>
 
-        <div id="papan-final" class="tab-main-content fade-in block">
+        <div id="papan-saringan" class="tab-main-content fade-in block">
             
             <div class="flex justify-center gap-2 mb-8">
-                <button onclick="tukarSubTab('final-juara', this, 'btn-sub-f')" class="sub-tab-btn btn-sub-f aktif-sub px-4 py-1.5 text-xs font-bold uppercase rounded-full bg-slate-200 text-slate-700 transition">🏆 Papan Kedudukan Juara</button>
-                <button onclick="tukarSubTab('final-senarai', this, 'btn-sub-f')" class="sub-tab-btn btn-sub-f px-4 py-1.5 text-xs font-bold uppercase rounded-full bg-slate-200 text-slate-700 transition">📋 Senarai Finalis Bertanding</button>
+                <button onclick="tukarSubTab('saringan-keputusan', this, 'btn-sub-s')" class="sub-tab-btn btn-sub-s aktif-sub px-4 py-1.5 text-xs font-bold uppercase rounded-full bg-slate-200 text-slate-700 transition">📢 Keputusan Saringan</button>
+                <button onclick="tukarSubTab('saringan-senarai', this, 'btn-sub-s')" class="sub-tab-btn btn-sub-s px-4 py-1.5 text-xs font-bold uppercase rounded-full bg-slate-200 text-slate-700 transition">📋 Senarai Penuh Peserta</button>
             </div>
 
-            <div id="final-juara" class="tab-sub-content block">
+            <div id="saringan-keputusan" class="tab-sub-content block">
                 <div class="text-center mb-6">
-                    <h2 class="text-2xl font-black text-slate-800 uppercase">Kedudukan Pemenang Final</h2>
-                    <p class="text-slate-500 text-sm mt-1">Kedudukan rasmi berdasarkan purata markah mutakhir para juri.</p>
+                    <h2 class="text-2xl font-black text-slate-800 uppercase">Keputusan Pusingan Saringan</h2>
+                    <p class="text-slate-500 text-sm mt-1">Senarai peserta yang mara ke Final & penghargaan buat semua peserta.</p>
                 </div>
-                <div id="papan-podium-final" class="space-y-4">
-                    </div>
-            </div>
-
-            <div id="final-senarai" class="tab-sub-content hidden">
-                <div class="text-center mb-6">
-                    <h2 class="text-2xl font-black text-slate-800 uppercase">Barisan 15 Finalis Terbaik</h2>
-                    <p class="text-slate-500 text-sm mt-1">Senarai bintang karaoke yang bertanding di pusingan akhir malam ini (Disusun mengikut Giliran).</p>
-                </div>
-                <div class="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
-                    <table class="w-full text-left text-sm">
-                        <thead>
-                            <tr class="bg-slate-800 text-white uppercase text-xs border-b">
-                                <th class="p-4 text-center font-bold w-24">No. Giliran</th>
-                                <th class="p-4 text-center w-24">Gambar</th>
-                                <th class="p-4 font-bold">Nama Peserta Finalis</th>
-                                <th class="p-4 font-bold">Lagu Pilihan Peringkat Final</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabel-senarai-finalis" class="divide-y divide-slate-100"></tbody>
-                    </table>
-                </div>
-            </div>
-
-        </div>
-
-        <div id="papan-saringan" class="tab-main-content fade-in hidden">
-            
-            <div class="flex justify-center gap-2 mb-8">
-                <button onclick="tukarSubTab('saringan-ranking', this, 'btn-sub-s')" class="sub-tab-btn btn-sub-s aktif-sub px-4 py-1.5 text-xs font-bold uppercase rounded-full bg-slate-200 text-slate-700 transition">🥇 Carta Kedudukan Ranking</button>
-                <button onclick="tukarSubTab('saringan-senarai', this, 'btn-sub-s')" class="sub-tab-btn btn-sub-s px-4 py-1.5 text-xs font-bold uppercase rounded-full bg-slate-200 text-slate-700 transition">📋 Senarai Semua Peserta Saringan</button>
-            </div>
-
-            <div id="saringan-ranking" class="tab-sub-content block">
-                <div class="text-center mb-6">
-                    <h2 class="text-2xl font-black text-slate-800 uppercase">Ranking Markah Tertinggi Saringan</h2>
-                    <p class="text-slate-500 text-sm mt-1">Kedudukan terkini dari kedudukan pertama sehingga terakhir.</p>
-                </div>
-                <div class="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
+                
+                <h3 class="text-lg font-black text-emerald-600 mb-3 uppercase tracking-wide flex items-center gap-2"><i class="fas fa-check-circle"></i> Layak Ke Pusingan Final (Top 15)</h3>
+                <div class="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden mb-8">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-sm">
-                            <thead>
-                                <tr class="bg-slate-100 text-slate-600 uppercase text-xs font-black border-b border-slate-200">
-                                    <th class="p-4 text-center w-20">Ked.</th>
-                                    <th class="p-4 text-center w-20">Gambar</th>
-                                    <th class="p-4">Nama Peserta</th>
-                                    <th class="p-4 text-center">Status Saringan</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabel-ranking-saringan" class="divide-y divide-slate-100"></tbody>
+                            <tbody id="tabel-layak-final" class="divide-y divide-slate-100">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <h3 class="text-lg font-black text-slate-500 mb-3 uppercase tracking-wide flex items-center gap-2"><i class="fas fa-award"></i> Penghargaan & Saguhati</h3>
+                <div class="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden mb-8">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <tbody id="tabel-saguhati-saringan" class="divide-y divide-slate-100">
+                                </tbody>
                         </table>
                     </div>
                 </div>
@@ -120,6 +87,43 @@
                             <tbody id="tabel-senarai-peserta-saringan" class="divide-y divide-slate-100"></tbody>
                         </table>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="papan-final" class="tab-main-content fade-in hidden">
+            
+            <div class="flex justify-center gap-2 mb-8">
+                <button onclick="tukarSubTab('final-juara', this, 'btn-sub-f')" class="sub-tab-btn btn-sub-f aktif-sub px-4 py-1.5 text-xs font-bold uppercase rounded-full bg-slate-200 text-slate-700 transition">🏆 Papan Kedudukan Juara</button>
+                <button onclick="tukarSubTab('final-senarai', this, 'btn-sub-f')" class="sub-tab-btn btn-sub-f px-4 py-1.5 text-xs font-bold uppercase rounded-full bg-slate-200 text-slate-700 transition">📋 Senarai Finalis Bertanding</button>
+            </div>
+
+            <div id="final-juara" class="tab-sub-content block">
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl font-black text-slate-800 uppercase">Kedudukan Pemenang Final</h2>
+                    <p class="text-slate-500 text-sm mt-1">Kedudukan rasmi berdasarkan markah mutakhir para juri malam ini.</p>
+                </div>
+                <div id="papan-podium-final" class="space-y-4">
+                    </div>
+            </div>
+
+            <div id="final-senarai" class="tab-sub-content hidden">
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl font-black text-slate-800 uppercase">Barisan Finalis Terbaik</h2>
+                    <p class="text-slate-500 text-sm mt-1">Senarai bintang karaoke yang bertanding di pusingan akhir malam ini (Disusun mengikut Giliran).</p>
+                </div>
+                <div class="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
+                    <table class="w-full text-left text-sm">
+                        <thead>
+                            <tr class="bg-slate-800 text-white uppercase text-xs border-b">
+                                <th class="p-4 text-center font-bold w-24">No. Giliran</th>
+                                <th class="p-4 text-center w-24">Gambar</th>
+                                <th class="p-4 font-bold">Nama Peserta Finalis</th>
+                                <th class="p-4 font-bold">Lagu Pilihan Peringkat Final</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabel-senarai-finalis" class="divide-y divide-slate-100"></tbody>
+                    </table>
                 </div>
             </div>
 
@@ -170,44 +174,44 @@
                 const snap = await getDocs(collection(db, "peserta"));
                 
                 let senaraiSemuaAsal = [];
-                let saringanRanking = [];
+                let senaraiLayakFinal = [];
+                let senaraiTidakLayak = [];
                 let finalRanking = [];
                 let finalisSenaraiGiliran = [];
+                let adaMarkahFinal = false;
 
                 snap.forEach(d => {
                     let p = d.data();
                     senaraiSemuaAsal.push(p);
 
-                    // ============================================
-                    // KEMASKINI LOGIK: MASUKKAN SEMUA KE SARINGAN
-                    // ============================================
-                    let totalS = 0, countS = 0;
-                    if(p.markah_saringan) { for(let h in p.markah_saringan) { totalS += p.markah_saringan[h]; countS++; } }
-                    // Jika belum ada markah, set 0 supaya tetap ada dalam carta
-                    p.purataSaringan = countS > 0 ? (totalS / countS) : 0; 
-                    saringanRanking.push(p);
+                    // Semak status untuk Saringan
+                    if(p.status === 'Final') {
+                        senaraiLayakFinal.push(p);
+                        finalisSenaraiGiliran.push(p);
+                    } else {
+                        senaraiTidakLayak.push(p);
+                    }
 
-                    // Pengiraan Final 
+                    // Pengiraan Final (Di sebalik tabir, untuk ranking juara)
                     let totalF = 0, countF = 0;
-                    if(p.markah_final) { for(let h in p.markah_final) { totalF += p.markah_final[h]; countF++; } }
+                    if(p.markah_final && Object.keys(p.markah_final).length > 0) { 
+                        for(let h in p.markah_final) { totalF += p.markah_final[h]; countF++; } 
+                        adaMarkahFinal = true;
+                    }
                     p.purataFinal = countF > 0 ? (totalF / countF) : 0;
                     
                     if(p.status === 'Final') {
-                        finalisSenaraiGiliran.push(p);
-                        finalRanking.push(p); // Masukkan semua finalis ke podium ranking (walaupun 0 markah)
+                        finalRanking.push(p);
                     }
                 });
 
-                // Susun Atur
+                // Susun Atur Ikut Giliran (Untuk sembunyikan markah sebenar)
                 senaraiSemuaAsal.sort((a,b) => a.no_giliran - b.no_giliran); 
+                senaraiLayakFinal.sort((a,b) => a.no_giliran - b.no_giliran); 
+                senaraiTidakLayak.sort((a,b) => a.no_giliran - b.no_giliran); 
                 finalisSenaraiGiliran.sort((a,b) => a.no_giliran - b.no_giliran); 
                 
-                // Jika markah seri (cth: sama-sama 0 sebab juri belum nilai), susun ikut giliran
-                saringanRanking.sort((a,b) => {
-                    if (b.purataSaringan === a.purataSaringan) return a.no_giliran - b.no_giliran;
-                    return b.purataSaringan - a.purataSaringan;
-                }); 
-                
+                // Final Ranking disusun ikut markah sebenar (Hanya di Tab Final)
                 finalRanking.sort((a,b) => {
                     if (b.purataFinal === a.purataFinal) return a.no_giliran - b.no_giliran;
                     return b.purataFinal - a.purataFinal;
@@ -215,9 +219,9 @@
 
                 // Render ke UI
                 paparSenaraiSaringanPeserta(senaraiSemuaAsal);
-                paparRankingSaringan(saringanRanking);
+                paparKeputusanSaringan(senaraiLayakFinal, senaraiTidakLayak);
                 paparSenaraiFinalisPeserta(finalisSenaraiGiliran);
-                paparPodiumFinal(finalRanking);
+                paparPodiumFinal(finalRanking, adaMarkahFinal);
 
             } catch(err) {
                 console.error(err);
@@ -243,27 +247,45 @@
             });
         }
 
-        // 2. PAPARAN: RANKING CARTA SARINGAN (MARKAH TERTINGGI)
-        function paparRankingSaringan(data) {
-            const tbody = document.getElementById('tabel-ranking-saringan');
-            tbody.innerHTML = "";
-            if(data.length === 0) { tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center">Belum ada peserta didaftarkan.</td></tr>`; return; }
+        // 2. PAPARAN: KEPUTUSAN SARINGAN (TIADA RANKING)
+        function paparKeputusanSaringan(layak, tidakLayak) {
+            const tbodyLayak = document.getElementById('tabel-layak-final');
+            const tbodySaguhati = document.getElementById('tabel-saguhati-saringan');
+            
+            tbodyLayak.innerHTML = "";
+            tbodySaguhati.innerHTML = "";
 
-            data.forEach((p, index) => {
-                let img = p.gambar ? `<img src="${p.gambar}" class="h-10 w-10 object-cover rounded-full mx-auto border shadow-sm">` : `<div class="h-10 w-10 bg-slate-200 rounded-full mx-auto flex items-center justify-center text-[10px] text-slate-500"><i class="fas fa-user"></i></div>`;
-                
-                let badge = p.status === 'Final' 
-                    ? `<span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-black uppercase"><i class="fas fa-star mr-1"></i> LAYAK KE FINAL</span>`
-                    : (p.purataSaringan > 0 ? `<span class="text-slate-500 text-xs font-bold uppercase">Selesai Beraksi</span>` : `<span class="text-amber-500 text-xs font-bold uppercase"><i class="fas fa-hourglass-half mr-1"></i> Menunggu Keputusan</span>`);
+            if(layak.length === 0) {
+                tbodyLayak.innerHTML = `<tr><td class="p-6 text-center text-slate-400">Keputusan rasmi Top 15 belum dimuktamadkan oleh Urusetia.</td></tr>`;
+            } else {
+                layak.forEach(p => {
+                    let img = p.gambar ? `<img src="${p.gambar}" class="h-12 w-12 object-cover rounded-full border shadow-sm">` : `<div class="h-12 w-12 bg-slate-200 rounded-full flex items-center justify-center text-[10px] text-slate-500"><i class="fas fa-user"></i></div>`;
+                    tbodyLayak.innerHTML += `
+                        <tr class="hover:bg-emerald-50 transition border-b border-slate-100">
+                            <td class="p-4 w-16 text-center">${img}</td>
+                            <td class="p-4 font-black text-slate-800 uppercase text-base">${p.nama}</td>
+                            <td class="p-4 text-right w-40">
+                                <span class="bg-emerald-100 text-emerald-700 px-3 py-1.5 rounded-full text-xs font-black uppercase shadow-sm"><i class="fas fa-check-circle mr-1"></i> Mara Ke Final</span>
+                            </td>
+                        </tr>`;
+                });
+            }
 
-                tbody.innerHTML += `
-                    <tr class="${p.status === 'Final' ? 'bg-indigo-50/40' : ''} hover:bg-slate-50 transition border-b border-slate-100">
-                        <td class="p-4 text-center font-black text-slate-600 text-lg">${index + 1}</td>
-                        <td class="p-4 text-center">${img}</td>
-                        <td class="p-4 font-black text-slate-800 uppercase">${p.nama}</td>
-                        <td class="p-4 text-center">${badge}</td>
-                    </tr>`;
-            });
+            if(tidakLayak.length === 0) {
+                tbodySaguhati.innerHTML = `<tr><td class="p-6 text-center text-slate-400">Tiada rekod.</td></tr>`;
+            } else {
+                tidakLayak.forEach(p => {
+                    let img = p.gambar ? `<img src="${p.gambar}" class="h-12 w-12 object-cover rounded-full border shadow-sm opacity-80">` : `<div class="h-12 w-12 bg-slate-100 rounded-full flex items-center justify-center text-[10px] text-slate-400"><i class="fas fa-user"></i></div>`;
+                    tbodySaguhati.innerHTML += `
+                        <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+                            <td class="p-4 w-16 text-center">${img}</td>
+                            <td class="p-4 font-bold text-slate-600 uppercase">${p.nama}</td>
+                            <td class="p-4 text-right w-40">
+                                <span class="text-slate-400 text-xs font-bold uppercase"><i class="fas fa-gift mr-1"></i> Saguhati</span>
+                            </td>
+                        </tr>`;
+                });
+            }
         }
 
         // 3. PAPARAN: SENARAI 15 FINALIS (FINAL - GILIRAN)
@@ -286,21 +308,37 @@
         }
 
         // 4. PAPARAN: PODIUM JUARA (FINAL - RANKING)
-        function paparPodiumFinal(data) {
+        function paparPodiumFinal(data, adaMarkah) {
             const container = document.getElementById('papan-podium-final');
             container.innerHTML = "";
 
             if(data.length === 0) {
-                container.innerHTML = `<div class="bg-white p-8 rounded-2xl shadow-sm text-center text-slate-400 border border-slate-200">Belum ada peserta finalis yang dinilai.</div>`;
+                container.innerHTML = `<div class="bg-white p-8 rounded-2xl shadow-sm text-center text-slate-400 border border-slate-200">Peserta Final belum disahkan.</div>`;
                 return;
             }
 
-            data.forEach((p, index) => {
+            if(!adaMarkah) {
+                container.innerHTML = `<div class="bg-indigo-50 border border-indigo-200 text-indigo-900 p-6 rounded-2xl font-bold text-center shadow-sm"><i class="fas fa-clock text-3xl mb-2 text-indigo-400 block"></i> Pertandingan Final belum bermula.<br><span class="text-sm font-medium text-indigo-600">Keputusan penuh akan dipaparkan di sini selepas juri memasukkan markah.</span></div>`;
+                return;
+            }
+
+            // Pecahkan kepada Top 7 dan Saguhati (seperti kehendak urusetia)
+            let top7 = data.slice(0, 7);
+            let saguhati = data.slice(7);
+
+            // Shuffel peserta saguhati (Rawak)
+            for (let i = saguhati.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [saguhati[i], saguhati[j]] = [saguhati[j], saguhati[i]];
+            }
+
+            // Render Kedudukan Top 7
+            top7.forEach((p, index) => {
                 let card = document.createElement('div');
                 let imgHtml = p.gambar ? `<img src="${p.gambar}" class="h-16 w-16 md:h-20 md:w-20 object-cover rounded-full border-4 border-white shadow-lg z-10 relative">` : `<div class="h-16 w-16 md:h-20 md:w-20 bg-slate-100 rounded-full border-4 border-white shadow-lg z-10 relative flex items-center justify-center text-slate-400"><i class="fas fa-user text-2xl"></i></div>`;
                 
                 if (index === 0) {
-                    card.className = "bg-gold-gradient p-1 rounded-2xl shadow-xl transform transition hover:-translate-y-1 fade-in";
+                    card.className = "bg-gold-gradient p-1 rounded-2xl shadow-xl transform transition hover:-translate-y-1 fade-in mb-4";
                     card.innerHTML = `
                         <div class="bg-white/90 backdrop-blur-sm p-4 md:p-6 rounded-xl flex items-center gap-4 relative overflow-hidden">
                             <div class="absolute -right-4 -top-4 text-yellow-500/20 text-9xl"><i class="fas fa-trophy"></i></div>
@@ -311,7 +349,7 @@
                             </div>
                         </div>`;
                 } else if (index === 1) {
-                    card.className = "bg-silver-gradient p-1 rounded-2xl shadow-md transform transition hover:-translate-y-1 ml-0 md:ml-8";
+                    card.className = "bg-silver-gradient p-1 rounded-2xl shadow-md transform transition hover:-translate-y-1 ml-0 md:ml-8 mb-4";
                     card.innerHTML = `
                         <div class="bg-white/90 backdrop-blur-sm p-4 rounded-xl flex items-center gap-4 relative">
                             <div class="flex-shrink-0 relative"><div class="absolute -top-2 -left-2 bg-slate-400 text-white h-6 w-6 rounded-full flex items-center justify-center font-black z-20 shadow-sm text-xs">2</div>${imgHtml}</div>
@@ -321,7 +359,7 @@
                             </div>
                         </div>`;
                 } else if (index === 2) {
-                    card.className = "bg-bronze-gradient p-1 rounded-2xl shadow-md transform transition hover:-translate-y-1 ml-0 md:ml-16";
+                    card.className = "bg-bronze-gradient p-1 rounded-2xl shadow-md transform transition hover:-translate-y-1 ml-0 md:ml-16 mb-4";
                     card.innerHTML = `
                         <div class="bg-white/90 backdrop-blur-sm p-4 rounded-xl flex items-center gap-4 relative">
                             <div class="flex-shrink-0 relative"><div class="absolute -top-2 -left-2 bg-amber-700 text-white h-6 w-6 rounded-full flex items-center justify-center font-black z-20 shadow-sm text-xs">3</div>${imgHtml}</div>
@@ -331,7 +369,7 @@
                             </div>
                         </div>`;
                 } else {
-                    card.className = "bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4 ml-0 md:ml-24 mt-2";
+                    card.className = "bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4 ml-0 md:ml-24 mb-2 fade-in";
                     let imgSmall = p.gambar ? `<img src="${p.gambar}" class="h-12 w-12 object-cover rounded-full border border-slate-200">` : `<div class="h-12 w-12 bg-slate-100 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 text-xs"><i class="fas fa-user"></i></div>`;
                     card.innerHTML = `
                         <div class="text-slate-400 font-black w-8 text-center text-lg">${index + 1}</div>
@@ -340,8 +378,31 @@
                 }
                 container.appendChild(card);
             });
+
+            // Pemisah Visual untuk Saguhati
+            if(saguhati.length > 0) {
+                let pemisah = document.createElement('div');
+                pemisah.className = "text-center my-6 relative";
+                pemisah.innerHTML = `<span class="bg-slate-50 px-4 text-xs font-bold text-slate-400 uppercase tracking-widest relative z-10">Penerima Hadiah Saguhati</span><div class="absolute top-1/2 left-0 w-full h-px bg-slate-200"></div>`;
+                container.appendChild(pemisah);
+            }
+
+            // Render Senarai Rawak Saguhati
+            saguhati.forEach((p) => {
+                let div = document.createElement('div');
+                let imgHtml = p.gambar ? `<img src="${p.gambar}" class="h-10 w-10 object-cover rounded-full border border-gray-200 shadow-sm">` : `<div class="h-10 w-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 text-xs"><i class="fas fa-user"></i></div>`;
+                
+                div.className = "bg-white border border-slate-100 text-gray-700 p-3 rounded-xl flex items-center gap-4 mb-2 shadow-sm fade-in opacity-80 hover:opacity-100 transition";
+                div.innerHTML = `
+                    <div class="w-12 text-center shrink-0 text-xl text-amber-500"><i class="fas fa-award"></i></div>
+                    ${imgHtml}
+                    <span class="uppercase flex-grow text-left font-bold text-slate-600 text-sm">${p.nama}</span>
+                `;
+                container.appendChild(div);
+            });
         }
 
+        // Muat Data Automatik
         muatSistemKeputusan();
     </script>
 </body>
