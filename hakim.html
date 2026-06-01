@@ -3,217 +3,266 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Penilaian Hakim</title>
+    <title>Portal Juri - Spark Karaoke</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        .modal-masuk { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        input[type=range] { accent-color: #4f46e5; }
-        .emoji-btn { transition: all 0.2s; filter: grayscale(100%); opacity: 0.5; }
-        .emoji-btn.aktif { filter: grayscale(0%); opacity: 1; transform: scale(1.3); background-color: #e0e7ff; border-radius: 100%; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .modal-masuk { animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        input[type=range] { accent-color: #ec4899; height: 6px; }
+        .emoji-btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); filter: grayscale(100%); opacity: 0.4; }
+        .emoji-btn.aktif { filter: grayscale(0%); opacity: 1; transform: scale(1.35) translateY(-5px); background-color: #fdf2f8; border-radius: 100%; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .bg-spark-gradient { background: linear-gradient(135deg, #0f172a 0%, #312e81 100%); }
     </style>
 </head>
-<body class="bg-gray-100 font-sans antialiased text-gray-900 h-screen flex flex-col">
+<body class="bg-slate-50 font-sans antialiased text-slate-900 h-screen flex flex-col">
 
-    <nav class="bg-indigo-900 p-4 text-white shadow-lg z-20 sticky top-0">
+    <nav class="bg-spark-gradient p-4 text-white shadow-xl z-20 sticky top-0 border-b border-indigo-500/30">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold tracking-wider">🎙️ E-JURI KARAOKE</h1>
+            <div class="flex items-center gap-2">
+                <i class="fas fa-microphone-alt text-amber-400 text-2xl"></i>
+                <h1 class="text-xl md:text-2xl font-black tracking-widest uppercase text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-500 drop-shadow-sm">Spark Juri</h1>
+            </div>
             
             <div id="bahagian-pengguna" class="hidden flex items-center gap-3">
                 <input type="file" id="upload-avatar" hidden accept="image/*" onchange="muatNaikAvatarHakim(event)">
-                <img id="avatar-hakim" src="https://i.ibb.co/ZcKQ9xP/default-avatar.png" onclick="document.getElementById('upload-avatar').click()" class="h-10 w-10 rounded-full cursor-pointer border-2 border-indigo-400 hover:border-white object-cover" title="Klik untuk tukar gambar profil">
+                <div class="relative group cursor-pointer" onclick="document.getElementById('upload-avatar').click()" title="Tukar Gambar Profil">
+                    <img id="avatar-hakim" src="https://i.ibb.co/ZcKQ9xP/default-avatar.png" class="h-10 w-10 md:h-12 md:w-12 rounded-full border-2 border-amber-400 object-cover shadow-md transition group-hover:opacity-80">
+                    <div class="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition"><i class="fas fa-camera text-white text-xs"></i></div>
+                </div>
                 
-                <div class="font-medium hidden sm:block mr-2">Hakim: <span id="label-hakim" class="text-amber-400 font-bold"></span></div>
-                <button onclick="logKeluar()" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 text-sm font-bold rounded shadow transition">Log Keluar</button>
+                <div class="hidden sm:block mr-2 text-right leading-tight">
+                    <div class="text-[10px] text-indigo-300 uppercase tracking-widest font-bold">Panel Hakim</div>
+                    <div id="label-hakim" class="text-amber-400 font-black truncate max-w-[150px]"></div>
+                </div>
+                <button onclick="logKeluar()" class="bg-rose-500 hover:bg-rose-600 text-white px-3 py-2 text-xs font-bold rounded-lg shadow-md transition ml-1"><i class="fas fa-sign-out-alt"></i></button>
             </div>
         </div>
     </nav>
 
-    <div id="skrin-login" class="flex-grow flex items-center justify-center p-4">
-        <div class="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full text-center border-t-4 border-indigo-600 relative overflow-hidden">
-            <h2 class="text-2xl font-black text-gray-800 mb-2">Log Masuk Juri</h2>
-            <p class="text-sm text-gray-500 mb-6">Pengesahan identiti panel hakim.</p>
+    <div id="skrin-login" class="flex-grow flex items-center justify-center p-4 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]">
+        <div class="bg-white p-8 md:p-10 rounded-3xl shadow-2xl max-w-md w-full text-center border-t-8 border-pink-500 relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 text-pink-500/10 text-9xl"><i class="fas fa-music"></i></div>
             
-            <div class="relative">
+            <h2 class="text-3xl font-black text-slate-800 mb-2 uppercase tracking-wide">Akses Juri</h2>
+            <p class="text-sm text-slate-500 mb-8 font-medium">Sila masukkan No. IC untuk mula menilai.</p>
+            
+            <div class="relative mb-6">
                 <input type="text" id="input-ic" inputmode="numeric" maxlength="12" 
                        oninput="this.value = this.value.replace(/[^0-9]/g, '')"
-                       class="w-full border-2 border-gray-300 p-3 rounded-lg text-center text-2xl font-bold tracking-[0.15em] mb-2 focus:outline-none focus:border-indigo-600 transition shadow-inner text-indigo-900" 
-                       placeholder="850101135566">
-                <p class="text-xs text-indigo-500 font-bold mb-6 uppercase tracking-wider bg-indigo-50 py-1 rounded">Masukkan 12 Digit (Tanpa Sempang)</p>
+                       class="w-full border-2 border-slate-200 p-4 rounded-xl text-center text-2xl font-black tracking-[0.2em] focus:outline-none focus:border-pink-500 focus:ring-4 focus:ring-pink-100 transition text-indigo-900 bg-slate-50" 
+                       placeholder="NO IC">
+                <p class="text-[10px] text-pink-600 font-black mt-2 uppercase tracking-widest text-left ml-2">12 Digit (Tanpa Sempang)</p>
             </div>
 
-            <button id="btn-login" onclick="sahkanHakim()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg shadow-md transition-all text-lg flex justify-center items-center gap-2">
-                Sahkan Identiti <span class="text-xl">➔</span>
+            <button id="btn-login" onclick="sahkanHakim()" class="w-full bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-black py-4 px-6 rounded-xl shadow-lg transition-transform transform hover:-translate-y-1 text-lg flex justify-center items-center gap-3 uppercase tracking-wider">
+                Sahkan Identiti <i class="fas fa-arrow-right"></i>
             </button>
-            <p id="msg-login" class="text-red-500 mt-4 text-sm font-bold bg-red-50 p-2 rounded hidden"></p>
+            <p id="msg-login" class="text-rose-500 mt-4 text-sm font-bold bg-rose-50 border border-rose-200 p-3 rounded-lg hidden"></p>
         </div>
     </div>
 
-    <div id="skrin-dashboard" class="hidden flex-grow flex flex-col w-full">
+    <div id="skrin-dashboard" class="hidden flex-grow flex flex-col w-full bg-slate-50">
         
-        <div class="bg-indigo-900 pt-6 pb-10 px-4 text-center rounded-b-[40px] shadow-lg relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-full bg-white opacity-5"></div>
-            <p class="text-indigo-300 text-xs sm:text-sm uppercase tracking-[0.3em] font-bold mb-1">Panel Juri Profesional</p>
-            <h1 id="nama-hakim-besar" class="text-3xl sm:text-4xl font-black text-amber-400 drop-shadow-md uppercase tracking-wide">NAMA HAKIM</h1>
+        <div class="bg-spark-gradient pt-8 pb-12 px-4 text-center rounded-b-[3rem] shadow-xl relative overflow-hidden">
+            <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
+            <p class="text-indigo-200 text-xs sm:text-sm uppercase tracking-[0.4em] font-black mb-2 relative z-10"><i class="fas fa-star text-amber-400 mr-1"></i> Selamat Bertugas <i class="fas fa-star text-amber-400 ml-1"></i></p>
+            <h1 id="nama-hakim-besar" class="text-3xl md:text-5xl font-black text-amber-400 drop-shadow-lg uppercase tracking-widest relative z-10"></h1>
         </div>
 
-        <div class="p-4 sm:p-6 container mx-auto max-w-5xl -mt-6 relative z-10">
+        <div class="p-4 sm:p-6 container mx-auto max-w-6xl -mt-8 relative z-10">
             
-            <div class="bg-white p-4 rounded-xl shadow-md mb-6 flex flex-col lg:flex-row justify-between items-center gap-4 border-l-4 border-amber-400">
-                <div><h3 class="font-bold text-gray-700 text-lg">Senarai Peserta Untuk Dinilai:</h3></div>
+            <div class="bg-white p-5 rounded-2xl shadow-lg mb-8 flex flex-col lg:flex-row justify-between items-center gap-4 border border-slate-100">
+                <div class="text-center lg:text-left">
+                    <h3 class="font-black text-slate-800 text-xl uppercase tracking-wide">Papan Penilaian</h3>
+                    <p class="text-xs text-slate-500 font-medium">Urus dan laksanakan tugas pemarkahan anda di sini.</p>
+                </div>
                 
-                <div class="flex flex-col sm:flex-row flex-wrap gap-2 w-full lg:w-auto">
-                    <select id="pilih-paparan" onchange="renderSenaraiPeserta()" class="border border-indigo-300 bg-indigo-50 text-indigo-800 font-bold p-3 rounded-lg outline-none cursor-pointer w-full sm:w-auto text-sm">
-                        <option value="kad">📱 Paparan: Kad (Lalai)</option>
-                        <option value="jadual">📋 Paparan: Jadual (Table)</option>
-                    </select>
+                <div class="flex flex-col sm:flex-row flex-wrap justify-center gap-2 w-full lg:w-auto">
+                    <div class="relative bg-slate-100 rounded-xl p-1 flex">
+                        <select id="pilih-paparan" onchange="renderSenaraiPeserta()" class="bg-transparent text-slate-700 font-bold p-2 text-sm outline-none cursor-pointer appearance-none pr-8">
+                            <option value="kad">📱 Paparan Kad</option>
+                            <option value="jadual">📋 Paparan Jadual</option>
+                        </select>
+                        <i class="fas fa-chevron-down absolute right-3 top-3 text-slate-400 text-xs pointer-events-none"></i>
+                    </div>
 
-                    <select id="pilih-susunan" onchange="renderSenaraiPeserta()" class="border border-gray-300 bg-gray-50 text-gray-700 font-bold p-3 rounded-lg outline-none cursor-pointer w-full sm:w-auto text-sm">
-                        <option value="giliran">1️⃣ Susun: No Giliran</option>
-                        <option value="markah">🏆 Susun: Markah Tertinggi</option>
-                    </select>
+                    <div class="relative bg-slate-100 rounded-xl p-1 flex">
+                        <select id="pilih-susunan" onchange="renderSenaraiPeserta()" class="bg-transparent text-slate-700 font-bold p-2 text-sm outline-none cursor-pointer appearance-none pr-8">
+                            <option value="giliran">1️⃣ Susun: Giliran</option>
+                            <option value="markah">🏆 Susun: Markah</option>
+                        </select>
+                        <i class="fas fa-chevron-down absolute right-3 top-3 text-slate-400 text-xs pointer-events-none"></i>
+                    </div>
 
-                    <select id="pilih-tahap" onchange="muatPesertaUntukDinilai()" class="border-2 border-indigo-400 bg-indigo-600 text-white font-bold p-3 rounded-lg outline-none cursor-pointer w-full sm:w-auto shadow-sm text-sm">
-                        <option value="Saringan">Peringkat Saringan</option>
-                        <option value="Final">Peringkat Final</option>
-                    </select>
+                    <div class="relative bg-indigo-100 border border-indigo-200 rounded-xl p-1 flex">
+                        <select id="pilih-tahap" onchange="muatPesertaUntukDinilai()" class="bg-transparent text-indigo-800 font-black p-2 text-sm outline-none cursor-pointer appearance-none pr-8 uppercase tracking-wider">
+                            <option value="Saringan">Saringan</option>
+                            <option value="Final">Pusingan Final</option>
+                        </select>
+                        <i class="fas fa-chevron-down absolute right-3 top-3 text-indigo-500 text-xs pointer-events-none"></i>
+                    </div>
                 </div>
             </div>
 
-            <div id="senarai-peserta-body" class="mb-6"></div>
+            <div id="senarai-peserta-body" class="mb-8 min-h-[400px]"></div>
 
-            <div class="mt-8 mb-12 bg-indigo-50 border border-indigo-100 p-6 rounded-2xl text-center shadow-sm">
-                <h3 class="text-lg font-black text-indigo-900 mb-2">Selesai Menilai Semua Peserta?</h3>
-                <p class="text-sm text-indigo-600 mb-4">Sahkan penghantaran markah untuk melengkapkan tugasan pusingan ini.</p>
-                <button onclick="sahkanSesiKeseluruhan()" class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-black px-8 py-4 rounded-full shadow-lg text-lg transition transform hover:scale-105 uppercase tracking-wide">
-                    Hantar Keputusan Keseluruhan
+            <div class="mt-10 mb-6 bg-gradient-to-r from-indigo-50 to-pink-50 border border-indigo-100 p-8 rounded-3xl text-center shadow-sm">
+                <div class="inline-block bg-white p-4 rounded-full shadow-sm mb-4 text-3xl">🏁</div>
+                <h3 class="text-xl font-black text-indigo-900 mb-2 uppercase tracking-wide">Selesai Tugas?</h3>
+                <p class="text-sm text-slate-500 mb-6 max-w-md mx-auto">Sahkan penghantaran markah jika anda telah selesai menilai kesemua peserta pada pusingan ini.</p>
+                <button onclick="sahkanSesiKeseluruhan()" class="w-full sm:w-auto bg-slate-900 hover:bg-black text-white font-black px-10 py-4 rounded-xl shadow-lg transition transform hover:-translate-y-1 uppercase tracking-widest text-sm">
+                    Kunci Sesi Penilaian <i class="fas fa-lock ml-2"></i>
                 </button>
             </div>
 
         </div>
     </div>
 
-    <div id="modal-penilaian" class="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 z-[60] hidden">
-        <div class="bg-gray-50 w-full max-w-2xl rounded-2xl shadow-2xl modal-masuk flex flex-col max-h-[95vh] sm:max-h-[90vh]">
+    <div id="modal-penilaian" class="fixed inset-0 bg-slate-900/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 z-[60] hidden">
+        <div class="bg-slate-50 w-full max-w-2xl rounded-[2rem] shadow-2xl modal-masuk flex flex-col max-h-[96vh] sm:max-h-[90vh] overflow-hidden">
             
-            <div class="bg-indigo-700 p-4 sm:p-5 text-white flex justify-between items-center rounded-t-2xl shadow-md z-10">
-                <div class="flex items-center gap-4">
+            <div class="bg-spark-gradient p-5 sm:p-6 text-white flex justify-between items-start border-b-4 border-pink-500 relative overflow-hidden">
+                <div class="absolute -right-4 -bottom-4 text-white/10 text-8xl"><i class="fas fa-star"></i></div>
+                <div class="flex items-center gap-4 relative z-10">
                     <div id="modal-gambar-container" class="hidden sm:block"></div>
                     <div>
-                        <span id="modal-giliran" class="bg-amber-400 text-indigo-900 px-2 py-0.5 rounded text-xs font-black uppercase">Giliran 1</span>
-                        <h2 id="modal-nama" class="text-xl sm:text-2xl font-black mt-1 uppercase tracking-wide">Nama Peserta</h2>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="bg-pink-500 text-white px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest shadow-sm">Borang Juri</span>
+                            <span id="modal-giliran" class="text-amber-300 text-xs font-black uppercase tracking-widest">Giliran 1</span>
+                        </div>
+                        <h2 id="modal-nama" class="text-2xl sm:text-3xl font-black uppercase tracking-wider drop-shadow-md">Nama Peserta</h2>
                     </div>
                 </div>
-                <button onclick="tutupModal()" class="text-white hover:text-red-300 font-black text-4xl leading-none px-2">&times;</button>
+                <button onclick="tutupModal()" class="text-white hover:text-pink-300 font-black text-4xl leading-none transition relative z-10">&times;</button>
             </div>
 
-            <div class="p-4 sm:p-6 overflow-y-auto flex-grow relative">
-                <div class="bg-blue-50 border-l-4 border-blue-500 p-3 mb-5 rounded shadow-sm">
-                    <p class="text-xs sm:text-sm text-blue-900 font-medium flex items-start gap-2">
-                        <span class="text-lg leading-none">💡</span>
-                        <span><strong>Bantuan Sistem:</strong> Markah disetkan pada paras <strong>50% (Pertengahan)</strong>. Sila laras markah mengikut persembahan.</span>
+            <div class="p-4 sm:p-6 overflow-y-auto flex-grow relative space-y-6">
+                
+                <div class="bg-indigo-50 border border-indigo-100 p-4 rounded-xl shadow-sm flex gap-3">
+                    <div class="text-2xl text-indigo-500"><i class="fas fa-lightbulb"></i></div>
+                    <p class="text-xs sm:text-sm text-indigo-900 font-medium leading-relaxed">
+                        Sistem mencadangkan <strong class="text-indigo-700">50% (Markah Asas)</strong>. Gunakan <i>slider</i> atau taip markah di dalam kotak mengikut kualiti persembahan.
                     </p>
                 </div>
 
                 <input type="hidden" id="modal-id-peserta">
                 
-                <div class="space-y-5">
-                    <div class="border border-gray-200 rounded-xl p-4 bg-white shadow-sm">
-                        <h3 class="font-black text-indigo-800 mb-4 border-b pb-2 uppercase text-sm">🎙️ Vokal & Teknikal (45%)</h3>
-                        <div class="mb-4">
-                            <div class="flex justify-between items-end mb-1">
-                                <label class="font-bold text-gray-700 text-base">1. Kualiti Vokal & Nada</label>
-                                <div><input type="number" id="m-vokal" min="0" max="30" oninput="selaraskanSlider('m-vokal')" class="w-16 text-center border bg-gray-50 rounded font-bold text-xl outline-none focus:border-indigo-500 py-1"><span class="text-xs font-bold text-gray-400 ml-1">/ 30</span></div>
-                            </div>
-                            <input type="range" id="slide-vokal" min="0" max="30" step="1" oninput="selaraskanInput('slide-vokal', 'm-vokal')" class="w-full cursor-pointer mt-2">
-                        </div>
-                        <div>
-                            <div class="flex justify-between items-end mb-1">
-                                <label class="font-bold text-gray-700 text-base">2. Ketepatan Tempo</label>
-                                <div><input type="number" id="m-tempo" min="0" max="15" oninput="selaraskanSlider('m-tempo')" class="w-16 text-center border bg-gray-50 rounded font-bold text-xl outline-none focus:border-indigo-500 py-1"><span class="text-xs font-bold text-gray-400 ml-1">/ 15</span></div>
-                            </div>
-                            <input type="range" id="slide-tempo" min="0" max="15" step="1" oninput="selaraskanInput('slide-tempo', 'm-tempo')" class="w-full cursor-pointer mt-2">
-                        </div>
-                    </div>
-
-                    <div class="border border-gray-200 rounded-xl p-4 bg-white shadow-sm">
-                        <h3 class="font-black text-indigo-800 mb-4 border-b pb-2 uppercase text-sm">🎭 Penyampaian (30%)</h3>
-                        <div class="mb-4">
-                            <div class="flex justify-between items-end mb-1">
-                                <label class="font-bold text-gray-700 text-base">3. Penghayatan & Emosi</label>
-                                <div><input type="number" id="m-penghayatan" min="0" max="15" oninput="selaraskanSlider('m-penghayatan')" class="w-16 text-center border bg-gray-50 rounded font-bold text-xl outline-none focus:border-indigo-500 py-1"><span class="text-xs font-bold text-gray-400 ml-1">/ 15</span></div>
-                            </div>
-                            <input type="range" id="slide-penghayatan" min="0" max="15" step="1" oninput="selaraskanInput('slide-penghayatan', 'm-penghayatan')" class="w-full cursor-pointer mt-2">
-                        </div>
-                        <div>
-                            <div class="flex justify-between items-end mb-1">
-                                <label class="font-bold text-gray-700 text-base">4. Kejelasan Sebutan Lirik</label>
-                                <div><input type="number" id="m-sebutan" min="0" max="15" oninput="selaraskanSlider('m-sebutan')" class="w-16 text-center border bg-gray-50 rounded font-bold text-xl outline-none focus:border-indigo-500 py-1"><span class="text-xs font-bold text-gray-400 ml-1">/ 15</span></div>
-                            </div>
-                            <input type="range" id="slide-sebutan" min="0" max="15" step="1" oninput="selaraskanInput('slide-sebutan', 'm-sebutan')" class="w-full cursor-pointer mt-2">
-                        </div>
-                    </div>
-
-                    <div class="border border-gray-200 rounded-xl p-4 bg-white shadow-sm">
-                        <h3 class="font-black text-indigo-800 mb-4 border-b pb-2 uppercase text-sm">✨ Penampilan Pentas (25%)</h3>
-                        <div class="mb-4">
-                            <div class="flex justify-between items-end mb-1">
-                                <label class="font-bold text-gray-700 text-base">5. Gaya Persembahan</label>
-                                <div><input type="number" id="m-gaya" min="0" max="15" oninput="selaraskanSlider('m-gaya')" class="w-16 text-center border bg-gray-50 rounded font-bold text-xl outline-none focus:border-indigo-500 py-1"><span class="text-xs font-bold text-gray-400 ml-1">/ 15</span></div>
-                            </div>
-                            <input type="range" id="slide-gaya" min="0" max="15" step="1" oninput="selaraskanInput('slide-gaya', 'm-gaya')" class="w-full cursor-pointer mt-2">
-                        </div>
-                        <div>
-                            <div class="flex justify-between items-end mb-1">
-                                <label class="font-bold text-gray-700 text-base">6. Pakaian & Imej</label>
-                                <div><input type="number" id="m-pakaian" min="0" max="10" oninput="selaraskanSlider('m-pakaian')" class="w-16 text-center border bg-gray-50 rounded font-bold text-xl outline-none focus:border-indigo-500 py-1"><span class="text-xs font-bold text-gray-400 ml-1">/ 10</span></div>
-                            </div>
-                            <input type="range" id="slide-pakaian" min="0" max="10" step="1" oninput="selaraskanInput('slide-pakaian', 'm-pakaian')" class="w-full cursor-pointer mt-2">
-                        </div>
-                    </div>
-
-                    <div class="border border-gray-200 rounded-xl p-4 bg-white shadow-sm">
-                        <h3 class="font-black text-indigo-800 mb-2 border-b pb-2 uppercase text-sm">📝 Komen & Reaksi</h3>
-                        <textarea id="m-komen" rows="2" class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:border-indigo-500 transition text-base text-gray-700 placeholder-gray-400" placeholder="Nota tambahan..."></textarea>
+                <div class="space-y-4">
+                    
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                        <h3 class="font-black text-slate-800 mb-5 border-b-2 border-slate-100 pb-2 uppercase tracking-wider text-sm flex items-center gap-2"><i class="fas fa-microphone-alt text-pink-500"></i> Vokal & Teknikal <span class="text-slate-400 font-bold text-xs ml-auto">Wajaran 45%</span></h3>
                         
-                        <div class="mt-4 text-center">
-                            <p class="text-sm font-bold text-gray-500 uppercase mb-2">Reaksi Anda:</p>
-                            <div class="flex justify-center gap-4">
-                                <button type="button" onclick="pilihEmoji('🔥')" id="emo-🔥" class="emoji-btn text-4xl p-2" title="Mantap!">🔥</button>
-                                <button type="button" onclick="pilihEmoji('😍')" id="emo-😍" class="emoji-btn text-4xl p-2" title="Sangat Suka!">😍</button>
-                                <button type="button" onclick="pilihEmoji('👍')" id="emo-👍" class="emoji-btn text-4xl p-2" title="Boleh Tahan">👍</button>
-                                <button type="button" onclick="pilihEmoji('😬')" id="emo-😬" class="emoji-btn text-4xl p-2" title="Perlu Banyak Usaha">😬</button>
+                        <div class="mb-6">
+                            <div class="flex justify-between items-end mb-2">
+                                <label class="font-bold text-slate-700 text-sm">1. Kualiti Vokal & Nada</label>
+                                <div class="flex items-center gap-1"><input type="number" id="m-vokal" min="0" max="30" oninput="selaraskanSlider('m-vokal')" class="w-16 text-center border-2 border-slate-200 bg-slate-50 rounded-lg font-black text-xl outline-none focus:border-pink-500 focus:bg-white py-1 transition text-slate-800"><span class="text-xs font-black text-slate-400">/ 30</span></div>
+                            </div>
+                            <input type="range" id="slide-vokal" min="0" max="30" step="1" oninput="selaraskanInput('slide-vokal', 'm-vokal')" class="w-full cursor-pointer">
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between items-end mb-2">
+                                <label class="font-bold text-slate-700 text-sm">2. Ketepatan Tempo</label>
+                                <div class="flex items-center gap-1"><input type="number" id="m-tempo" min="0" max="15" oninput="selaraskanSlider('m-tempo')" class="w-16 text-center border-2 border-slate-200 bg-slate-50 rounded-lg font-black text-xl outline-none focus:border-pink-500 focus:bg-white py-1 transition text-slate-800"><span class="text-xs font-black text-slate-400">/ 15</span></div>
+                            </div>
+                            <input type="range" id="slide-tempo" min="0" max="15" step="1" oninput="selaraskanInput('slide-tempo', 'm-tempo')" class="w-full cursor-pointer">
+                        </div>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                        <h3 class="font-black text-slate-800 mb-5 border-b-2 border-slate-100 pb-2 uppercase tracking-wider text-sm flex items-center gap-2"><i class="fas fa-theater-masks text-amber-500"></i> Penyampaian <span class="text-slate-400 font-bold text-xs ml-auto">Wajaran 30%</span></h3>
+                        
+                        <div class="mb-6">
+                            <div class="flex justify-between items-end mb-2">
+                                <label class="font-bold text-slate-700 text-sm">3. Penghayatan & Emosi</label>
+                                <div class="flex items-center gap-1"><input type="number" id="m-penghayatan" min="0" max="15" oninput="selaraskanSlider('m-penghayatan')" class="w-16 text-center border-2 border-slate-200 bg-slate-50 rounded-lg font-black text-xl outline-none focus:border-pink-500 focus:bg-white py-1 transition text-slate-800"><span class="text-xs font-black text-slate-400">/ 15</span></div>
+                            </div>
+                            <input type="range" id="slide-penghayatan" min="0" max="15" step="1" oninput="selaraskanInput('slide-penghayatan', 'm-penghayatan')" class="w-full cursor-pointer">
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between items-end mb-2">
+                                <label class="font-bold text-slate-700 text-sm">4. Kejelasan Sebutan Lirik</label>
+                                <div class="flex items-center gap-1"><input type="number" id="m-sebutan" min="0" max="15" oninput="selaraskanSlider('m-sebutan')" class="w-16 text-center border-2 border-slate-200 bg-slate-50 rounded-lg font-black text-xl outline-none focus:border-pink-500 focus:bg-white py-1 transition text-slate-800"><span class="text-xs font-black text-slate-400">/ 15</span></div>
+                            </div>
+                            <input type="range" id="slide-sebutan" min="0" max="15" step="1" oninput="selaraskanInput('slide-sebutan', 'm-sebutan')" class="w-full cursor-pointer">
+                        </div>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                        <h3 class="font-black text-slate-800 mb-5 border-b-2 border-slate-100 pb-2 uppercase tracking-wider text-sm flex items-center gap-2"><i class="fas fa-star text-indigo-500"></i> Penampilan Pentas <span class="text-slate-400 font-bold text-xs ml-auto">Wajaran 25%</span></h3>
+                        
+                        <div class="mb-6">
+                            <div class="flex justify-between items-end mb-2">
+                                <label class="font-bold text-slate-700 text-sm">5. Gaya Persembahan</label>
+                                <div class="flex items-center gap-1"><input type="number" id="m-gaya" min="0" max="15" oninput="selaraskanSlider('m-gaya')" class="w-16 text-center border-2 border-slate-200 bg-slate-50 rounded-lg font-black text-xl outline-none focus:border-pink-500 focus:bg-white py-1 transition text-slate-800"><span class="text-xs font-black text-slate-400">/ 15</span></div>
+                            </div>
+                            <input type="range" id="slide-gaya" min="0" max="15" step="1" oninput="selaraskanInput('slide-gaya', 'm-gaya')" class="w-full cursor-pointer">
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between items-end mb-2">
+                                <label class="font-bold text-slate-700 text-sm">6. Pakaian & Imej</label>
+                                <div class="flex items-center gap-1"><input type="number" id="m-pakaian" min="0" max="10" oninput="selaraskanSlider('m-pakaian')" class="w-16 text-center border-2 border-slate-200 bg-slate-50 rounded-lg font-black text-xl outline-none focus:border-pink-500 focus:bg-white py-1 transition text-slate-800"><span class="text-xs font-black text-slate-400">/ 10</span></div>
+                            </div>
+                            <input type="range" id="slide-pakaian" min="0" max="10" step="1" oninput="selaraskanInput('slide-pakaian', 'm-pakaian')" class="w-full cursor-pointer">
+                        </div>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                        <h3 class="font-black text-slate-800 mb-4 border-b-2 border-slate-100 pb-2 uppercase tracking-wider text-sm flex items-center gap-2"><i class="fas fa-comment-dots text-teal-500"></i> Ulasan & Reaksi</h3>
+                        
+                        <textarea id="m-komen" rows="2" class="w-full border-2 border-slate-200 rounded-xl p-4 focus:outline-none focus:border-pink-500 focus:ring-4 focus:ring-pink-100 transition text-sm text-slate-700 placeholder-slate-400 bg-slate-50 focus:bg-white" placeholder="Taip nota atau teguran membina di sini..."></textarea>
+                        
+                        <div class="mt-6 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 text-center">Pilih Reaksi Cepat:</p>
+                            <div class="flex justify-center gap-4 sm:gap-6">
+                                <button type="button" onclick="pilihEmoji('🔥')" id="emo-🔥" class="emoji-btn text-4xl p-2 bg-white rounded-full shadow-sm" title="Mantap!">🔥</button>
+                                <button type="button" onclick="pilihEmoji('😍')" id="emo-😍" class="emoji-btn text-4xl p-2 bg-white rounded-full shadow-sm" title="Sangat Suka!">😍</button>
+                                <button type="button" onclick="pilihEmoji('👍')" id="emo-👍" class="emoji-btn text-4xl p-2 bg-white rounded-full shadow-sm" title="Boleh Tahan">👍</button>
+                                <button type="button" onclick="pilihEmoji('😬')" id="emo-😬" class="emoji-btn text-4xl p-2 bg-white rounded-full shadow-sm" title="Kurang Menyengat">😬</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-indigo-900 border-t-4 border-amber-400 p-4 rounded-b-2xl shadow-xl">
-                <div class="flex justify-between items-center mb-4">
-                    <span class="text-white font-bold text-base uppercase">Jumlah Markah:</span>
-                    <div id="modal-total" class="text-5xl font-black text-amber-400 drop-shadow-md">0<span class="text-2xl text-amber-200">%</span></div>
+            <div class="bg-slate-900 border-t-8 border-pink-500 p-5 sm:p-6 rounded-b-[2rem]">
+                <div class="flex justify-between items-center mb-5 bg-slate-800/50 p-3 rounded-xl border border-slate-700">
+                    <span class="text-slate-300 font-bold text-sm uppercase tracking-widest">Markah Keseluruhan:</span>
+                    <div id="modal-total" class="text-5xl font-black text-white drop-shadow-md">0<span class="text-xl text-slate-400 ml-1">%</span></div>
                 </div>
-                <button onclick="hantarKeputusan()" class="w-full bg-green-500 hover:bg-green-400 text-indigo-950 text-xl font-black uppercase tracking-wider py-4 rounded-xl shadow-lg transition transform hover:scale-[1.02]">KUNCI MARKAH</button>
+                <button onclick="hantarKeputusan()" class="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-slate-900 text-lg font-black uppercase tracking-widest py-4 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.4)] transition transform hover:-translate-y-1 flex items-center justify-center gap-2">
+                    KUNCI KEPUTUSAN <i class="fas fa-lock"></i>
+                </button>
             </div>
         </div>
     </div>
 
-    <div id="modal-mesej" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-[100] hidden">
-        <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl modal-masuk flex flex-col overflow-hidden text-center border-t-4 border-indigo-500">
-            <div class="pt-8 pb-4">
-                <div id="mesej-ikon" class="text-7xl mb-4 drop-shadow-md">🔔</div>
-                <h2 id="mesej-tajuk" class="text-2xl font-black text-gray-800 uppercase tracking-wide">Tajuk</h2>
+    <div id="modal-mesej" class="fixed inset-0 bg-slate-900/90 backdrop-blur-sm flex items-center justify-center p-4 z-[100] hidden">
+        <div class="bg-white w-full max-w-sm rounded-[2rem] shadow-2xl modal-masuk flex flex-col overflow-hidden text-center">
+            <div class="bg-slate-50 pt-8 pb-6 border-b border-slate-100 relative">
+                <div id="mesej-ikon" class="text-6xl mb-3 drop-shadow-md">🔔</div>
+                <h2 id="mesej-tajuk" class="text-xl font-black text-slate-800 uppercase tracking-widest">Tajuk</h2>
             </div>
-            <div class="px-6 pb-8">
-                <p id="mesej-teks" class="text-gray-600 text-base font-medium whitespace-pre-line leading-relaxed">Mesej di sini</p>
+            <div class="p-6">
+                <p id="mesej-teks" class="text-slate-600 text-sm font-medium whitespace-pre-line leading-relaxed">Mesej di sini</p>
             </div>
-            <div class="bg-gray-50 p-4 flex gap-3 justify-center border-t border-gray-100">
-                <button id="btn-batal-mesej" class="hidden flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-black uppercase tracking-wider py-3 rounded-xl transition shadow-sm">Batal</button>
-                <button id="btn-ok-mesej" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-black uppercase tracking-wider py-3 rounded-xl shadow-md transition transform hover:scale-105">OK</button>
+            <div class="p-4 flex gap-3 justify-center bg-slate-50 border-t border-slate-100">
+                <button id="btn-batal-mesej" class="hidden flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-black uppercase tracking-wider py-3.5 rounded-xl transition text-sm">Batal</button>
+                <button id="btn-ok-mesej" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-black uppercase tracking-wider py-3.5 rounded-xl shadow-md transition transform hover:-translate-y-0.5 text-sm">Tutup</button>
             </div>
         </div>
     </div>
+
+    <footer class="mt-auto bg-slate-900 border-t border-slate-800 py-6 text-center z-10">
+        <div class="flex items-center justify-center gap-2 opacity-50 hover:opacity-100 transition duration-300 cursor-default">
+            <i class="fas fa-bolt text-amber-500"></i>
+            <span class="text-[10px] sm:text-xs font-black text-slate-300 uppercase tracking-[0.3em]">Powered by Spark Karaoke System</span>
+        </div>
+        <p class="text-[9px] text-slate-600 mt-2 tracking-widest uppercase">Created by pahanStudio © 2026</p>
+    </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -231,205 +280,140 @@
         const db = getFirestore(app);
         const IMGBB_API_KEY = "27983a3f2b483a2ff935c595affbefa8";
 
-        let namaHakimSemasa = "";
-        let idDocHakim = "";
-        let senaraiPesertaMemori = [];
-        let emojiPilihanSemasa = "";
-        let mesejCallback = null;
+        let namaHakimSemasa = ""; let idDocHakim = ""; let senaraiPesertaMemori = []; let emojiPilihanSemasa = ""; let mesejCallback = null;
 
-        // FUNGSI CUSTOM MODAL (Pengganti Alert & Confirm)
-        window.tunjukMesej = function(tajuk, teks, jenis = 'alert', ikon = '🔔', callback = null) {
+        window.tunjukMesej = function(tajuk, teks, jenis = 'alert', ikon = '🔔', warnaBgOk = 'bg-indigo-600', callback = null) {
             document.getElementById('mesej-tajuk').innerText = tajuk;
             document.getElementById('mesej-teks').innerText = teks;
             document.getElementById('mesej-ikon').innerText = ikon;
-
             const btnBatal = document.getElementById('btn-batal-mesej');
-            if(jenis === 'confirm') btnBatal.classList.remove('hidden');
-            else btnBatal.classList.add('hidden');
+            const btnOk = document.getElementById('btn-ok-mesej');
+            
+            btnOk.className = `flex-1 text-white font-black uppercase tracking-wider py-3.5 rounded-xl shadow-md transition transform hover:-translate-y-0.5 text-sm ${warnaBgOk}`;
+            
+            if(jenis === 'confirm') { btnBatal.classList.remove('hidden'); btnOk.innerText = "YA, PASTI"; }
+            else { btnBatal.classList.add('hidden'); btnOk.innerText = "TUTUP"; }
 
             mesejCallback = callback;
             document.getElementById('modal-mesej').classList.remove('hidden');
         }
 
-        document.getElementById('btn-ok-mesej').onclick = function() {
-            document.getElementById('modal-mesej').classList.add('hidden');
-            if(mesejCallback) mesejCallback(true);
-        };
-        document.getElementById('btn-batal-mesej').onclick = function() {
-            document.getElementById('modal-mesej').classList.add('hidden');
-            if(mesejCallback) mesejCallback(false);
-        };
+        document.getElementById('btn-ok-mesej').onclick = function() { document.getElementById('modal-mesej').classList.add('hidden'); if(mesejCallback) mesejCallback(true); };
+        document.getElementById('btn-batal-mesej').onclick = function() { document.getElementById('modal-mesej').classList.add('hidden'); if(mesejCallback) mesejCallback(false); };
 
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedIC = localStorage.getItem('hakim_ic');
-            if(savedIC) {
-                document.getElementById('input-ic').value = savedIC;
-                sahkanHakim(true);
-            }
-        });
+        window.addEventListener('DOMContentLoaded', () => { const savedIC = localStorage.getItem('hakim_ic'); if(savedIC) { document.getElementById('input-ic').value = savedIC; sahkanHakim(true); } });
 
         window.logKeluar = function() {
-            tunjukMesej("Log Keluar", "Adakah anda pasti untuk menamatkan sesi penjurian ini?", "confirm", "🚪", function(res) {
-                if(res) {
-                    localStorage.removeItem('hakim_ic');
-                    location.reload(); 
-                }
+            tunjukMesej("Log Keluar", "Tamatkan sesi penjurian ini?", "confirm", "🚪", "bg-rose-600 hover:bg-rose-700", function(res) {
+                if(res) { localStorage.removeItem('hakim_ic'); location.reload(); }
             });
         }
 
         window.sahkanHakim = async function(isAutoLogin = false) {
             const icInput = document.getElementById('input-ic').value.trim();
-            const btn = document.getElementById('btn-login');
-            const msg = document.getElementById('msg-login');
+            const btn = document.getElementById('btn-login'); const msg = document.getElementById('msg-login');
             
-            if(!isAutoLogin && icInput.length !== 12) {
-                msg.innerText = "Sila pastikan anda memasukkan tepat 12 digit nombor IC.";
-                msg.classList.remove('hidden');
-                setTimeout(() => msg.classList.add('hidden'), 4000);
-                return;
-            }
-
-            if(!isAutoLogin) btn.innerText = "Mengesahkan...";
+            if(!isAutoLogin && icInput.length !== 12) { msg.innerText = "Sila pastikan tepat 12 digit nombor IC."; msg.classList.remove('hidden'); setTimeout(() => msg.classList.add('hidden'), 4000); return; }
+            if(!isAutoLogin) btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Mengesahkan...`;
 
             const snap = await getDocs(query(collection(db, "hakim"), where("ic", "==", icInput)));
 
             if(!snap.empty) {
                 localStorage.setItem('hakim_ic', icInput);
-                let dataHakim = snap.docs[0].data();
-                namaHakimSemasa = dataHakim.nama;
-                idDocHakim = snap.docs[0].id;
-                
+                let dataHakim = snap.docs[0].data(); namaHakimSemasa = dataHakim.nama; idDocHakim = snap.docs[0].id;
                 if(dataHakim.gambar) document.getElementById('avatar-hakim').src = dataHakim.gambar;
-                
-                document.getElementById('skrin-login').classList.add('hidden');
-                document.getElementById('skrin-dashboard').classList.remove('hidden');
-                document.getElementById('bahagian-pengguna').classList.remove('hidden');
-                
-                document.getElementById('nama-hakim-besar').innerText = namaHakimSemasa; 
-                document.getElementById('label-hakim').innerText = namaHakimSemasa; 
-                
+                document.getElementById('skrin-login').classList.add('hidden'); document.getElementById('skrin-dashboard').classList.remove('hidden'); document.getElementById('bahagian-pengguna').classList.remove('hidden');
+                document.getElementById('nama-hakim-besar').innerText = namaHakimSemasa; document.getElementById('label-hakim').innerText = namaHakimSemasa; 
                 muatPesertaUntukDinilai();
             } else {
-                if(!isAutoLogin) {
-                    msg.innerText = "Akses Ditolak: Nombor IC tidak berdaftar.";
-                    msg.classList.remove('hidden');
-                    btn.innerHTML = `Sahkan Identiti <span class="text-xl">➔</span>`;
-                    setTimeout(() => msg.classList.add('hidden'), 4000);
-                } else {
-                    localStorage.removeItem('hakim_ic'); 
-                }
+                if(!isAutoLogin) { msg.innerText = "Akses Ditolak: Nombor IC tidak berdaftar."; msg.classList.remove('hidden'); btn.innerHTML = `Sahkan Identiti <i class="fas fa-arrow-right"></i>`; setTimeout(() => msg.classList.add('hidden'), 4000); } 
+                else localStorage.removeItem('hakim_ic'); 
             }
         }
 
         window.muatNaikAvatarHakim = async function(e) {
-            const fail = e.target.files[0];
-            if(!fail) return;
-            const ikon = document.getElementById('avatar-hakim');
-            ikon.style.opacity = "0.5"; 
-
-            const formData = new FormData();
-            formData.append('image', fail);
+            const fail = e.target.files[0]; if(!fail) return;
+            const ikon = document.getElementById('avatar-hakim'); ikon.style.opacity = "0.5"; 
+            const formData = new FormData(); formData.append('image', fail);
             try {
                 const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData });
-                const data = await res.json();
-                const urlGambar = data.data.url;
-                await updateDoc(doc(db, "hakim", idDocHakim), { gambar: urlGambar });
-                ikon.src = urlGambar;
-                tunjukMesej("Berjaya", "Gambar profil telah berjaya dikemaskini!", "alert", "📸");
-            } catch(err) { 
-                tunjukMesej("Ralat", "Gagal memuat naik gambar. Sila pastikan saiz tidak terlalu besar.", "alert", "❌");
-            }
+                const data = await res.json(); const urlGambar = data.data.url;
+                await updateDoc(doc(db, "hakim", idDocHakim), { gambar: urlGambar }); ikon.src = urlGambar;
+                tunjukMesej("Berjaya", "Gambar profil telah berjaya dikemaskini!", "alert", "📸", "bg-indigo-600");
+            } catch(err) { tunjukMesej("Ralat", "Gagal memuat naik gambar.", "alert", "❌", "bg-rose-600"); }
             ikon.style.opacity = "1";
         }
 
         window.muatPesertaUntukDinilai = async function() {
             const tahap = document.getElementById('pilih-tahap').value;
             const snap = await getDocs(query(collection(db, "peserta"), where("status", "==", tahap)));
-            
             senaraiPesertaMemori = [];
-            if(snap.empty) {
-                document.getElementById('senarai-peserta-body').innerHTML = `<div class="p-8 text-center text-gray-500 font-medium bg-white rounded-xl shadow-sm border border-gray-100">Tiada peserta dijumpai untuk pusingan ${tahap}.</div>`;
-                return;
-            }
+            if(snap.empty) { document.getElementById('senarai-peserta-body').innerHTML = `<div class="p-10 text-center text-slate-500 font-bold bg-white rounded-3xl shadow-sm border border-slate-200"><i class="far fa-folder-open text-4xl mb-3 text-slate-300"></i><br>Tiada peserta untuk pusingan ${tahap}.</div>`; return; }
             snap.forEach(d => { let p = d.data(); p.id = d.id; senaraiPesertaMemori.push(p); });
             renderSenaraiPeserta(); 
         }
 
         window.renderSenaraiPeserta = function() {
-            const tahap = document.getElementById('pilih-tahap').value;
-            const susunan = document.getElementById('pilih-susunan').value;
-            const jenisPaparan = document.getElementById('pilih-paparan').value;
-
-            let belumDinilai = [];
-            let sudahDinilai = [];
+            const tahap = document.getElementById('pilih-tahap').value; const susunan = document.getElementById('pilih-susunan').value; const jenisPaparan = document.getElementById('pilih-paparan').value;
+            let belumDinilai = []; let sudahDinilai = [];
 
             senaraiPesertaMemori.forEach(p => {
                 let mark = 0;
                 if(tahap === "Saringan" && p.markah_saringan && p.markah_saringan[namaHakimSemasa]) mark = p.markah_saringan[namaHakimSemasa];
                 if(tahap === "Final" && p.markah_final && p.markah_final[namaHakimSemasa]) mark = p.markah_final[namaHakimSemasa];
                 p.tempSortMark = mark;
-                
                 if (mark > 0) sudahDinilai.push(p); else belumDinilai.push(p);
             });
 
-            const fungsiSusun = (a, b) => {
-                if(susunan === "giliran") return a.no_giliran - b.no_giliran;
-                else return b.tempSortMark - a.tempSortMark;
-            };
+            const fungsiSusun = (a, b) => { if(susunan === "giliran") return a.no_giliran - b.no_giliran; else return b.tempSortMark - a.tempSortMark; };
             belumDinilai.sort(fungsiSusun); sudahDinilai.sort(fungsiSusun);
 
-            const bekasUtama = document.getElementById('senarai-peserta-body');
-            let htmlKemasukan = "";
+            const bekasUtama = document.getElementById('senarai-peserta-body'); let htmlKemasukan = "";
 
             if (jenisPaparan === 'kad') {
                 if(belumDinilai.length > 0) {
-                    htmlKemasukan += `<h3 class="font-black text-xl text-amber-600 uppercase mb-3 flex items-center gap-2 border-b-2 border-amber-200 pb-2">⏳ Belum Dinilai <span class="bg-amber-100 text-amber-800 text-sm px-2 py-1 rounded-full">${belumDinilai.length}</span></h3><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">`;
-                    belumDinilai.forEach(p => htmlKemasukan += binaKadPeserta(p, false));
-                    htmlKemasukan += `</div>`;
+                    htmlKemasukan += `<h3 class="font-black text-lg text-amber-500 uppercase mb-4 tracking-widest pl-2">⏳ Belum Dinilai <span class="bg-amber-100 text-amber-800 text-xs px-2.5 py-1 rounded-lg ml-2 shadow-sm">${belumDinilai.length}</span></h3><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">`;
+                    belumDinilai.forEach(p => htmlKemasukan += binaKadPeserta(p, false)); htmlKemasukan += `</div>`;
                 }
                 if(sudahDinilai.length > 0) {
-                    htmlKemasukan += `<h3 class="font-black text-xl text-green-600 uppercase mb-3 flex items-center gap-2 border-b-2 border-green-200 pb-2">✅ Selesai Dinilai <span class="bg-green-100 text-green-800 text-sm px-2 py-1 rounded-full">${sudahDinilai.length}</span></h3><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">`;
-                    sudahDinilai.forEach(p => htmlKemasukan += binaKadPeserta(p, true));
-                    htmlKemasukan += `</div>`;
+                    htmlKemasukan += `<h3 class="font-black text-lg text-emerald-500 uppercase mb-4 tracking-widest pl-2">✅ Selesai Dinilai <span class="bg-emerald-100 text-emerald-800 text-xs px-2.5 py-1 rounded-lg ml-2 shadow-sm">${sudahDinilai.length}</span></h3><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">`;
+                    sudahDinilai.forEach(p => htmlKemasukan += binaKadPeserta(p, true)); htmlKemasukan += `</div>`;
                 }
             } else {
                 if(belumDinilai.length > 0) {
-                    htmlKemasukan += `<h3 class="font-black text-xl text-amber-600 uppercase mb-3 flex items-center gap-2 border-b-2 border-amber-200 pb-2">⏳ Belum Dinilai <span class="bg-amber-100 text-amber-800 text-sm px-2 py-1 rounded-full">${belumDinilai.length}</span></h3>`;
-                    htmlKemasukan += `<div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 mb-8"><div class="overflow-x-auto"><table class="w-full text-left text-sm whitespace-nowrap"><thead><tr class="bg-gray-50 text-gray-600 border-b"><th class="p-4 font-bold text-center w-16">Giliran</th><th class="p-4 font-bold text-center w-16">Gambar</th><th class="p-4 font-bold">Nama Peserta</th><th class="p-4 font-bold text-center">Markah</th><th class="p-4 font-bold text-center w-32">Tindakan</th></tr></thead><tbody class="divide-y divide-gray-100">`;
-                    belumDinilai.forEach(p => htmlKemasukan += binaBarisJadual(p, false));
-                    htmlKemasukan += `</tbody></table></div></div>`;
+                    htmlKemasukan += `<h3 class="font-black text-lg text-amber-500 uppercase mb-4 tracking-widest pl-2">⏳ Belum Dinilai <span class="bg-amber-100 text-amber-800 text-xs px-2.5 py-1 rounded-lg ml-2 shadow-sm">${belumDinilai.length}</span></h3>`;
+                    htmlKemasukan += `<div class="bg-white rounded-3xl shadow-sm overflow-hidden border border-slate-200 mb-10"><div class="overflow-x-auto"><table class="w-full text-left text-sm whitespace-nowrap"><thead><tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-widest border-b border-slate-100"><th class="p-5 font-black text-center w-16">No</th><th class="p-5 font-black text-center w-16">Avatar</th><th class="p-5 font-black">Peserta</th><th class="p-5 font-black text-center">Skor</th><th class="p-5 font-black text-center w-32">Aksi</th></tr></thead><tbody class="divide-y divide-slate-100">`;
+                    belumDinilai.forEach(p => htmlKemasukan += binaBarisJadual(p, false)); htmlKemasukan += `</tbody></table></div></div>`;
                 }
                 if(sudahDinilai.length > 0) {
-                    htmlKemasukan += `<h3 class="font-black text-xl text-green-600 uppercase mb-3 flex items-center gap-2 border-b-2 border-green-200 pb-2">✅ Selesai Dinilai <span class="bg-green-100 text-green-800 text-sm px-2 py-1 rounded-full">${sudahDinilai.length}</span></h3>`;
-                    htmlKemasukan += `<div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 mb-8"><div class="overflow-x-auto"><table class="w-full text-left text-sm whitespace-nowrap"><thead><tr class="bg-gray-50 text-gray-600 border-b"><th class="p-4 font-bold text-center w-16">Giliran</th><th class="p-4 font-bold text-center w-16">Gambar</th><th class="p-4 font-bold">Nama Peserta</th><th class="p-4 font-bold text-center">Markah</th><th class="p-4 font-bold text-center w-32">Tindakan</th></tr></thead><tbody class="divide-y divide-gray-100">`;
-                    sudahDinilai.forEach(p => htmlKemasukan += binaBarisJadual(p, true));
-                    htmlKemasukan += `</tbody></table></div></div>`;
+                    htmlKemasukan += `<h3 class="font-black text-lg text-emerald-500 uppercase mb-4 tracking-widest pl-2">✅ Selesai Dinilai <span class="bg-emerald-100 text-emerald-800 text-xs px-2.5 py-1 rounded-lg ml-2 shadow-sm">${sudahDinilai.length}</span></h3>`;
+                    htmlKemasukan += `<div class="bg-white rounded-3xl shadow-sm overflow-hidden border border-slate-200 mb-10"><div class="overflow-x-auto"><table class="w-full text-left text-sm whitespace-nowrap"><thead><tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-widest border-b border-slate-100"><th class="p-5 font-black text-center w-16">No</th><th class="p-5 font-black text-center w-16">Avatar</th><th class="p-5 font-black">Peserta</th><th class="p-5 font-black text-center">Skor</th><th class="p-5 font-black text-center w-32">Aksi</th></tr></thead><tbody class="divide-y divide-slate-100">`;
+                    sudahDinilai.forEach(p => htmlKemasukan += binaBarisJadual(p, true)); htmlKemasukan += `</tbody></table></div></div>`;
                 }
             }
             bekasUtama.innerHTML = htmlKemasukan;
         }
 
         function binaKadPeserta(p, sudah) {
-            let imgTag = p.gambar ? `<img src="${p.gambar}" class="h-16 w-16 object-cover rounded-full border-2 border-gray-300 shadow-sm">` : `<div class="h-16 w-16 bg-gray-200 rounded-full flex items-center justify-center text-xs text-gray-500 font-bold border-2 border-gray-300">Tiada</div>`;
-            let tindakanBtn = sudah ? `<button onclick="bukaModalPenilaian('${p.id}')" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 py-3 rounded-xl font-bold text-lg transition mt-3">Edit Markah</button>` : `<button onclick="bukaModalPenilaian('${p.id}')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-black text-lg shadow-md transition mt-3 flex justify-center items-center gap-2">Buka Borang <i class="fas fa-chevron-right text-sm"></i></button>`;
+            let imgTag = p.gambar ? `<img src="${p.gambar}" class="h-16 w-16 md:h-20 md:w-20 object-cover rounded-full border-4 border-white shadow-md">` : `<div class="h-16 w-16 md:h-20 md:w-20 bg-slate-100 rounded-full flex items-center justify-center text-2xl text-slate-300 font-black border-4 border-white shadow-md"><i class="fas fa-user"></i></div>`;
+            let tindakanBtn = sudah ? `<button onclick="bukaModalPenilaian('${p.id}')" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 py-3.5 rounded-xl font-black text-sm uppercase tracking-wider transition mt-4"><i class="fas fa-pen text-xs mr-1"></i> Edit Markah</button>` : `<button onclick="bukaModalPenilaian('${p.id}')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3.5 rounded-xl font-black text-sm uppercase tracking-wider shadow-md transition mt-4 flex justify-center items-center gap-2"><i class="fas fa-clipboard-check"></i> Buka Borang</button>`;
 
             return `
-                <div class="bg-white p-5 rounded-2xl shadow-sm border-2 ${sudah ? 'border-green-300 opacity-90' : 'border-indigo-100'} hover:shadow-lg transition flex flex-col relative overflow-hidden">
-                    ${sudah ? `<div class="absolute top-0 right-0 bg-green-500 text-white text-base font-black px-4 py-1.5 rounded-bl-xl shadow-sm">${p.tempSortMark}%</div>` : ''}
-                    <div class="flex items-center gap-4 mb-2">
-                        <div class="relative flex-shrink-0">${imgTag}<span class="absolute -top-2 -left-2 ${sudah ? 'bg-green-600' : 'bg-indigo-600'} text-white text-sm font-black w-7 h-7 flex items-center justify-center rounded-full shadow-md border-2 border-white">${p.no_giliran}</span></div>
-                        <div class="flex-grow pt-2"><h4 class="font-black text-gray-800 uppercase text-xl leading-tight line-clamp-2">${p.nama} ${p.emojiReaksi ? p.emojiReaksi : ''}</h4></div>
+                <div class="bg-white p-6 rounded-[2rem] shadow-sm border ${sudah ? 'border-emerald-200 opacity-90' : 'border-slate-200'} hover:shadow-xl transition-shadow flex flex-col relative overflow-hidden group">
+                    ${sudah ? `<div class="absolute top-0 right-0 bg-emerald-500 text-white text-sm font-black px-5 py-2 rounded-bl-2xl shadow-sm tracking-widest">${p.tempSortMark}%</div>` : ''}
+                    <div class="flex items-center gap-5 mb-2">
+                        <div class="relative flex-shrink-0">${imgTag}<span class="absolute -bottom-2 right-0 ${sudah ? 'bg-emerald-500' : 'bg-slate-800'} text-white text-[10px] md:text-xs font-black px-2 py-0.5 rounded-md shadow-sm border border-white">#${p.no_giliran}</span></div>
+                        <div class="flex-grow pt-2"><h4 class="font-black text-slate-800 uppercase text-lg md:text-xl leading-tight line-clamp-2">${p.nama} ${p.emojiReaksi ? `<span class="inline-block scale-110 ml-1 drop-shadow-sm">${p.emojiReaksi}</span>` : ''}</h4></div>
                     </div>
                     ${tindakanBtn}
                 </div>`;
         }
 
         function binaBarisJadual(p, sudah) {
-            let imgTag = p.gambar ? `<img src="${p.gambar}" class="h-10 w-10 object-cover rounded-full mx-auto border border-gray-300 shadow-sm">` : `<div class="h-10 w-10 bg-gray-200 rounded-full mx-auto flex items-center justify-center text-[10px] text-gray-400">Tiada</div>`;
-            let tindakanBtn = sudah ? `<button onclick="bukaModalPenilaian('${p.id}')" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded font-bold transition">Edit</button>` : `<button onclick="bukaModalPenilaian('${p.id}')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded font-bold shadow-sm transition">Buka Borang</button>`;
+            let imgTag = p.gambar ? `<img src="${p.gambar}" class="h-12 w-12 object-cover rounded-full mx-auto border-2 border-white shadow-sm">` : `<div class="h-12 w-12 bg-slate-100 rounded-full mx-auto flex items-center justify-center text-slate-300 font-bold border-2 border-white shadow-sm"><i class="fas fa-user"></i></div>`;
+            let tindakanBtn = sudah ? `<button onclick="bukaModalPenilaian('${p.id}')" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 px-4 py-2.5 rounded-lg font-black text-xs uppercase tracking-wider transition">Edit</button>` : `<button onclick="bukaModalPenilaian('${p.id}')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-lg font-black text-xs uppercase tracking-wider shadow-sm transition">Nilai</button>`;
 
-            return `<tr class="hover:bg-indigo-50/50 transition"><td class="p-3 text-center font-black text-gray-500 text-lg">${p.no_giliran}</td><td class="p-3 text-center">${imgTag}</td><td class="p-3 font-bold text-gray-800 uppercase text-base">${p.nama} ${p.emojiReaksi ? p.emojiReaksi : ''}</td><td class="p-3 text-center font-black ${sudah ? 'text-indigo-600' : 'text-gray-300'} text-lg">${sudah ? p.tempSortMark + '%' : '-'}</td><td class="p-3 text-center">${tindakanBtn}</td></tr>`;
+            return `<tr class="hover:bg-indigo-50/30 transition-colors"><td class="p-5 text-center font-black text-slate-400 text-lg">#${p.no_giliran}</td><td class="p-5 text-center">${imgTag}</td><td class="p-5 font-black text-slate-700 uppercase text-sm">${p.nama} ${p.emojiReaksi ? p.emojiReaksi : ''}</td><td class="p-5 text-center font-black ${sudah ? 'text-emerald-500' : 'text-slate-300'} text-xl">${sudah ? p.tempSortMark + '%' : '-'}</td><td class="p-5 text-center">${tindakanBtn}</td></tr>`;
         }
 
         const inputIDs = ['vokal', 'tempo', 'penghayatan', 'sebutan', 'gaya', 'pakaian'];
@@ -437,17 +421,14 @@
 
         window.selaraskanInput = function(sliderId, inputId) { document.getElementById(inputId).value = document.getElementById(sliderId).value; kiraMarkahTotal(); }
         window.selaraskanSlider = function(inputId) {
-            let el = document.getElementById(inputId);
-            let max = parseInt(el.max);
+            let el = document.getElementById(inputId); let max = parseInt(el.max);
             if(el.value > max) el.value = max; if(el.value < 0 || el.value === "") el.value = 0;
-            document.getElementById('slide-' + inputId.split('-')[1]).value = el.value;
-            kiraMarkahTotal();
+            document.getElementById('slide-' + inputId.split('-')[1]).value = el.value; kiraMarkahTotal();
         }
 
         window.kiraMarkahTotal = function() {
-            let total = 0;
-            inputIDs.forEach(id => { total += (parseFloat(document.getElementById('m-' + id).value) || 0); });
-            document.getElementById('modal-total').innerHTML = `${total}<span class="text-2xl text-amber-200">%</span>`;
+            let total = 0; inputIDs.forEach(id => { total += (parseFloat(document.getElementById('m-' + id).value) || 0); });
+            document.getElementById('modal-total').innerHTML = `${total}<span class="text-xl text-white/50 ml-1">%</span>`;
             return total;
         }
 
@@ -458,36 +439,27 @@
         }
 
         window.bukaModalPenilaian = function(id) {
-            const p = senaraiPesertaMemori.find(x => x.id === id);
-            if(!p) return;
+            const p = senaraiPesertaMemori.find(x => x.id === id); if(!p) return;
 
             document.getElementById('modal-id-peserta').value = p.id;
-            document.getElementById('modal-giliran').innerText = `Giliran ${p.no_giliran}`;
+            document.getElementById('modal-giliran').innerText = `GILIRAN ${p.no_giliran}`;
             document.getElementById('modal-nama').innerText = p.nama;
             
             const imgContainer = document.getElementById('modal-gambar-container');
-            if(p.gambar) {
-                imgContainer.innerHTML = `<img src="${p.gambar}" class="h-12 w-12 object-cover rounded-full border-2 border-amber-400 shadow">`;
-                imgContainer.classList.remove('hidden');
-            } else imgContainer.classList.add('hidden');
+            if(p.gambar) { imgContainer.innerHTML = `<img src="${p.gambar}" class="h-14 w-14 md:h-16 md:w-16 object-cover rounded-full border-4 border-white/20 shadow-md">`; imgContainer.classList.remove('hidden'); } 
+            else imgContainer.classList.add('hidden');
 
-            inputIDs.forEach(id => {
-                document.getElementById('m-' + id).value = markahPertengahan[id];
-                document.getElementById('slide-' + id).value = markahPertengahan[id];
-            });
+            inputIDs.forEach(id => { document.getElementById('m-' + id).value = markahPertengahan[id]; document.getElementById('slide-' + id).value = markahPertengahan[id]; });
             kiraMarkahTotal();
 
-            let komenLama = "";
-            emojiPilihanSemasa = ""; 
+            let komenLama = ""; emojiPilihanSemasa = ""; 
             ['🔥','😍','👍','😬'].forEach(e => { document.getElementById('emo-' + e).classList.remove('aktif'); });
 
             const tahap = document.getElementById('pilih-tahap').value;
             if(tahap === "Saringan" && p.komen_saringan && p.komen_saringan[namaHakimSemasa]) {
-                komenLama = p.komen_saringan[namaHakimSemasa];
-                if(p.emoji_saringan && p.emoji_saringan[namaHakimSemasa]) pilihEmoji(p.emoji_saringan[namaHakimSemasa]);
+                komenLama = p.komen_saringan[namaHakimSemasa]; if(p.emoji_saringan && p.emoji_saringan[namaHakimSemasa]) pilihEmoji(p.emoji_saringan[namaHakimSemasa]);
             } else if(tahap === "Final" && p.komen_final && p.komen_final[namaHakimSemasa]) {
-                komenLama = p.komen_final[namaHakimSemasa];
-                if(p.emoji_final && p.emoji_final[namaHakimSemasa]) pilihEmoji(p.emoji_final[namaHakimSemasa]);
+                komenLama = p.komen_final[namaHakimSemasa]; if(p.emoji_final && p.emoji_final[namaHakimSemasa]) pilihEmoji(p.emoji_final[namaHakimSemasa]);
             }
             
             document.getElementById('m-komen').value = komenLama;
@@ -497,38 +469,23 @@
         window.tutupModal = function() { document.getElementById('modal-penilaian').classList.add('hidden'); }
 
         window.hantarKeputusan = async function() {
-            const total = kiraMarkahTotal();
-            const komen = document.getElementById('m-komen').value.trim();
-            const idPeserta = document.getElementById('modal-id-peserta').value;
-            const tahap = document.getElementById('pilih-tahap').value;
+            const total = kiraMarkahTotal(); const komen = document.getElementById('m-komen').value.trim();
+            const idPeserta = document.getElementById('modal-id-peserta').value; const tahap = document.getElementById('pilih-tahap').value;
 
             try {
-                const docRef = doc(db, "peserta", idPeserta);
-                const kemaskini = {};
+                const docRef = doc(db, "peserta", idPeserta); const kemaskini = {};
                 
-                if(tahap === "Saringan") {
-                    kemaskini[`markah_saringan.${namaHakimSemasa}`] = total;
-                    kemaskini[`komen_saringan.${namaHakimSemasa}`] = komen;
-                    kemaskini[`emoji_saringan.${namaHakimSemasa}`] = emojiPilihanSemasa;
-                } else {
-                    kemaskini[`markah_final.${namaHakimSemasa}`] = total;
-                    kemaskini[`komen_final.${namaHakimSemasa}`] = komen;
-                    kemaskini[`emoji_final.${namaHakimSemasa}`] = emojiPilihanSemasa;
-                }
+                if(tahap === "Saringan") { kemaskini[`markah_saringan.${namaHakimSemasa}`] = total; kemaskini[`komen_saringan.${namaHakimSemasa}`] = komen; kemaskini[`emoji_saringan.${namaHakimSemasa}`] = emojiPilihanSemasa; } 
+                else { kemaskini[`markah_final.${namaHakimSemasa}`] = total; kemaskini[`komen_final.${namaHakimSemasa}`] = komen; kemaskini[`emoji_final.${namaHakimSemasa}`] = emojiPilihanSemasa; }
 
-                const btn = event.currentTarget;
-                let textAsal = btn.innerText;
-                btn.innerText = "MENYIMPAN..."; btn.classList.add('opacity-50', 'pointer-events-none');
+                const btn = event.currentTarget; let textAsal = btn.innerHTML;
+                btn.innerHTML = `<i class="fas fa-circle-notch fa-spin mr-2"></i> MENYIMPAN...`; btn.classList.add('opacity-80', 'pointer-events-none');
                 
                 await updateDoc(docRef, kemaskini);
                 
-                btn.innerText = "BERJAYA DISIMPAN!"; btn.classList.remove('opacity-50', 'pointer-events-none');
-                setTimeout(() => {
-                    btn.innerText = textAsal;
-                    tutupModal();
-                    muatPesertaUntukDinilai(); 
-                }, 800);
-            } catch (err) { tunjukMesej("Ralat Sistem", "Gagal menyimpan markah: " + err.message, "alert", "⚠️", "text-red-500"); }
+                btn.innerHTML = `<i class="fas fa-check mr-2"></i> BERJAYA!`; 
+                setTimeout(() => { btn.innerHTML = textAsal; btn.classList.remove('opacity-80', 'pointer-events-none'); tutupModal(); muatPesertaUntukDinilai(); }, 600);
+            } catch (err) { tunjukMesej("Ralat Sistem", "Gagal menyimpan markah: " + err.message, "alert", "⚠️", "bg-rose-600"); }
         }
 
         window.sahkanSesiKeseluruhan = function() {
@@ -540,17 +497,14 @@
             });
             const jumlahSemua = senaraiPesertaMemori.length;
 
-            if(jumlahSemua === 0) return tunjukMesej("Perhatian", "Tiada peserta untuk dinilai pada tahap ini.", "alert", "ℹ️");
+            if(jumlahSemua === 0) return tunjukMesej("Perhatian", "Tiada peserta untuk dinilai pada tahap ini.", "alert", "ℹ️", "bg-indigo-600");
 
-            tunjukMesej("Sahkan Keputusan", `Anda telah menilai ${jumlahDinilai} daripada ${jumlahSemua} peserta.\n\nAdakah anda pasti untuk menghantar dan mengesahkan keputusan bagi sesi ini?`, "confirm", "✅", function(res) {
+            tunjukMesej("Kunci Sesi", `Anda telah menilai ${jumlahDinilai} daripada ${jumlahSemua} peserta.\n\nSahkan penghantaran untuk pusingan ini?`, "confirm", "🔒", "bg-emerald-600 hover:bg-emerald-700", function(res) {
                 if(res) {
-                    tunjukMesej("Penyertaan Direkod", `Terima Kasih Yang Berbahagia Juri ${namaHakimSemasa}!\n\nPenilaian anda untuk peringkat ${tahap} telah direkodkan ke pangkalan data utama.`, "alert", "🎉", "text-green-500", function() {
+                    tunjukMesej("Terima Kasih", `Rekod penjurian anda telah disahkan.\n\nKerjasama anda amat kami hargai.`, "alert", "🎉", "bg-indigo-600", function() {
                         if(tahap === "Saringan") {
-                            document.getElementById('pilih-tahap').value = "Final";
-                            muatPesertaUntukDinilai();
-                            tunjukMesej("Mod Ditukar", "Sistem kini berada dalam mod Peringkat Final.\nSila tunggu arahan urusetia untuk mula menilai finalis.", "alert", "🏆", "text-amber-500");
-                        } else {
-                            tunjukMesej("Penjurian Tamat", "Tugasan anda untuk malam ini telah selesai. Terima kasih atas kerjasama anda!", "alert", "💖", "text-pink-500");
+                            document.getElementById('pilih-tahap').value = "Final"; muatPesertaUntukDinilai();
+                            tunjukMesej("Mod Ditukar", "Sistem kini berada dalam mod Pusingan Final.\nSila bersedia untuk sesi malam nanti.", "alert", "🏆", "bg-amber-600 hover:bg-amber-700");
                         }
                     });
                 }
