@@ -6,7 +6,6 @@
     <title>Portal Penilaian Hakim</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        /* Animasi Modal & Slider */
         .modal-masuk { animation: slideUp 0.3s ease-out forwards; }
         @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         input[type=range] { accent-color: #4f46e5; }
@@ -14,53 +13,75 @@
 </head>
 <body class="bg-gray-100 font-sans antialiased text-gray-900 h-screen flex flex-col">
 
-    <nav class="bg-indigo-900 p-4 text-white shadow-lg z-10 sticky top-0">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold tracking-wider">🎙️ E-JURI KARAOKE</h1>
-            <div id="nama-pengguna" class="font-medium hidden">Hakim: <span id="label-hakim" class="text-amber-400 font-bold"></span></div>
-        </div>
-    </nav>
-
     <div id="skrin-login" class="flex-grow flex items-center justify-center p-4">
-        <div class="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full text-center border-t-4 border-indigo-600">
+        <div class="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full text-center border-t-4 border-indigo-600 relative overflow-hidden">
             <h2 class="text-2xl font-black text-gray-800 mb-2">Log Masuk Juri</h2>
-            <p class="text-sm text-gray-500 mb-6">Sila masukkan No. IC anda untuk mula menilai.</p>
-            <input type="text" id="input-ic" class="w-full border-2 border-gray-300 p-3 rounded-lg text-center text-lg font-bold tracking-widest mb-4 focus:outline-none focus:border-indigo-600 transition" placeholder="NO. IC (Tanpa Sempang)">
-            <button onclick="sahkanHakim()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg shadow-md transition-all">Sahkan Identiti ➔</button>
-            <p id="msg-login" class="text-red-500 mt-3 text-sm font-semibold hidden">No IC tidak dijumpai di dalam sistem.</p>
-        </div>
-    </div>
-
-    <div id="skrin-dashboard" class="hidden flex-grow flex flex-col p-4 sm:p-6 container mx-auto max-w-5xl">
-        
-        <div class="bg-white p-4 rounded-xl shadow-sm mb-6 flex flex-col sm:flex-row justify-between items-center gap-4 border-l-4 border-indigo-500">
-            <div><h3 class="font-bold text-gray-700">Senarai Peserta Untuk Dinilai:</h3></div>
-            <select id="pilih-tahap" onchange="muatPesertaUntukDinilai()" class="border border-indigo-200 bg-indigo-50 text-indigo-900 font-bold p-2 rounded outline-none cursor-pointer w-full sm:w-auto">
-                <option value="Saringan">Peringkat Saringan</option>
-                <option value="Final">Peringkat Final</option>
-            </select>
-        </div>
-
-        <div class="bg-white rounded-xl shadow-md overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm whitespace-nowrap">
-                    <thead>
-                        <tr class="bg-indigo-50 text-indigo-900 border-b border-indigo-100">
-                            <th class="p-4 font-bold text-center w-16">Giliran</th>
-                            <th class="p-4 font-bold">Nama Peserta</th>
-                            <th class="p-4 font-bold text-center">Status Borang</th>
-                            <th class="p-4 font-bold text-center">Markah Anda</th>
-                            <th class="p-4 font-bold text-center">Tindakan</th>
-                        </tr>
-                    </thead>
-                    <tbody id="senarai-peserta-body" class="divide-y divide-gray-100">
-                        </tbody>
-                </table>
+            <p class="text-sm text-gray-500 mb-6">Pengesahan identiti panel hakim.</p>
+            
+            <div class="relative">
+                <input type="text" id="input-ic" inputmode="numeric" maxlength="12" 
+                       oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                       class="w-full border-2 border-gray-300 p-3 rounded-lg text-center text-2xl font-bold tracking-[0.15em] mb-2 focus:outline-none focus:border-indigo-600 transition shadow-inner text-indigo-900" 
+                       placeholder="850101135566">
+                
+                <p class="text-xs text-indigo-500 font-bold mb-6 uppercase tracking-wider bg-indigo-50 py-1 rounded">Masukkan 12 Digit (Tanpa Sempang)</p>
             </div>
+
+            <button onclick="sahkanHakim()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg shadow-md transition-all text-lg flex justify-center items-center gap-2">
+                Sahkan Identiti <span class="text-xl">➔</span>
+            </button>
+            <p id="msg-login" class="text-red-500 mt-4 text-sm font-bold bg-red-50 p-2 rounded hidden"></p>
         </div>
     </div>
 
-    <div id="modal-penilaian" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 z-50 hidden">
+    <div id="skrin-dashboard" class="hidden flex-grow flex flex-col w-full">
+        
+        <div class="bg-indigo-900 pt-8 pb-10 px-4 text-center rounded-b-[40px] shadow-lg relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-full bg-white opacity-5"></div>
+            <p class="text-indigo-300 text-xs sm:text-sm uppercase tracking-[0.3em] font-bold mb-2">Panel Juri Profesional</p>
+            <h1 id="nama-hakim-besar" class="text-3xl sm:text-5xl font-black text-amber-400 drop-shadow-md uppercase tracking-wide">NAMA HAKIM</h1>
+        </div>
+
+        <div class="p-4 sm:p-6 container mx-auto max-w-5xl -mt-6 relative z-10">
+            
+            <div class="bg-white p-4 rounded-xl shadow-md mb-6 flex flex-col sm:flex-row justify-between items-center gap-4 border-l-4 border-amber-400">
+                <div><h3 class="font-bold text-gray-700 text-lg">Senarai Peserta Untuk Dinilai:</h3></div>
+                <select id="pilih-tahap" onchange="muatPesertaUntukDinilai()" class="border-2 border-indigo-200 bg-indigo-50 text-indigo-900 font-bold p-2.5 rounded-lg outline-none cursor-pointer w-full sm:w-auto shadow-sm">
+                    <option value="Saringan">Peringkat Saringan</option>
+                    <option value="Final">Peringkat Final</option>
+                </select>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm whitespace-nowrap">
+                        <thead>
+                            <tr class="bg-gray-50 text-gray-600 border-b border-gray-200">
+                                <th class="p-4 font-bold text-center w-16">Giliran</th>
+                                <th class="p-4 font-bold">Nama Peserta</th>
+                                <th class="p-4 font-bold text-center">Status Borang</th>
+                                <th class="p-4 font-bold text-center">Markah Anda</th>
+                                <th class="p-4 font-bold text-center">Tindakan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="senarai-peserta-body" class="divide-y divide-gray-100">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="mt-8 mb-12 bg-indigo-50 border border-indigo-100 p-6 rounded-2xl text-center shadow-sm">
+                <h3 class="text-lg font-black text-indigo-900 mb-2">Selesai Menilai Semua Peserta?</h3>
+                <p class="text-sm text-indigo-600 mb-4">Sahkan penghantaran markah untuk melengkapkan tugasan pusingan ini.</p>
+                <button onclick="sahkanSesiKeseluruhan()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-black px-8 py-3 rounded-full shadow-lg text-lg transition transform hover:scale-105 uppercase tracking-wide">
+                    Hantar Keputusan Keseluruhan
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="modal-penilaian" class="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 z-50 hidden">
         <div class="bg-gray-50 w-full max-w-2xl rounded-2xl shadow-2xl modal-masuk flex flex-col max-h-[95vh] sm:max-h-[90vh]">
             
             <div class="bg-indigo-700 p-4 sm:p-5 text-white flex justify-between items-center rounded-t-2xl shadow-md z-10">
@@ -72,79 +93,60 @@
             </div>
 
             <div class="p-4 sm:p-6 overflow-y-auto flex-grow relative">
-                
-                <div class="bg-white p-3 rounded-lg border border-gray-200 mb-6 shadow-sm">
-                    <p class="text-xs font-bold text-gray-500 uppercase mb-1">Lagu Pilihan</p>
-                    <div id="modal-lagu" class="text-sm font-semibold text-indigo-900"></div>
-                </div>
-
                 <input type="hidden" id="modal-id-peserta">
                 
                 <div class="space-y-5">
-                    
-                    <div class="border-2 border-indigo-100 rounded-xl p-4 bg-white shadow-sm">
+                    <div class="border border-gray-200 rounded-xl p-4 bg-white shadow-sm">
                         <h3 class="font-black text-indigo-800 mb-4 border-b pb-2 uppercase text-sm">🎙️ Vokal & Teknikal (45%)</h3>
-                        
                         <div class="mb-4">
                             <div class="flex justify-between items-end mb-1">
                                 <label class="font-bold text-gray-700 text-sm">1. Kualiti Vokal & Nada (Pitching)</label>
-                                <input type="number" id="m-vokal" min="0" max="30" value="0" oninput="selaraskanSlider('m-vokal')" class="w-16 text-center border bg-gray-50 rounded font-bold text-lg outline-none focus:border-indigo-500 py-1">
-                                <span class="text-xs font-bold text-gray-400">/ 30</span>
+                                <div><input type="number" id="m-vokal" min="0" max="30" oninput="selaraskanSlider('m-vokal')" class="w-16 text-center border bg-gray-50 rounded font-bold text-lg outline-none focus:border-indigo-500 py-1"><span class="text-xs font-bold text-gray-400 ml-1">/ 30</span></div>
                             </div>
-                            <input type="range" id="slide-vokal" min="0" max="30" value="0" step="1" oninput="selaraskanInput('slide-vokal', 'm-vokal')" class="w-full cursor-pointer">
+                            <input type="range" id="slide-vokal" min="0" max="30" step="1" oninput="selaraskanInput('slide-vokal', 'm-vokal')" class="w-full cursor-pointer">
                         </div>
-
                         <div>
                             <div class="flex justify-between items-end mb-1">
                                 <label class="font-bold text-gray-700 text-sm">2. Ketepatan Tempo & Rentak</label>
-                                <input type="number" id="m-tempo" min="0" max="15" value="0" oninput="selaraskanSlider('m-tempo')" class="w-16 text-center border bg-gray-50 rounded font-bold text-lg outline-none focus:border-indigo-500 py-1">
-                                <span class="text-xs font-bold text-gray-400">/ 15</span>
+                                <div><input type="number" id="m-tempo" min="0" max="15" oninput="selaraskanSlider('m-tempo')" class="w-16 text-center border bg-gray-50 rounded font-bold text-lg outline-none focus:border-indigo-500 py-1"><span class="text-xs font-bold text-gray-400 ml-1">/ 15</span></div>
                             </div>
-                            <input type="range" id="slide-tempo" min="0" max="15" value="0" step="1" oninput="selaraskanInput('slide-tempo', 'm-tempo')" class="w-full cursor-pointer">
+                            <input type="range" id="slide-tempo" min="0" max="15" step="1" oninput="selaraskanInput('slide-tempo', 'm-tempo')" class="w-full cursor-pointer">
                         </div>
                     </div>
 
-                    <div class="border-2 border-indigo-100 rounded-xl p-4 bg-white shadow-sm">
+                    <div class="border border-gray-200 rounded-xl p-4 bg-white shadow-sm">
                         <h3 class="font-black text-indigo-800 mb-4 border-b pb-2 uppercase text-sm">🎭 Penyampaian & Ekspresi (30%)</h3>
-                        
                         <div class="mb-4">
                             <div class="flex justify-between items-end mb-1">
                                 <label class="font-bold text-gray-700 text-sm">3. Penghayatan & Emosi</label>
-                                <input type="number" id="m-penghayatan" min="0" max="15" value="0" oninput="selaraskanSlider('m-penghayatan')" class="w-16 text-center border bg-gray-50 rounded font-bold text-lg outline-none focus:border-indigo-500 py-1">
-                                <span class="text-xs font-bold text-gray-400">/ 15</span>
+                                <div><input type="number" id="m-penghayatan" min="0" max="15" oninput="selaraskanSlider('m-penghayatan')" class="w-16 text-center border bg-gray-50 rounded font-bold text-lg outline-none focus:border-indigo-500 py-1"><span class="text-xs font-bold text-gray-400 ml-1">/ 15</span></div>
                             </div>
-                            <input type="range" id="slide-penghayatan" min="0" max="15" value="0" step="1" oninput="selaraskanInput('slide-penghayatan', 'm-penghayatan')" class="w-full cursor-pointer">
+                            <input type="range" id="slide-penghayatan" min="0" max="15" step="1" oninput="selaraskanInput('slide-penghayatan', 'm-penghayatan')" class="w-full cursor-pointer">
                         </div>
-
                         <div>
                             <div class="flex justify-between items-end mb-1">
                                 <label class="font-bold text-gray-700 text-sm">4. Kejelasan Sebutan Lirik</label>
-                                <input type="number" id="m-sebutan" min="0" max="15" value="0" oninput="selaraskanSlider('m-sebutan')" class="w-16 text-center border bg-gray-50 rounded font-bold text-lg outline-none focus:border-indigo-500 py-1">
-                                <span class="text-xs font-bold text-gray-400">/ 15</span>
+                                <div><input type="number" id="m-sebutan" min="0" max="15" oninput="selaraskanSlider('m-sebutan')" class="w-16 text-center border bg-gray-50 rounded font-bold text-lg outline-none focus:border-indigo-500 py-1"><span class="text-xs font-bold text-gray-400 ml-1">/ 15</span></div>
                             </div>
-                            <input type="range" id="slide-sebutan" min="0" max="15" value="0" step="1" oninput="selaraskanInput('slide-sebutan', 'm-sebutan')" class="w-full cursor-pointer">
+                            <input type="range" id="slide-sebutan" min="0" max="15" step="1" oninput="selaraskanInput('slide-sebutan', 'm-sebutan')" class="w-full cursor-pointer">
                         </div>
                     </div>
 
-                    <div class="border-2 border-indigo-100 rounded-xl p-4 bg-white shadow-sm">
+                    <div class="border border-gray-200 rounded-xl p-4 bg-white shadow-sm">
                         <h3 class="font-black text-indigo-800 mb-4 border-b pb-2 uppercase text-sm">✨ Penampilan Pentas (25%)</h3>
-                        
                         <div class="mb-4">
                             <div class="flex justify-between items-end mb-1">
                                 <label class="font-bold text-gray-700 text-sm">5. Gaya Persembahan (Showmanship)</label>
-                                <input type="number" id="m-gaya" min="0" max="15" value="0" oninput="selaraskanSlider('m-gaya')" class="w-16 text-center border bg-gray-50 rounded font-bold text-lg outline-none focus:border-indigo-500 py-1">
-                                <span class="text-xs font-bold text-gray-400">/ 15</span>
+                                <div><input type="number" id="m-gaya" min="0" max="15" oninput="selaraskanSlider('m-gaya')" class="w-16 text-center border bg-gray-50 rounded font-bold text-lg outline-none focus:border-indigo-500 py-1"><span class="text-xs font-bold text-gray-400 ml-1">/ 15</span></div>
                             </div>
-                            <input type="range" id="slide-gaya" min="0" max="15" value="0" step="1" oninput="selaraskanInput('slide-gaya', 'm-gaya')" class="w-full cursor-pointer">
+                            <input type="range" id="slide-gaya" min="0" max="15" step="1" oninput="selaraskanInput('slide-gaya', 'm-gaya')" class="w-full cursor-pointer">
                         </div>
-
                         <div>
                             <div class="flex justify-between items-end mb-1">
                                 <label class="font-bold text-gray-700 text-sm">6. Pakaian & Kesesuaian Imej</label>
-                                <input type="number" id="m-pakaian" min="0" max="10" value="0" oninput="selaraskanSlider('m-pakaian')" class="w-16 text-center border bg-gray-50 rounded font-bold text-lg outline-none focus:border-indigo-500 py-1">
-                                <span class="text-xs font-bold text-gray-400">/ 10</span>
+                                <div><input type="number" id="m-pakaian" min="0" max="10" oninput="selaraskanSlider('m-pakaian')" class="w-16 text-center border bg-gray-50 rounded font-bold text-lg outline-none focus:border-indigo-500 py-1"><span class="text-xs font-bold text-gray-400 ml-1">/ 10</span></div>
                             </div>
-                            <input type="range" id="slide-pakaian" min="0" max="10" value="0" step="1" oninput="selaraskanInput('slide-pakaian', 'm-pakaian')" class="w-full cursor-pointer">
+                            <input type="range" id="slide-pakaian" min="0" max="10" step="1" oninput="selaraskanInput('slide-pakaian', 'm-pakaian')" class="w-full cursor-pointer">
                         </div>
                     </div>
 
@@ -165,7 +167,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, getDocs, doc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // MASUKKAN CONFIG FIREBASE ANDA DI SINI
+        // GUNA CONFIG ANDA
         const firebaseConfig = {
             apiKey: "AIzaSyCwDP8KCl2r6QL1DOAQTMGx5-pcwub9mYM",
             authDomain: "kareoke-83a74.firebaseapp.com",
@@ -180,10 +182,17 @@
         let namaHakimSemasa = "";
         let senaraiPesertaMemori = [];
 
-        // 1. PENGESAHAN LOG MASUK
         window.sahkanHakim = async function() {
             const icInput = document.getElementById('input-ic').value.trim();
-            if(!icInput) return;
+            const msg = document.getElementById('msg-login');
+            
+            // VALIDASI TAMBAHAN: Mesti tepat 12 digit
+            if(icInput.length !== 12) {
+                msg.innerText = "Ralat: Sila pastikan anda memasukkan tepat 12 digit nombor IC.";
+                msg.classList.remove('hidden');
+                setTimeout(() => msg.classList.add('hidden'), 4000);
+                return;
+            }
 
             const snap = await getDocs(query(collection(db, "hakim"), where("ic", "==", icInput)));
 
@@ -191,17 +200,15 @@
                 namaHakimSemasa = snap.docs[0].data().nama;
                 document.getElementById('skrin-login').classList.add('hidden');
                 document.getElementById('skrin-dashboard').classList.remove('hidden');
-                document.getElementById('nama-pengguna').classList.remove('hidden');
-                document.getElementById('label-hakim').innerText = namaHakimSemasa;
+                document.getElementById('nama-hakim-besar').innerText = namaHakimSemasa; 
                 muatPesertaUntukDinilai();
             } else {
-                const msg = document.getElementById('msg-login');
+                msg.innerText = "Akses Ditolak: Nombor IC tidak berdaftar dalam sistem.";
                 msg.classList.remove('hidden');
-                setTimeout(() => msg.classList.add('hidden'), 3000);
+                setTimeout(() => msg.classList.add('hidden'), 4000);
             }
         }
 
-        // 2. PAPARAN SENARAI
         window.muatPesertaUntukDinilai = async function() {
             const tahap = document.getElementById('pilih-tahap').value;
             const snap = await getDocs(query(collection(db, "peserta"), where("status", "==", tahap)));
@@ -211,7 +218,7 @@
             tbody.innerHTML = "";
 
             if(snap.empty) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-gray-500 font-medium">Tiada peserta dijumpai untuk pusingan ini.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-gray-500 font-medium">Tiada peserta dijumpai untuk pusingan ${tahap}.</td></tr>`;
                 return;
             }
 
@@ -233,7 +240,7 @@
                     : `<span class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-bold border border-amber-200">⏳ Menunggu</span>`;
                 
                 let tindakanBtn = sudahDinilai
-                    ? `<button onclick="bukaModalPenilaian('${p.id}')" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-1 rounded font-bold text-sm shadow-sm transition">Edit Markah</button>`
+                    ? `<button onclick="bukaModalPenilaian('${p.id}')" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-1 rounded font-bold text-sm transition">Edit Markah</button>`
                     : `<button onclick="bukaModalPenilaian('${p.id}')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-1 rounded font-bold text-sm shadow-sm transition">Buka Borang</button>`;
 
                 tbody.innerHTML += `
@@ -248,8 +255,10 @@
             });
         }
 
-        // 3. PENGURUSAN BORANG (MODAL & SLIDER)
         const inputIDs = ['vokal', 'tempo', 'penghayatan', 'sebutan', 'gaya', 'pakaian'];
+        
+        // MARKAH PERTENGAHAN / DEFAULT SCORES (TOTAL = 50%)
+        const markahPertengahan = { vokal: 15, tempo: 7, penghayatan: 7, sebutan: 8, gaya: 8, pakaian: 5 };
 
         window.selaraskanInput = function(sliderId, inputId) {
             document.getElementById(inputId).value = document.getElementById(sliderId).value;
@@ -258,9 +267,8 @@
         window.selaraskanSlider = function(inputId) {
             let el = document.getElementById(inputId);
             let max = parseInt(el.max);
-            if(el.value > max) el.value = max; // Halang markah lebih dari had limit wajaran
+            if(el.value > max) el.value = max; 
             if(el.value < 0 || el.value === "") el.value = 0;
-            
             document.getElementById('slide-' + inputId.split('-')[1]).value = el.value;
             kiraMarkahTotal();
         }
@@ -280,16 +288,10 @@
             document.getElementById('modal-giliran').innerText = `Giliran ${p.no_giliran}`;
             document.getElementById('modal-nama').innerText = p.nama;
 
-            let senaraiLaguHTML = "";
-            if(p.lagu && p.lagu.length > 0) {
-                p.lagu.forEach(l => senaraiLaguHTML += `• ${l.tajuk}<br>`);
-            } else senaraiLaguHTML = "Tiada maklumat lagu dimasukkan";
-            document.getElementById('modal-lagu').innerHTML = senaraiLaguHTML;
-
-            // Reset markah ke 0 setiap kali borang baru dibuka
+            // Masukkan markah Auto-Pertengahan bila borang dibuka
             inputIDs.forEach(id => {
-                document.getElementById('m-' + id).value = 0;
-                document.getElementById('slide-' + id).value = 0;
+                document.getElementById('m-' + id).value = markahPertengahan[id];
+                document.getElementById('slide-' + id).value = markahPertengahan[id];
             });
             kiraMarkahTotal();
 
@@ -313,22 +315,52 @@
 
                 const btn = event.currentTarget;
                 let textAsal = btn.innerText;
-                btn.innerText = "MENYIMPAN...";
-                btn.classList.add('opacity-50');
+                btn.innerText = "MENYIMPAN..."; btn.classList.add('opacity-50');
                 
                 await updateDoc(docRef, kemaskini);
                 
-                btn.innerText = "BERJAYA DISIMPAN!";
-                btn.classList.remove('opacity-50');
-                
+                btn.innerText = "BERJAYA DISIMPAN!"; btn.classList.remove('opacity-50');
                 setTimeout(() => {
                     btn.innerText = textAsal;
                     tutupModal();
-                    muatPesertaUntukDinilai(); // Kemaskini jadual senarai
+                    muatPesertaUntukDinilai();
                 }, 800);
+            } catch (err) { alert("Ralat menghantar markah: " + err.message); }
+        }
 
-            } catch (err) {
-                alert("Ralat menghantar markah: " + err.message);
+        // FUNGSI PENGESAHAN KESELURUHAN & AUTO-TUKAR KE FINAL
+        window.sahkanSesiKeseluruhan = function() {
+            const tahap = document.getElementById('pilih-tahap').value;
+            
+            // Kira berapa peserta telah dinilai
+            let jumlahDinilai = 0;
+            senaraiPesertaMemori.forEach(p => {
+                if(tahap === "Saringan" && p.markah_saringan && p.markah_saringan[namaHakimSemasa]) jumlahDinilai++;
+                if(tahap === "Final" && p.markah_final && p.markah_final[namaHakimSemasa]) jumlahDinilai++;
+            });
+            
+            const jumlahSemua = senaraiPesertaMemori.length;
+
+            if(jumlahSemua === 0) {
+                alert("Tiada peserta untuk dinilai pada tahap ini.");
+                return;
+            }
+
+            // Pop-up Pengesahan
+            const mesejSahkan = `Anda telah menilai ${jumlahDinilai} daripada ${jumlahSemua} peserta untuk peringkat ${tahap}.\n\nAdakah anda pasti untuk menghantar dan mengesahkan keputusan bagi sesi ini?`;
+            
+            if(confirm(mesejSahkan)) {
+                // Ucapan Terima Kasih
+                alert(`Terima Kasih Yang Berbahagia Juri ${namaHakimSemasa}!\n\nPenilaian anda untuk peringkat ${tahap} telah direkodkan ke pangkalan data utama.`);
+                
+                // Jika Saringan, Auto Tukar ke Final
+                if(tahap === "Saringan") {
+                    document.getElementById('pilih-tahap').value = "Final";
+                    muatPesertaUntukDinilai();
+                    alert("Sistem kini ditukar ke mod Peringkat Final.\nSila tunggu arahan pihak urusetia untuk mula menilai finalis.");
+                } else {
+                    alert("Tugasan anda untuk Peringkat Final telah selesai. Terima kasih atas kerjasama anda sepanjang malam ini!");
+                }
             }
         }
     </script>
