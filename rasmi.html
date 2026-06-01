@@ -135,7 +135,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, getDocs, query } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // GUNA CONFIG FIREBASE ANDA
         const firebaseConfig = {
             apiKey: "AIzaSyCwDP8KCl2r6QL1DOAQTMGx5-pcwub9mYM",
             authDomain: "kareoke-83a74.firebaseapp.com",
@@ -157,7 +156,6 @@
         }
 
         window.tukarSubTab = function(subTabId, btnElemen, kumpulanBtnClass) {
-            // Sembunyikan sub-content dalam seksyen yang aktif sahaja
             const parents = btnElemen.closest('.tab-main-content');
             parents.querySelectorAll('.tab-sub-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(subTabId).classList.remove('hidden');
@@ -180,28 +178,40 @@
                     let p = d.data();
                     senaraiSemuaAsal.push(p);
 
-                    // Pengiraan Saringan (Di sebalik tabir, untuk ranking)
+                    // ============================================
+                    // KEMASKINI LOGIK: MASUKKAN SEMUA KE SARINGAN
+                    // ============================================
                     let totalS = 0, countS = 0;
                     if(p.markah_saringan) { for(let h in p.markah_saringan) { totalS += p.markah_saringan[h]; countS++; } }
-                    p.purataSaringan = countS > 0 ? (totalS / countS) : -1;
-                    if(p.purataSaringan > -1) saringanRanking.push(p);
+                    // Jika belum ada markah, set 0 supaya tetap ada dalam carta
+                    p.purataSaringan = countS > 0 ? (totalS / countS) : 0; 
+                    saringanRanking.push(p);
 
-                    // Pengiraan Final (Di sebalik tabir, untuk ranking juara)
+                    // Pengiraan Final 
                     let totalF = 0, countF = 0;
                     if(p.markah_final) { for(let h in p.markah_final) { totalF += p.markah_final[h]; countF++; } }
-                    p.purataFinal = countF > 0 ? (totalF / countF) : -1;
+                    p.purataFinal = countF > 0 ? (totalF / countF) : 0;
                     
                     if(p.status === 'Final') {
-                        finalisSenaraiGiliran.push(p); // Untuk senarai peserta final bertanding
-                        if(p.purataFinal > -1) finalRanking.push(p); // Untuk podium kemenangan
+                        finalisSenaraiGiliran.push(p);
+                        finalRanking.push(p); // Masukkan semua finalis ke podium ranking (walaupun 0 markah)
                     }
                 });
 
-                // Susun Atur Atas Pilihan
-                senaraiSemuaAsal.sort((a,b) => a.no_giliran - b.no_giliran); // Ikut No. Giliran Asal
-                finalisSenaraiGiliran.sort((a,b) => a.no_giliran - b.no_giliran); // Ikut No. Giliran Asal Finalis
-                saringanRanking.sort((a,b) => b.purataSaringan - a.purataSaringan); // Ranking Tertinggi Saringan
-                finalRanking.sort((a,b) => b.purataFinal - a.purataFinal); // Ranking Tertinggi Final
+                // Susun Atur
+                senaraiSemuaAsal.sort((a,b) => a.no_giliran - b.no_giliran); 
+                finalisSenaraiGiliran.sort((a,b) => a.no_giliran - b.no_giliran); 
+                
+                // Jika markah seri (cth: sama-sama 0 sebab juri belum nilai), susun ikut giliran
+                saringanRanking.sort((a,b) => {
+                    if (b.purataSaringan === a.purataSaringan) return a.no_giliran - b.no_giliran;
+                    return b.purataSaringan - a.purataSaringan;
+                }); 
+                
+                finalRanking.sort((a,b) => {
+                    if (b.purataFinal === a.purataFinal) return a.no_giliran - b.no_giliran;
+                    return b.purataFinal - a.purataFinal;
+                });
 
                 // Render ke UI
                 paparSenaraiSaringanPeserta(senaraiSemuaAsal);
@@ -224,7 +234,7 @@
                 let img = p.gambar ? `<img src="${p.gambar}" class="h-10 w-10 object-cover rounded border">` : `<div class="h-10 w-10 bg-slate-200 rounded text-xs flex items-center justify-center text-slate-500"><i class="fas fa-user"></i></div>`;
                 let tajukLagu = p.lagu && p.lagu[0] ? p.lagu[0].tajuk : "Tiada maklumat lagu";
                 tbody.innerHTML += `
-                    <tr>
+                    <tr class="hover:bg-slate-50">
                         <td class="p-4 text-center font-black text-slate-500 text-base">#${p.no_giliran}</td>
                         <td class="p-4 flex justify-center">${img}</td>
                         <td class="p-4 font-bold text-slate-800 uppercase">${p.nama}</td>
@@ -237,16 +247,17 @@
         function paparRankingSaringan(data) {
             const tbody = document.getElementById('tabel-ranking-saringan');
             tbody.innerHTML = "";
-            if(data.length === 0) { tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center">Carta ranking saringan belum bermula.</td></tr>`; return; }
+            if(data.length === 0) { tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center">Belum ada peserta didaftarkan.</td></tr>`; return; }
 
             data.forEach((p, index) => {
                 let img = p.gambar ? `<img src="${p.gambar}" class="h-10 w-10 object-cover rounded-full mx-auto border shadow-sm">` : `<div class="h-10 w-10 bg-slate-200 rounded-full mx-auto flex items-center justify-center text-[10px] text-slate-500"><i class="fas fa-user"></i></div>`;
+                
                 let badge = p.status === 'Final' 
                     ? `<span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-black uppercase"><i class="fas fa-star mr-1"></i> LAYAK KE FINAL</span>`
-                    : `<span class="text-slate-400 text-xs font-bold uppercase">Saringan</span>`;
+                    : (p.purataSaringan > 0 ? `<span class="text-slate-500 text-xs font-bold uppercase">Selesai Beraksi</span>` : `<span class="text-amber-500 text-xs font-bold uppercase"><i class="fas fa-hourglass-half mr-1"></i> Menunggu Keputusan</span>`);
 
                 tbody.innerHTML += `
-                    <tr class="${p.status === 'Final' ? 'bg-indigo-50/40' : ''} hover:bg-slate-50 transition">
+                    <tr class="${p.status === 'Final' ? 'bg-indigo-50/40' : ''} hover:bg-slate-50 transition border-b border-slate-100">
                         <td class="p-4 text-center font-black text-slate-600 text-lg">${index + 1}</td>
                         <td class="p-4 text-center">${img}</td>
                         <td class="p-4 font-black text-slate-800 uppercase">${p.nama}</td>
@@ -259,14 +270,13 @@
         function paparSenaraiFinalisPeserta(data) {
             const tbody = document.getElementById('tabel-senarai-finalis');
             tbody.innerHTML = "";
-            if(data.length === 0) { tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400">Menunggu keputusan Top 15 dari pusingan saringan selesai.</td></tr>`; return; }
+            if(data.length === 0) { tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400">Menunggu keputusan peserta Top 15 dari pusingan saringan.</td></tr>`; return; }
 
             data.forEach(p => {
                 let img = p.gambar ? `<img src="${p.gambar}" class="h-10 w-10 object-cover rounded border">` : `<div class="h-10 w-10 bg-slate-200 rounded text-xs flex items-center justify-center text-slate-500"><i class="fas fa-user"></i></div>`;
-                // Lagu peringkat final jika dimasukkan sebagai lagu kedua, jika tidak guna lagu sedia ada
                 let tajukLaguFinal = p.lagu && p.lagu[1] ? p.lagu[1].tajuk : (p.lagu && p.lagu[0] ? p.lagu[0].tajuk : "Tiada maklumat lagu");
                 tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 transition">
+                    <tr class="hover:bg-slate-50 transition border-b border-slate-100">
                         <td class="p-4 text-center font-black text-indigo-600 text-base">#${p.no_giliran}</td>
                         <td class="p-4 flex justify-center">${img}</td>
                         <td class="p-4 font-black text-slate-800 uppercase">${p.nama}</td>
@@ -281,7 +291,7 @@
             container.innerHTML = "";
 
             if(data.length === 0) {
-                container.innerHTML = `<div class="bg-white p-8 rounded-2xl shadow-sm text-center text-slate-400 border border-slate-200">Keputusan akhir pusingan Final belum dikeluarkan. Sila tunggu keputusan rasmi diumumkan!</div>`;
+                container.innerHTML = `<div class="bg-white p-8 rounded-2xl shadow-sm text-center text-slate-400 border border-slate-200">Belum ada peserta finalis yang dinilai.</div>`;
                 return;
             }
 
@@ -321,7 +331,7 @@
                             </div>
                         </div>`;
                 } else {
-                    card.className = "bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4 ml-0 md:ml-24";
+                    card.className = "bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4 ml-0 md:ml-24 mt-2";
                     let imgSmall = p.gambar ? `<img src="${p.gambar}" class="h-12 w-12 object-cover rounded-full border border-slate-200">` : `<div class="h-12 w-12 bg-slate-100 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 text-xs"><i class="fas fa-user"></i></div>`;
                     card.innerHTML = `
                         <div class="text-slate-400 font-black w-8 text-center text-lg">${index + 1}</div>
@@ -332,7 +342,6 @@
             });
         }
 
-        // Muat data utama bila skrin dibuka
         muatSistemKeputusan();
     </script>
 </body>
