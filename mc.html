@@ -27,17 +27,70 @@
         </div>
     </header>
 
-    <main class="container mx-auto p-4 max-w-4xl flex-grow mt-4 space-y-6">
+    <main class="container mx-auto p-4 max-w-5xl flex-grow mt-4 space-y-6">
         
-        <div class="grid grid-cols-2 gap-2 bg-slate-900/60 p-1.5 rounded-xl border border-slate-800 max-w-md mx-auto shadow-inner">
-            <button onclick="tukarTabMC('sesi-saringan', this)" class="tab-mc aktif px-4 py-2.5 text-sm sm:text-base font-bold uppercase rounded-lg text-slate-400 transition duration-200">🎤 Saringan (Petang)</button>
-            <button onclick="tukarTabMC('sesi-final', this)" class="tab-mc px-4 py-2.5 text-sm sm:text-base font-bold uppercase rounded-lg text-slate-400 transition duration-200">🏆 Final (Malam)</button>
+        <div class="grid grid-cols-3 gap-2 bg-slate-900/60 p-1.5 rounded-xl border border-slate-800 max-w-3xl mx-auto shadow-inner">
+            <button onclick="tukarTabMC('sesi-info', this)" class="tab-mc px-2 py-2.5 text-xs sm:text-sm font-bold uppercase rounded-lg text-slate-400 transition duration-200">ℹ️ Info Acara</button>
+            <button onclick="tukarTabMC('sesi-saringan', this)" class="tab-mc aktif px-2 py-2.5 text-xs sm:text-sm font-bold uppercase rounded-lg text-slate-400 transition duration-200">🎤 Saringan</button>
+            <button onclick="tukarTabMC('sesi-final', this)" class="tab-mc px-2 py-2.5 text-xs sm:text-sm font-bold uppercase rounded-lg text-slate-400 transition duration-200">🏆 Final</button>
         </div>
 
         <div class="text-right">
             <button onclick="muatDataMC()" class="text-xs bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 font-bold px-4 py-2 rounded-lg shadow transition">
                 <i class="fas fa-sync-alt mr-1"></i> Kemaskini Nota Komen
             </button>
+        </div>
+
+        <div id="sesi-info" class="tab-mc-content fade-in hidden space-y-6 max-w-3xl mx-auto">
+            
+            <div class="glass-mc p-6 rounded-2xl border-l-4 border-blue-500 shadow-lg">
+                <h2 class="text-xl sm:text-2xl font-black text-amber-400 mb-4 uppercase tracking-wide"><i class="fas fa-sitemap mr-2"></i> Format Pertandingan</h2>
+                <div class="space-y-4">
+                    <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-800">
+                        <h3 class="font-bold text-white text-lg mb-1"><span class="bg-blue-600 text-white px-2 py-1 rounded text-xs mr-2 uppercase">Sesi Petang</span> Pusingan Saringan</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">Semua peserta berdaftar akan mempersembahkan satu lagu pilihan mereka. Para juri akan menilai persembahan ini dan <b>hanya 15 peserta dengan purata markah tertinggi (Top 15)</b> akan dilayakkan untuk mara ke pusingan akhir pada sebelah malam.</p>
+                    </div>
+                    <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-800">
+                        <h3 class="font-bold text-white text-lg mb-1"><span class="bg-amber-600 text-white px-2 py-1 rounded text-xs mr-2 uppercase">Sesi Malam</span> Pusingan Final</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">Pentas kemuncak! 15 Finalis yang berjaya akan berentap semula. Kedudukan Johan, Naib Johan, dan Tempat Ketiga akan dinobatkan berdasarkan persembahan malam ini secara mutlak.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-mc p-6 rounded-2xl border-l-4 border-pink-500 shadow-lg">
+                <h2 class="text-xl sm:text-2xl font-black text-amber-400 mb-4 uppercase tracking-wide"><i class="fas fa-tasks mr-2"></i> Kriteria Penilaian Juri (100%)</h2>
+                <p class="text-slate-400 text-sm mb-4">Setiap persembahan akan dinilai secara profesional berdasarkan tiga aspek utama:</p>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-800">
+                        <div class="text-2xl mb-2">🎙️</div>
+                        <h4 class="font-black text-white mb-2 uppercase text-sm border-b border-slate-700 pb-2">Vokal & Teknikal <span class="text-amber-400">(45%)</span></h4>
+                        <ul class="text-slate-400 text-xs space-y-1">
+                            <li><i class="fas fa-check text-pink-500 mr-1"></i> Kualiti Vokal & Nada (30%)</li>
+                            <li><i class="fas fa-check text-pink-500 mr-1"></i> Ketepatan Tempo (15%)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-800">
+                        <div class="text-2xl mb-2">🎭</div>
+                        <h4 class="font-black text-white mb-2 uppercase text-sm border-b border-slate-700 pb-2">Penyampaian <span class="text-amber-400">(30%)</span></h4>
+                        <ul class="text-slate-400 text-xs space-y-1">
+                            <li><i class="fas fa-check text-pink-500 mr-1"></i> Penghayatan & Emosi (15%)</li>
+                            <li><i class="fas fa-check text-pink-500 mr-1"></i> Kejelasan Sebutan (15%)</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-800">
+                        <div class="text-2xl mb-2">✨</div>
+                        <h4 class="font-black text-white mb-2 uppercase text-sm border-b border-slate-700 pb-2">Penampilan <span class="text-amber-400">(25%)</span></h4>
+                        <ul class="text-slate-400 text-xs space-y-1">
+                            <li><i class="fas fa-check text-pink-500 mr-1"></i> Gaya Persembahan (15%)</li>
+                            <li><i class="fas fa-check text-pink-500 mr-1"></i> Pakaian & Imej (10%)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <div id="sesi-saringan" class="tab-mc-content fade-in block space-y-4">
@@ -93,7 +146,6 @@
             document.getElementById('konten-final').innerHTML = loaders;
 
             try {
-                // Tarik data mengikut susunan nombor giliran asal
                 const snap = await getDocs(query(collection(db, "peserta"), orderBy("no_giliran", "asc")));
                 
                 let htmlSaringan = "";
@@ -104,14 +156,12 @@
                 snap.forEach(d => {
                     let p = d.data();
                     
-                    // 1. Bina Elemen Nota Komen Saringan
                     let komenSaringanHTML = binaBlokKomen(p.komen_saringan, p.emoji_saringan);
                     let laguSaringan = p.lagu && p.lagu[0] ? p.lagu[0].tajuk : "Tiada maklumat lagu";
                     
                     htmlSaringan += binaKadMC(p, laguSaringan, komenSaringanHTML);
                     countSaringan++;
 
-                    // 2. Bina Elemen Nota Komen Final (Jika layak ke Final)
                     if(p.status === "Final") {
                         let komenFinalHTML = binaBlokKomen(p.komen_final, p.emoji_final);
                         let laguFinal = p.lagu && p.lagu[1] ? p.lagu[1].tajuk : (p.lagu && p.lagu[0] ? p.lagu[0].tajuk : "Tiada maklumat lagu");
@@ -132,7 +182,6 @@
             }
         }
 
-        // FUNGSI JANA KAD UNTUK MC
         function binaKadMC(p, tajukLagu, komenHTML) {
             let avatar = p.gambar 
                 ? `<img src="${p.gambar}" class="h-16 w-16 object-cover rounded-xl border border-slate-700 shadow-md">`
@@ -159,17 +208,14 @@
             `;
         }
 
-        // FUNGSI EKSTRAK KOMEN & EMOJI (TANPA NAMA HAKIM)
         function binaBlokKomen(komenMap, emojiMap) {
             let senaraiBlok = "";
             let adaKomen = false;
 
-            // Proses Komen Teks
             if(komenMap && Object.keys(komenMap).length > 0) {
                 let indeksKomen = 1;
                 for(let h in komenMap) {
                     if(komenMap[h].trim() !== "") {
-                        // Ambil emoji hakim tersebut jika ada
                         let emojiSatu = (emojiMap && emojiMap[h]) ? `<span class="text-lg bg-slate-800/80 px-2 py-0.5 rounded-md border border-slate-700 shadow-sm ml-2">${emojiMap[h]}</span>` : '';
                         
                         senaraiBlok += `
@@ -184,7 +230,6 @@
                 }
             }
 
-            // Jika juri tidak meninggalkan teks komen, tetapi ada tanda emoji reaksi sahaja
             if(!adaKomen && emojiMap && Object.keys(emojiMap).length > 0) {
                 let htmlEmojiSahaja = `<div class="flex flex-wrap gap-2 items-center text-sm text-slate-400 bg-slate-900/20 p-2 rounded-xl border border-slate-800/20"><span class="text-xs font-bold uppercase">Reaksi Juri:</span>`;
                 for(let h in emojiMap) {
@@ -197,7 +242,6 @@
             return adaKomen ? senaraiBlok : `<div class="text-slate-500 text-xs italic p-3 bg-slate-900/10 rounded-xl border border-dashed border-slate-800">Belum ada nota maklum balas daripada panel juri bagi pusingan ini.</div>`;
         }
 
-        // Jalankan sistem permulaan
         muatDataMC();
     </script>
 </body>
