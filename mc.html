@@ -8,7 +8,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         .bg-mc-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); }
-        .glass-mc { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .glass-mc { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.3s ease; }
+        .glass-mc.selesai { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(34, 197, 94, 0.4); opacity: 0.75; }
         .tab-mc.aktif { background-color: #f59e0b; color: #0f172a; font-weight: 900; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4); }
         .fade-in { animation: fadeIn 0.4s ease-in-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -37,7 +38,7 @@
 
         <div class="text-right">
             <button onclick="muatDataMC()" class="text-xs bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 font-bold px-4 py-2 rounded-lg shadow transition">
-                <i class="fas fa-sync-alt mr-1"></i> Kemaskini Nota Komen
+                <i class="fas fa-sync-alt mr-1"></i> Kemaskini Skrin
             </button>
         </div>
 
@@ -76,9 +77,11 @@
         </div>
 
         <div id="sesi-saringan" class="tab-mc-content fade-in block space-y-4">
-            <div class="text-center sm:text-left border-l-4 border-amber-500 pl-3 py-1 mb-4">
-                <h2 class="text-xl font-black uppercase tracking-wide">Aturcara Pusingan Saringan</h2>
-                <p class="text-xs text-slate-400">Nota ulasan juri dipaparkan secara langsung mengikut nombor giliran peserta.</p>
+            <div class="text-center sm:text-left border-l-4 border-amber-500 pl-3 py-1 mb-4 flex flex-col sm:flex-row justify-between items-center gap-2">
+                <div>
+                    <h2 class="text-xl font-black uppercase tracking-wide">Pusingan Saringan</h2>
+                    <p class="text-xs text-slate-400">Tandakan pada petak <b>"Selesai"</b> untuk menyimpan rekod peserta yang sudah beraksi.</p>
+                </div>
             </div>
             <div id="konten-saringan" class="space-y-4">
                 </div>
@@ -86,8 +89,8 @@
 
         <div id="sesi-final" class="tab-mc-content fade-in hidden space-y-4">
             <div class="text-center sm:text-left border-l-4 border-amber-500 pl-3 py-1 mb-4">
-                <h2 class="text-xl font-black uppercase tracking-wide">Aturcara Pusingan Final (Top 15)</h2>
-                <p class="text-xs text-slate-400">Senarai finalis yang dicalonkan berserta imbasan komen saringan & maklum balas juri terkini.</p>
+                <h2 class="text-xl font-black uppercase tracking-wide">Pusingan Final (Top 15)</h2>
+                <p class="text-xs text-slate-400">Tandakan pada petak <b>"Selesai"</b> untuk menyimpan rekod finalis yang sudah beraksi.</p>
             </div>
             <div id="konten-final" class="space-y-4">
                 </div>
@@ -101,7 +104,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // GUNA CONFIG FIREBASE ANDA
         const firebaseConfig = {
@@ -122,8 +125,8 @@
             btnElemen.classList.add('aktif');
         }
 
-        async function muatDataMC() {
-            const loaders = `<div class="text-center py-12 text-slate-400"><i class="fas fa-circle-notch fa-spin text-3xl mb-2 text-amber-500"></i><br>Menarik nota juri semasa...</div>`;
+        window.muatDataMC = async function() {
+            const loaders = `<div class="text-center py-12 text-slate-400"><i class="fas fa-circle-notch fa-spin text-3xl mb-2 text-amber-500"></i><br>Menarik pangkalan data terkini...</div>`;
             document.getElementById('konten-saringan').innerHTML = loaders;
             document.getElementById('konten-final').innerHTML = loaders;
 
@@ -135,32 +138,32 @@
 
                 snap.forEach(d => {
                     let p = d.data();
+                    p.id = d.id; // Simpan ID untuk rujukan update
                     
                     // 1. DATA SARINGAN
                     let komenSaringanHTML = binaBlokKomen(p.komen_saringan, p.emoji_saringan);
                     let laguSaringan = p.lagu && p.lagu[0] ? p.lagu[0].tajuk : "Tiada maklumat lagu";
+                    let tajukSaringanHTML = `<div class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-2"><i class="far fa-comments mr-1"></i> Nota Juri:</div>`;
                     
-                    let tajukSaringanHTML = `<div class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2"><i class="far fa-comments mr-1"></i> Nota & Ulasan Juri:</div>`;
-                    htmlSaringan += binaKadMC(p, laguSaringan, tajukSaringanHTML + komenSaringanHTML);
+                    htmlSaringan += binaKadMC(p, laguSaringan, tajukSaringanHTML + komenSaringanHTML, "Saringan", p.mc_selesai_saringan || false);
 
-                    // 2. DATA FINAL (DENGAN IMBASAN KEMBALI)
+                    // 2. DATA FINAL
                     if(p.status === "Final") {
                         let komenFinalHTML = binaBlokKomen(p.komen_final, p.emoji_final);
                         let laguFinal = p.lagu && p.lagu[1] ? p.lagu[1].tajuk : (p.lagu && p.lagu[0] ? p.lagu[0].tajuk : "Tiada maklumat lagu");
                         
-                        // Gabungkan Imbasan Saringan + Komen Final
                         let gabunganKomen = `
                             <div class="mb-4 bg-slate-800/30 p-3 rounded-xl border border-slate-700/50">
-                                <div class="text-[11px] text-amber-500 font-black uppercase tracking-widest mb-2"><i class="fas fa-history mr-1"></i> Imbasan Komen Saringan (Petang tadi):</div>
+                                <div class="text-[11px] text-amber-500 font-black uppercase tracking-widest mb-2"><i class="fas fa-history mr-1"></i> Imbasan Komen Saringan:</div>
                                 ${komenSaringanHTML}
                             </div>
                             <div class="pt-2">
-                                <div class="text-[11px] text-green-400 font-black uppercase tracking-widest mb-2"><i class="far fa-comments mr-1"></i> Ulasan Pusingan Final Terkini:</div>
+                                <div class="text-[11px] text-green-400 font-black uppercase tracking-widest mb-2"><i class="far fa-comments mr-1"></i> Ulasan Juri Final:</div>
                                 ${komenFinalHTML}
                             </div>
                         `;
                         
-                        htmlFinal += binaKadMC(p, laguFinal, gabunganKomen);
+                        htmlFinal += binaKadMC(p, laguFinal, gabunganKomen, "Final", p.mc_selesai_final || false);
                     }
                 });
 
@@ -175,29 +178,70 @@
             }
         }
 
-        function binaKadMC(p, tajukLagu, kandunganKomenHTML) {
+        // FUNGSI JANA KAD UNTUK MC BERSERTA BUTANG TICK (SELESAI)
+        function binaKadMC(p, tajukLagu, kandunganKomenHTML, tahap, sudahSelesai) {
             let avatar = p.gambar 
-                ? `<img src="${p.gambar}" class="h-16 w-16 object-cover rounded-xl border border-slate-700 shadow-md">`
-                : `<div class="h-16 w-16 bg-slate-800 rounded-xl border border-slate-700 text-slate-500 flex items-center justify-center text-xl"><i class="fas fa-user"></i></div>`;
+                ? `<img src="${p.gambar}" class="h-14 w-14 sm:h-16 sm:w-16 object-cover rounded-xl border border-slate-700 shadow-md">`
+                : `<div class="h-14 w-14 sm:h-16 sm:w-16 bg-slate-800 rounded-xl border border-slate-700 text-slate-500 flex items-center justify-center text-xl"><i class="fas fa-user"></i></div>`;
+
+            // Reka Bentuk Butang Selesai
+            let btnSelesai = sudahSelesai
+                ? `<button onclick="tandaSelesaiMC('${p.id}', '${tahap}', true)" class="w-full mt-3 bg-green-600/20 text-green-400 hover:bg-green-600/30 border border-green-500/50 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition"><i class="fas fa-check-circle mr-1"></i> Telah Beraksi (Batal)</button>`
+                : `<button onclick="tandaSelesaiMC('${p.id}', '${tahap}', false)" class="w-full mt-3 bg-indigo-600 hover:bg-indigo-500 text-white py-2 rounded-lg font-black text-xs uppercase tracking-wider shadow-md transition"><i class="far fa-circle mr-1"></i> Tanda Beraksi Selesai</button>`;
+
+            let classSelesai = sudahSelesai ? "selesai" : "";
 
             return `
-                <div class="glass-mc p-4 sm:p-5 rounded-2xl flex flex-col sm:flex-row gap-4 transform transition duration-200 hover:border-slate-700 fade-in">
+                <div class="glass-mc ${classSelesai} p-4 sm:p-5 rounded-2xl flex flex-col sm:flex-row gap-4 relative overflow-hidden">
+                    ${sudahSelesai ? `<div class="absolute -right-8 top-4 bg-green-600 text-white text-[10px] font-black py-1 px-10 transform rotate-45 shadow-sm uppercase tracking-widest z-10">Selesai</div>` : ''}
+
                     <div class="flex sm:flex-col items-center sm:items-start gap-4 sm:w-44 shrink-0 sm:border-r border-slate-800/60 sm:pr-4">
-                        <div class="relative">
-                            ${avatar}
-                            <span class="absolute -top-2 -left-2 bg-amber-500 text-slate-900 text-xs font-black h-6 w-6 rounded-full flex items-center justify-center shadow border border-slate-900">${p.no_giliran}</span>
+                        <div class="flex gap-4 items-center w-full">
+                            <div class="relative">
+                                ${avatar}
+                                <span class="absolute -top-2 -left-2 bg-amber-500 text-slate-900 text-xs font-black h-6 w-6 rounded-full flex items-center justify-center shadow border border-slate-900">${p.no_giliran}</span>
+                            </div>
+                            <div class="sm:hidden flex-grow">
+                                <h3 class="font-black uppercase text-amber-400 tracking-wide text-lg leading-tight line-clamp-2">${p.nama}</h3>
+                            </div>
                         </div>
-                        <div>
-                            <h3 class="font-black uppercase text-amber-400 tracking-wide text-lg sm:text-base leading-tight line-clamp-2">${p.nama}</h3>
-                            <p class="text-xs text-slate-400 font-medium italic mt-1 line-clamp-2"><i class="fas fa-music text-[10px] mr-1"></i>${tajukLagu}</p>
+                        
+                        <div class="hidden sm:block w-full">
+                            <h3 class="font-black uppercase text-amber-400 tracking-wide text-base leading-tight line-clamp-2">${p.nama}</h3>
+                        </div>
+
+                        <div class="w-full text-left sm:mt-1">
+                            <p class="text-xs text-slate-400 font-medium italic line-clamp-2"><i class="fas fa-music text-[10px] mr-1"></i>${tajukLagu}</p>
+                            ${btnSelesai}
                         </div>
                     </div>
                     
-                    <div class="flex-grow">
+                    <div class="flex-grow pt-2 sm:pt-0">
                         ${kandunganKomenHTML}
                     </div>
                 </div>
             `;
+        }
+
+        // FUNGSI KEMASKINI STATUS SELESAI KE DATABASE
+        window.tandaSelesaiMC = async function(idPeserta, tahap, statusSemasa) {
+            try {
+                // Halang double-click pantas
+                event.currentTarget.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Menyimpan...`;
+                event.currentTarget.classList.add('opacity-50', 'pointer-events-none');
+
+                const statusBaru = !statusSemasa;
+                const kemaskini = {};
+                
+                if(tahap === 'Saringan') { kemaskini.mc_selesai_saringan = statusBaru; }
+                else { kemaskini.mc_selesai_final = statusBaru; }
+
+                await updateDoc(doc(db, "peserta", idPeserta), kemaskini);
+                muatDataMC(); // Refresh UI untuk tunjuk pertukaran warna
+            } catch (err) {
+                alert("Ralat mengemaskini status: " + err.message);
+                muatDataMC();
+            }
         }
 
         function binaBlokKomen(komenMap, emojiMap) {
@@ -209,7 +253,6 @@
                 for(let h in komenMap) {
                     if(komenMap[h].trim() !== "") {
                         let emojiSatu = (emojiMap && emojiMap[h]) ? `<span class="text-lg bg-slate-800/80 px-2 py-0.5 rounded-md border border-slate-700 shadow-sm ml-2">${emojiMap[h]}</span>` : '';
-                        
                         senaraiBlok += `
                             <div class="bg-slate-900/60 p-2.5 rounded-lg border border-slate-800/60 text-sm flex items-start justify-between gap-3 text-slate-300 mb-2">
                                 <p class="leading-relaxed"><b class="text-amber-500/80 font-bold text-xs mr-2">JURI ${indeksKomen}:</b>"${komenMap[h]}"</p>
@@ -234,6 +277,7 @@
             return adaKomen ? senaraiBlok : `<div class="text-slate-500 text-[11px] italic p-2 bg-slate-900/10 rounded-lg border border-dashed border-slate-800/50">Belum ada nota maklum balas daripada panel juri bagi pusingan ini.</div>`;
         }
 
+        // Jalankan sistem permulaan
         muatDataMC();
     </script>
 </body>
