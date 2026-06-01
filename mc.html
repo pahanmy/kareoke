@@ -42,7 +42,6 @@
         </div>
 
         <div id="sesi-info" class="tab-mc-content fade-in hidden space-y-6 max-w-3xl mx-auto">
-            
             <div class="glass-mc p-6 rounded-2xl border-l-4 border-blue-500 shadow-lg">
                 <h2 class="text-xl sm:text-2xl font-black text-amber-400 mb-4 uppercase tracking-wide"><i class="fas fa-sitemap mr-2"></i> Format Pertandingan</h2>
                 <div class="space-y-4">
@@ -59,38 +58,21 @@
 
             <div class="glass-mc p-6 rounded-2xl border-l-4 border-pink-500 shadow-lg">
                 <h2 class="text-xl sm:text-2xl font-black text-amber-400 mb-4 uppercase tracking-wide"><i class="fas fa-tasks mr-2"></i> Kriteria Penilaian Juri (100%)</h2>
-                <p class="text-slate-400 text-sm mb-4">Setiap persembahan akan dinilai secara profesional berdasarkan tiga aspek utama:</p>
-                
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-800">
-                        <div class="text-2xl mb-2">🎙️</div>
-                        <h4 class="font-black text-white mb-2 uppercase text-sm border-b border-slate-700 pb-2">Vokal & Teknikal <span class="text-amber-400">(45%)</span></h4>
-                        <ul class="text-slate-400 text-xs space-y-1">
-                            <li><i class="fas fa-check text-pink-500 mr-1"></i> Kualiti Vokal & Nada (30%)</li>
-                            <li><i class="fas fa-check text-pink-500 mr-1"></i> Ketepatan Tempo (15%)</li>
-                        </ul>
+                        <h4 class="font-black text-white mb-2 uppercase text-sm border-b border-slate-700 pb-2">🎙️ Vokal & Teknikal <span class="text-amber-400">(45%)</span></h4>
+                        <ul class="text-slate-400 text-xs space-y-1"><li><i class="fas fa-check text-pink-500 mr-1"></i> Kualiti Vokal (30%)</li><li><i class="fas fa-check text-pink-500 mr-1"></i> Ketepatan Tempo (15%)</li></ul>
                     </div>
-                    
                     <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-800">
-                        <div class="text-2xl mb-2">🎭</div>
-                        <h4 class="font-black text-white mb-2 uppercase text-sm border-b border-slate-700 pb-2">Penyampaian <span class="text-amber-400">(30%)</span></h4>
-                        <ul class="text-slate-400 text-xs space-y-1">
-                            <li><i class="fas fa-check text-pink-500 mr-1"></i> Penghayatan & Emosi (15%)</li>
-                            <li><i class="fas fa-check text-pink-500 mr-1"></i> Kejelasan Sebutan (15%)</li>
-                        </ul>
+                        <h4 class="font-black text-white mb-2 uppercase text-sm border-b border-slate-700 pb-2">🎭 Penyampaian <span class="text-amber-400">(30%)</span></h4>
+                        <ul class="text-slate-400 text-xs space-y-1"><li><i class="fas fa-check text-pink-500 mr-1"></i> Penghayatan Emosi (15%)</li><li><i class="fas fa-check text-pink-500 mr-1"></i> Kejelasan Sebutan (15%)</li></ul>
                     </div>
-
                     <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-800">
-                        <div class="text-2xl mb-2">✨</div>
-                        <h4 class="font-black text-white mb-2 uppercase text-sm border-b border-slate-700 pb-2">Penampilan <span class="text-amber-400">(25%)</span></h4>
-                        <ul class="text-slate-400 text-xs space-y-1">
-                            <li><i class="fas fa-check text-pink-500 mr-1"></i> Gaya Persembahan (15%)</li>
-                            <li><i class="fas fa-check text-pink-500 mr-1"></i> Pakaian & Imej (10%)</li>
-                        </ul>
+                        <h4 class="font-black text-white mb-2 uppercase text-sm border-b border-slate-700 pb-2">✨ Penampilan <span class="text-amber-400">(25%)</span></h4>
+                        <ul class="text-slate-400 text-xs space-y-1"><li><i class="fas fa-check text-pink-500 mr-1"></i> Gaya Persembahan (15%)</li><li><i class="fas fa-check text-pink-500 mr-1"></i> Pakaian & Imej (10%)</li></ul>
                     </div>
                 </div>
             </div>
-
         </div>
 
         <div id="sesi-saringan" class="tab-mc-content fade-in block space-y-4">
@@ -105,7 +87,7 @@
         <div id="sesi-final" class="tab-mc-content fade-in hidden space-y-4">
             <div class="text-center sm:text-left border-l-4 border-amber-500 pl-3 py-1 mb-4">
                 <h2 class="text-xl font-black uppercase tracking-wide">Aturcara Pusingan Final (Top 15)</h2>
-                <p class="text-xs text-slate-400">Senarai finalis yang dicalonkan berserta maklum balas juri peringkat akhir.</p>
+                <p class="text-xs text-slate-400">Senarai finalis yang dicalonkan berserta imbasan komen saringan & maklum balas juri terkini.</p>
             </div>
             <div id="konten-final" class="space-y-4">
                 </div>
@@ -150,24 +132,35 @@
                 
                 let htmlSaringan = "";
                 let htmlFinal = "";
-                let countSaringan = 0;
-                let countFinal = 0;
 
                 snap.forEach(d => {
                     let p = d.data();
                     
+                    // 1. DATA SARINGAN
                     let komenSaringanHTML = binaBlokKomen(p.komen_saringan, p.emoji_saringan);
                     let laguSaringan = p.lagu && p.lagu[0] ? p.lagu[0].tajuk : "Tiada maklumat lagu";
                     
-                    htmlSaringan += binaKadMC(p, laguSaringan, komenSaringanHTML);
-                    countSaringan++;
+                    let tajukSaringanHTML = `<div class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2"><i class="far fa-comments mr-1"></i> Nota & Ulasan Juri:</div>`;
+                    htmlSaringan += binaKadMC(p, laguSaringan, tajukSaringanHTML + komenSaringanHTML);
 
+                    // 2. DATA FINAL (DENGAN IMBASAN KEMBALI)
                     if(p.status === "Final") {
                         let komenFinalHTML = binaBlokKomen(p.komen_final, p.emoji_final);
                         let laguFinal = p.lagu && p.lagu[1] ? p.lagu[1].tajuk : (p.lagu && p.lagu[0] ? p.lagu[0].tajuk : "Tiada maklumat lagu");
                         
-                        htmlFinal += binaKadMC(p, laguFinal, komenFinalHTML);
-                        countFinal++;
+                        // Gabungkan Imbasan Saringan + Komen Final
+                        let gabunganKomen = `
+                            <div class="mb-4 bg-slate-800/30 p-3 rounded-xl border border-slate-700/50">
+                                <div class="text-[11px] text-amber-500 font-black uppercase tracking-widest mb-2"><i class="fas fa-history mr-1"></i> Imbasan Komen Saringan (Petang tadi):</div>
+                                ${komenSaringanHTML}
+                            </div>
+                            <div class="pt-2">
+                                <div class="text-[11px] text-green-400 font-black uppercase tracking-widest mb-2"><i class="far fa-comments mr-1"></i> Ulasan Pusingan Final Terkini:</div>
+                                ${komenFinalHTML}
+                            </div>
+                        `;
+                        
+                        htmlFinal += binaKadMC(p, laguFinal, gabunganKomen);
                     }
                 });
 
@@ -182,7 +175,7 @@
             }
         }
 
-        function binaKadMC(p, tajukLagu, komenHTML) {
+        function binaKadMC(p, tajukLagu, kandunganKomenHTML) {
             let avatar = p.gambar 
                 ? `<img src="${p.gambar}" class="h-16 w-16 object-cover rounded-xl border border-slate-700 shadow-md">`
                 : `<div class="h-16 w-16 bg-slate-800 rounded-xl border border-slate-700 text-slate-500 flex items-center justify-center text-xl"><i class="fas fa-user"></i></div>`;
@@ -200,9 +193,8 @@
                         </div>
                     </div>
                     
-                    <div class="flex-grow space-y-2">
-                        <div class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1"><i class="far fa-comments mr-1"></i> Nota & Ulasan Maklum Balas Juri:</div>
-                        ${komenHTML}
+                    <div class="flex-grow">
+                        ${kandunganKomenHTML}
                     </div>
                 </div>
             `;
@@ -219,7 +211,7 @@
                         let emojiSatu = (emojiMap && emojiMap[h]) ? `<span class="text-lg bg-slate-800/80 px-2 py-0.5 rounded-md border border-slate-700 shadow-sm ml-2">${emojiMap[h]}</span>` : '';
                         
                         senaraiBlok += `
-                            <div class="bg-slate-900/40 p-3 rounded-xl border border-slate-800/40 text-sm flex items-start justify-between gap-3 text-slate-300">
+                            <div class="bg-slate-900/60 p-2.5 rounded-lg border border-slate-800/60 text-sm flex items-start justify-between gap-3 text-slate-300 mb-2">
                                 <p class="leading-relaxed"><b class="text-amber-500/80 font-bold text-xs mr-2">JURI ${indeksKomen}:</b>"${komenMap[h]}"</p>
                                 ${emojiSatu}
                             </div>
@@ -231,7 +223,7 @@
             }
 
             if(!adaKomen && emojiMap && Object.keys(emojiMap).length > 0) {
-                let htmlEmojiSahaja = `<div class="flex flex-wrap gap-2 items-center text-sm text-slate-400 bg-slate-900/20 p-2 rounded-xl border border-slate-800/20"><span class="text-xs font-bold uppercase">Reaksi Juri:</span>`;
+                let htmlEmojiSahaja = `<div class="flex flex-wrap gap-2 items-center text-sm text-slate-400 bg-slate-900/30 p-2 rounded-lg border border-slate-800/30"><span class="text-xs font-bold uppercase">Reaksi Juri:</span>`;
                 for(let h in emojiMap) {
                     if(emojiMap[h]) htmlEmojiSahaja += `<span class="text-xl p-1 bg-slate-800 rounded-md border border-slate-700 shadow">${emojiMap[h]}</span>`;
                 }
@@ -239,7 +231,7 @@
                 return htmlEmojiSahaja;
             }
 
-            return adaKomen ? senaraiBlok : `<div class="text-slate-500 text-xs italic p-3 bg-slate-900/10 rounded-xl border border-dashed border-slate-800">Belum ada nota maklum balas daripada panel juri bagi pusingan ini.</div>`;
+            return adaKomen ? senaraiBlok : `<div class="text-slate-500 text-[11px] italic p-2 bg-slate-900/10 rounded-lg border border-dashed border-slate-800/50">Belum ada nota maklum balas daripada panel juri bagi pusingan ini.</div>`;
         }
 
         muatDataMC();
