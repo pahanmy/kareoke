@@ -88,17 +88,24 @@
 
         <div id="tab-saringan" class="tab-content bg-white p-6 rounded-lg shadow-md hidden">
             <h2 class="text-2xl font-bold mb-2 text-slate-800">Carta Pusingan Saringan</h2>
-            <p class="text-sm text-gray-500 mb-4">Senarai keseluruhan peserta disusun mengikut markah tertinggi. Klik butang di bawah untuk menghantar 15 peserta teratas ke peringkat Final secara automatik.</p>
+            <p class="text-sm text-gray-500 mb-4">Senarai keseluruhan peserta disusun mengikut markah tertinggi. Jika ada finalis yang <b>tarik diri</b>, anda boleh batal kelayakan mereka di sini dan pilih peserta lain (cth: kedudukan 16) untuk masuk ke final.</p>
             
-            <div class="flex gap-2 mb-4">
+            <div class="flex flex-wrap gap-2 mb-4">
                 <button onclick="muatNaikCartaSaringan()" class="bg-slate-200 text-slate-800 px-4 py-2 rounded font-semibold text-sm">🔄 Kemaskini Carta</button>
-                <button onclick="autoPilihTop15()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded font-bold text-sm shadow-md">✨ Sahkan Top 15 ke Final</button>
+                <button onclick="autoPilihTop15()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded font-bold text-sm shadow-md">✨ Auto Sahkan Top 15 ke Final</button>
             </div>
             
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse text-sm">
                     <thead>
-                        <tr class="bg-gray-200"><th class="p-2 border text-center">Ked.</th><th class="p-2 border text-center">Giliran</th><th class="p-2 border">Nama</th><th class="p-2 border text-center">Purata Markah</th><th class="p-2 border text-center">Status</th></tr>
+                        <tr class="bg-gray-200">
+                            <th class="p-2 border text-center">Ked.</th>
+                            <th class="p-2 border text-center">Giliran</th>
+                            <th class="p-2 border">Nama</th>
+                            <th class="p-2 border text-center">Purata Markah</th>
+                            <th class="p-2 border text-center">Status</th>
+                            <th class="p-2 border text-center">Tindakan (Manual)</th>
+                        </tr>
                     </thead>
                     <tbody id="tabel-saringan"></tbody>
                 </table>
@@ -106,14 +113,14 @@
         </div>
 
         <div id="tab-finalis" class="tab-content bg-white p-6 rounded-lg shadow-md hidden">
-            <h2 class="text-2xl font-bold mb-2 text-indigo-700">Senarai 15 Finalis</h2>
+            <h2 class="text-2xl font-bold mb-2 text-indigo-700">Senarai Finalis</h2>
             <p class="text-sm text-gray-500 mb-4">Peserta di bawah ini telah disahkan untuk bersaing di peringkat Final. Hakim kini boleh menilai mereka di portal hakim.</p>
             <button onclick="muatSenaraiFinalis()" class="bg-indigo-100 text-indigo-800 px-4 py-2 rounded font-semibold text-sm mb-4">🔄 Refresh Finalis</button>
             
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse text-sm">
                     <thead>
-                        <tr class="bg-indigo-50 text-indigo-900 border-b border-indigo-200"><th class="p-3 border">Giliran Asal</th><th class="p-3 border text-center">Gambar</th><th class="p-3 border">Nama Peserta</th><th class="p-3 border">Tindakan</th></tr>
+                        <tr class="bg-indigo-50 text-indigo-900 border-b border-indigo-200"><th class="p-3 border text-center">Giliran Asal</th><th class="p-3 border text-center">Gambar</th><th class="p-3 border">Nama Peserta</th><th class="p-3 border text-center">Tindakan</th></tr>
                     </thead>
                     <tbody id="tabel-finalis"></tbody>
                 </table>
@@ -132,7 +139,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, orderBy, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // CONFIG FIREBASE ANDA
         const firebaseConfig = {
             apiKey: "AIzaSyCwDP8KCl2r6QL1DOAQTMGx5-pcwub9mYM",
             authDomain: "kareoke-83a74.firebaseapp.com",
@@ -158,7 +164,7 @@
             if(tabId === 'tab-keputusan') muatNaikKeputusanFinal();
         }
 
-        // --- PENGURUSAN PESERTA & GAMBAR (IMGBB) ---
+        // --- PENGURUSAN PESERTA & GAMBAR ---
         document.getElementById('form-peserta').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-submit-peserta');
@@ -168,9 +174,8 @@
 
             const idEdit = document.getElementById('edit-id-peserta').value;
             const nama = document.getElementById('nama-peserta').value;
-            let gambarUrl = document.getElementById('gambar-lama').value; // Ambil gambar lama jika ada
+            let gambarUrl = document.getElementById('gambar-lama').value; 
             
-            // Logik Muat Naik ImgBB
             const failGambar = document.getElementById('gambar-peserta').files[0];
             if(failGambar) {
                 const formData = new FormData();
@@ -178,20 +183,16 @@
                 try {
                     const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData });
                     const data = await res.json();
-                    gambarUrl = data.data.url; // Dapatkan link gambar terus
-                } catch(err) {
-                    alert("Ralat muat naik gambar. Peserta akan didaftarkan tanpa gambar baru.");
-                }
+                    gambarUrl = data.data.url; 
+                } catch(err) { alert("Ralat muat naik gambar. Peserta akan didaftarkan tanpa gambar baru."); }
             }
 
-            // Logik Pautan Lagu (Link kini tidak diwajibkan)
             let senaraiLagu = [];
             document.querySelectorAll('.item-lagu').forEach(el => {
                 const inputs = el.querySelectorAll('input');
                 if(inputs[0].value) senaraiLagu.push({ tajuk: inputs[0].value, link: inputs[1].value || "" });
             });
 
-            // Simpan ke Firestore
             try {
                 if(idEdit) {
                     await updateDoc(doc(db, "peserta", idEdit), { nama, gambar: gambarUrl, lagu: senaraiLagu });
@@ -204,7 +205,6 @@
                     alert("Peserta berjaya ditambah!");
                 }
                 
-                // Reset form
                 document.getElementById('form-peserta').reset();
                 document.getElementById('edit-id-peserta').value = "";
                 document.getElementById('gambar-lama').value = "";
@@ -237,14 +237,12 @@
         window.editPeserta = function(id, nama, gambar) {
             document.getElementById('edit-id-peserta').value = id;
             document.getElementById('nama-peserta').value = nama;
-            document.getElementById('gambar-lama').value = gambar; // Simpan rujukan gambar lama
+            document.getElementById('gambar-lama').value = gambar; 
             document.getElementById('btn-submit-peserta').innerText = "Kemaskini Peserta";
             window.scrollTo(0,0);
         }
 
-        window.padamPeserta = async function(id) {
-            if(confirm("Padam peserta ini?")) { await deleteDoc(doc(db, "peserta", id)); muatSenaraiPeserta(); }
-        }
+        window.padamPeserta = async function(id) { if(confirm("Padam peserta ini?")) { await deleteDoc(doc(db, "peserta", id)); muatSenaraiPeserta(); } }
 
         // --- PENGURUSAN HAKIM ---
         document.getElementById('form-hakim').addEventListener('submit', async (e) => {
@@ -260,8 +258,8 @@
         }
         window.padamHakim = async function(id) { if(confirm("Padam hakim?")) { await deleteDoc(doc(db, "hakim", id)); muatSenaraiHakim(); } }
 
-        // --- TAB 3: CARTA SARINGAN KESELURUHAN (Semua Peserta) ---
-        let senaraiSaringanGlobal = []; // Untuk simpan susunan saringan
+        // --- TAB 3: CARTA SARINGAN (Kini ada butang manual) ---
+        let senaraiSaringanGlobal = []; 
         
         window.muatNaikCartaSaringan = async function() {
             const snap = await getDocs(query(collection(db, "peserta")));
@@ -276,57 +274,66 @@
                 senaraiSaringanGlobal.push(data);
             });
             
-            // Susun markah dari tertinggi
             senaraiSaringanGlobal.sort((a,b) => b.purataSaringan - a.purataSaringan);
-            
             const tbody = document.getElementById('tabel-saringan'); tbody.innerHTML = "";
+            
             senaraiSaringanGlobal.forEach((p, index) => {
                 let isTop15 = index < 15;
-                let bgClass = isTop15 ? "bg-amber-50" : "";
-                let statusBadge = p.status === 'Final' ? `<span class="bg-green-600 text-white px-2 py-1 rounded text-xs font-bold">Sah Final</span>` : (isTop15 ? `<span class="bg-amber-200 text-amber-800 px-2 py-1 rounded text-xs font-bold">Top 15</span>` : `<span class="text-gray-400 text-xs">Luar Carta</span>`);
+                let bgClass = p.status === 'Final' ? "bg-green-50" : (isTop15 ? "bg-amber-50" : "");
+                let statusBadge = p.status === 'Final' 
+                    ? `<span class="bg-green-600 text-white px-2 py-1 rounded text-xs font-bold">Telah Ke Final</span>` 
+                    : (isTop15 ? `<span class="bg-amber-200 text-amber-800 px-2 py-1 rounded text-xs font-bold">Top 15</span>` : `<span class="text-gray-400 text-xs font-medium">Luar Carta</span>`);
+
+                // BUTANG KAWALAN INDIVIDU (Manual Control)
+                let butangTindakan = p.status === 'Final'
+                    ? `<button onclick="tukarStatusPeserta('${p.id}', 'Saringan')" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs font-bold shadow-sm">Batal (Tarik Diri)</button>`
+                    : `<button onclick="tukarStatusPeserta('${p.id}', 'Final')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs font-bold shadow-sm">Pilih Ke Final</button>`;
 
                 tbody.innerHTML += `
-                    <tr class="${bgClass} border-b">
+                    <tr class="${bgClass} border-b hover:bg-slate-100">
                         <td class="p-2 text-center font-black ${isTop15 ? 'text-amber-600' : 'text-gray-400'}">${index+1}</td>
                         <td class="p-2 text-center text-gray-500">${p.no_giliran}</td>
                         <td class="p-2 font-bold uppercase">${p.nama}</td>
                         <td class="p-2 text-center font-bold text-indigo-700">${p.purataSaringan.toFixed(2)}%</td>
                         <td class="p-2 text-center">${statusBadge}</td>
+                        <td class="p-2 text-center">${butangTindakan}</td>
                     </tr>`;
             });
+        }
+
+        // Fungsi Kemaskini Manual Individu (Naik / Turun pangkat)
+        window.tukarStatusPeserta = async function(id, statusBaru) {
+            let msg = statusBaru === 'Final' ? "Naikkan peserta ini ke pusingan Final?" : "Batalkan kelayakan peserta ini (Tarik Diri) dan turunkan ke Saringan?";
+            if(confirm(msg)) {
+                await updateDoc(doc(db, "peserta", id), { status: statusBaru });
+                muatNaikCartaSaringan(); // Refresh Carta Saringan
+            }
         }
 
         // FUNGSI AUTO-PILIH TOP 15
         window.autoPilihTop15 = async function() {
             if(senaraiSaringanGlobal.length === 0) return alert("Sila kemaskini carta saringan dahulu.");
             
-            if(confirm("Tindakan ini akan mengesahkan kedudukan 15 peserta teratas ke peringkat Final. Teruskan?")) {
+            if(confirm("Tindakan ini akan mengesahkan kedudukan 15 peserta teratas ke peringkat Final secara automatik. Teruskan?")) {
                 const batch = writeBatch(db);
-                
-                // Ambil 15 teratas dan tukar status ke Final, selebihnya kekal/Tersingkir
                 senaraiSaringanGlobal.forEach((p, index) => {
                     const docRef = doc(db, "peserta", p.id);
-                    if(index < 15) {
-                        batch.update(docRef, { status: "Final" });
-                    } else {
-                        batch.update(docRef, { status: "Saringan" }); // Boleh tukar ke "Tersingkir" jika mahu
-                    }
+                    if(index < 15) { batch.update(docRef, { status: "Final" }); } 
+                    else { batch.update(docRef, { status: "Saringan" }); }
                 });
-
                 await batch.commit();
                 alert("Berjaya! 15 Peserta telah dihantar ke Senarai Finalis.");
                 muatNaikCartaSaringan();
             }
         }
 
-        // --- TAB 4: SENARAI FINALIS (PENGURUSAN) ---
+        // --- TAB 4: SENARAI FINALIS ---
         window.muatSenaraiFinalis = async function() {
             const snap = await getDocs(query(collection(db, "peserta"), where("status", "==", "Final")));
             const tbody = document.getElementById('tabel-finalis'); tbody.innerHTML = "";
             let finalis = [];
             snap.forEach(d => { let p = d.data(); p.id = d.id; finalis.push(p); });
             
-            // Susun ikut nombor giliran asal supaya mudah diurus
             finalis.sort((a,b) => a.no_giliran - b.no_giliran);
 
             if(finalis.length === 0) tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">Belum ada finalis disahkan.</td></tr>`;
@@ -338,16 +345,9 @@
                         <td class="p-3 text-center font-bold text-gray-500">${p.no_giliran}</td>
                         <td class="p-3 flex justify-center">${imgTag}</td>
                         <td class="p-3 font-black text-indigo-900 uppercase">${p.nama}</td>
-                        <td class="p-3"><button onclick="batalFinalis('${p.id}')" class="text-red-500 hover:text-red-700 text-xs font-bold bg-red-50 px-2 py-1 rounded">Batal Kelayakan</button></td>
+                        <td class="p-3 text-center"><button onclick="tukarStatusPeserta('${p.id}', 'Saringan')" class="text-red-500 hover:text-red-700 text-xs font-bold bg-red-50 border border-red-200 px-3 py-1 rounded shadow-sm">Batal Kelayakan</button></td>
                     </tr>`;
             });
-        }
-
-        window.batalFinalis = async function(id) {
-            if(confirm("Gugurkan peserta ini dari peringkat Final?")) {
-                await updateDoc(doc(db, "peserta", id), { status: "Saringan" });
-                muatSenaraiFinalis();
-            }
         }
 
         // --- TAB 5: KEPUTUSAN MUKTAMAD FINAL ---
