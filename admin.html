@@ -17,16 +17,16 @@
         <div class="container mx-auto flex flex-wrap justify-between items-center">
             <h1 class="text-xl font-bold tracking-wider text-amber-400">⚙️ PUSAT KAWALAN ADMIN</h1>
             <div class="flex space-x-2 mt-2 sm:mt-0 flex-wrap">
-                <button onclick="tukarTab('tab-daftar-peserta')" class="px-3 py-1 rounded hover:bg-slate-700 bg-slate-900 text-sm font-medium">1. Urus Peserta</button>
-                <button onclick="tukarTab('tab-daftar-hakim')" class="px-3 py-1 rounded hover:bg-slate-700 text-sm font-medium">2. Urus Hakim</button>
-                <button onclick="tukarTab('tab-saringan')" class="px-3 py-1 rounded hover:bg-slate-700 text-sm font-medium">3. Carta Saringan</button>
-                <button onclick="tukarTab('tab-finalis')" class="px-3 py-1 rounded hover:bg-slate-700 text-sm font-medium">4. Senarai Finalis (Top 15)</button>
-                <button onclick="tukarTab('tab-keputusan')" class="px-3 py-1 rounded hover:bg-slate-700 text-sm font-medium">5. Keputusan Final</button>
+                <button onclick="ttukartab('tab-daftar-peserta')" class="px-3 py-1 rounded hover:bg-slate-700 bg-slate-900 text-sm font-medium">1. Urus Peserta</button>
+                <button onclick="ttukartab('tab-daftar-hakim')" class="px-3 py-1 rounded hover:bg-slate-700 text-sm font-medium">2. Urus Hakim</button>
+                <button onclick="ttukartab('tab-saringan')" class="px-3 py-1 rounded hover:bg-slate-700 text-sm font-medium">3. Carta Saringan</button>
+                <button onclick="ttukartab('tab-finalis')" class="px-3 py-1 rounded hover:bg-slate-700 text-sm font-medium">4. Senarai Finalis (Top 15)</button>
+                <button onclick="ttukartab('tab-keputusan')" class="px-3 py-1 rounded hover:bg-slate-700 text-sm font-medium">5. Keputusan Final</button>
             </div>
         </div>
     </nav>
 
-    <div class="container mx-auto p-4 max-w-6xl mt-4 flex-grow relative z-0">
+    <div class="container mx-auto p-4 max-w-5xl flex-grow mt-4 relative z-0">
 
         <div id="tab-daftar-peserta" class="tab-content bg-white p-6 rounded-lg shadow-md">
             <h2 class="text-2xl font-bold mb-4 text-slate-800">Pendaftaran & Senarai Peserta</h2>
@@ -137,8 +137,11 @@
 
         <div id="tab-keputusan" class="tab-content bg-white p-6 rounded-lg shadow-md hidden text-center">
             <h2 class="text-2xl font-bold mb-2 text-amber-500">🏆 KEPUTUSAN MUKTAMAD (FINAL)</h2>
+            <p class="text-sm text-gray-500 mb-6">Kedudukan Rasmi Top 7 & Senarai Penerima Saguhati secara rawak (Rahsia Kedudukan Bawah).</p>
             <button onclick="muatNaikKeputusanFinal()" class="bg-amber-500 text-white px-6 py-2 rounded-full mb-6 font-bold shadow hover:bg-amber-600"><i class="fas fa-calculator"></i> Kira Keputusan Sekarang</button>
-            <div id="papan-pemenang" class="space-y-3 max-w-md mx-auto"></div>
+            
+            <div id="papan-pemenang" class="space-y-3 max-w-md mx-auto">
+                </div>
         </div>
     </div>
 
@@ -152,30 +155,23 @@
             <div class="p-6 space-y-5">
                 <input type="hidden" id="edit-f-id">
                 <input type="hidden" id="edit-f-giliran-asal">
-                
                 <div>
                     <label class="block text-sm font-bold text-gray-700">Nama Finalis</label>
                     <input type="text" id="edit-f-nama" class="w-full border-2 border-gray-200 p-3 rounded-xl mt-1 bg-gray-50 text-gray-600 font-bold uppercase" readonly>
                 </div>
-                
                 <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-100">
                     <label class="block text-sm font-bold text-indigo-900">No. Giliran Persembahan (Final)</label>
-                    <input type="number" id="edit-f-giliran" min="1" class="w-full border-2 border-indigo-300 focus:border-indigo-600 p-3 rounded-xl mt-1 font-black text-2xl text-center text-indigo-700 bg-white shadow-inner">
-                    <p class="text-xs text-indigo-500 mt-2 font-medium"><i class="fas fa-info-circle"></i> Tukar nombor ini untuk mengalihkan giliran. Sistem akan menyusun semula peserta lain secara automatik.</p>
+                    <input type="number" id="edit-f-giliran" min="1" class="w-full border-2 border-indigo-300 p-3 rounded-xl mt-1 font-black text-2xl text-center text-indigo-700 bg-white">
                 </div>
-
                 <div class="border-t border-gray-200 pt-5">
                     <label class="block text-sm font-bold text-gray-700 mb-2"><i class="fas fa-music mr-1"></i> Lagu Pusingan Final</label>
-                    <input type="text" id="edit-f-lagu-tajuk" placeholder="Tajuk Lagu Final" class="w-full border-2 border-gray-300 focus:border-indigo-600 p-3 rounded-xl mb-3 text-sm font-medium">
-                    <input type="url" id="edit-f-lagu-link" placeholder="Pautan YouTube (Pilihan)" class="w-full border-2 border-gray-300 focus:border-indigo-600 p-3 rounded-xl text-sm font-medium">
+                    <input type="text" id="edit-f-lagu-tajuk" placeholder="Tajuk Lagu Final" class="w-full border-2 border-gray-300 p-3 rounded-xl mb-3 text-sm font-medium">
+                    <input type="url" id="edit-f-lagu-link" placeholder="Pautan YouTube (Pilihan)" class="w-full border-2 border-gray-300 p-3 rounded-xl text-sm font-medium">
                 </div>
             </div>
-
             <div class="bg-gray-50 p-4 flex gap-3 justify-end border-t border-gray-100">
-                <button onclick="tutupModalFinalis()" class="px-5 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold rounded-xl transition text-sm">Batal</button>
-                <button onclick="simpanEditFinalis()" id="btn-simpan-f" class="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-xl shadow-md transition flex items-center gap-2 text-sm">
-                    <i class="fas fa-save"></i> Simpan Maklumat
-                </button>
+                <button onclick="tutupModalFinalis()" class="px-5 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold rounded-xl text-sm">Batal</button>
+                <button onclick="simpanEditFinalis()" id="btn-simpan-f" class="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-xl shadow-md flex items-center gap-2 text-sm"><i class="fas fa-save"></i> Simpan Maklumat</button>
             </div>
         </div>
     </div>
@@ -197,7 +193,7 @@
         const IMGBB_API_KEY = "27983a3f2b483a2ff935c595affbefa8";
 
         let senaraiPesertaMemoriKawal = [];
-        let senaraiFinalisMemori = []; // Khas untuk Tab 4
+        let senaraiFinalisMemori = []; 
 
         window.tukarTab = function(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
@@ -212,11 +208,11 @@
             if(tabId === 'tab-keputusan') muatNaikKeputusanFinal();
         }
 
-        // --- TAB 1: PENGURUSAN PESERTA (AUTO-SUSUN) ---
+        // --- TAB 1: URUS PESERTA ---
         document.getElementById('form-peserta').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-submit-peserta');
-            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Memproses...`;
+            btn.innerText = "⏳ Memproses...";
             btn.classList.add('opacity-50', 'pointer-events-none');
 
             const idEdit = document.getElementById('edit-id-peserta').value;
@@ -227,12 +223,10 @@
             
             const failGambar = document.getElementById('gambar-peserta').files[0];
             if(failGambar) {
-                const formData = new FormData();
-                formData.append('image', failGambar);
+                const formData = new FormData(); formData.append('image', failGambar);
                 try {
                     const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData });
-                    const data = await res.json();
-                    gambarUrl = data.data.url; 
+                    const data = await res.json(); gambarUrl = data.data.url; 
                 } catch(err) { console.error("Gambar gagal upload."); }
             }
 
@@ -245,8 +239,6 @@
             try {
                 if(idEdit) {
                     const batch = writeBatch(db);
-                    
-                    // AUTO-ARRANGE GILIRAN (GLOBAL)
                     if(giliInput !== giliAsal) {
                         const snapP = await getDocs(query(collection(db, "peserta")));
                         snapP.forEach(d => {
@@ -260,26 +252,17 @@
                             }
                         });
                     }
-
-                    // Kerana Tab 1 hanya edit Lagu 1 (Saringan), kita kena kekalkan Lagu 2 (Final) jika wujud
                     const pSediaAda = senaraiPesertaMemoriKawal.find(x => x.id === idEdit);
-                    if(pSediaAda && pSediaAda.lagu && pSediaAda.lagu[1]) {
-                        senaraiLagu[1] = pSediaAda.lagu[1]; // Kekalkan lagu Final
-                    }
+                    if(pSediaAda && pSediaAda.lagu && pSediaAda.lagu[1]) senaraiLagu[1] = pSediaAda.lagu[1];
 
                     batch.update(doc(db, "peserta", idEdit), { nama, gambar: gambarUrl, no_giliran: giliInput, lagu: senaraiLagu });
-                    await batch.commit();
-                    alert("Data & Kedudukan giliran berjaya dikemaskini!");
+                    await batch.commit(); alert("Data berjaya dikemaskini!");
                 } else {
                     const snap = await getDocs(query(collection(db, "peserta")));
-                    await addDoc(collection(db, "peserta"), {
-                        nama, gambar: gambarUrl, no_giliran: snap.size + 1, lagu: senaraiLagu, status: "Saringan", markah_saringan: {}, markah_final: {}
-                    });
-                    alert("Peserta berjaya ditambah!");
+                    await addDoc(collection(db, "peserta"), { nama, gambar: gambarUrl, no_giliran: snap.size + 1, lagu: senaraiLagu, status: "Saringan", markah_saringan: {}, markah_final: {} });
+                    alert("Peserta ditambah!");
                 }
-                
-                batalModEdit();
-                muatSenaraiPeserta();
+                batalModEdit(); muatSenaraiPeserta();
             } catch (err) { alert(err.message); batalModEdit(); }
         });
 
@@ -287,81 +270,32 @@
             const snap = await getDocs(query(collection(db, "peserta"), orderBy("no_giliran", "asc")));
             const tbody = document.getElementById('tabel-peserta'); tbody.innerHTML = "";
             senaraiPesertaMemoriKawal = [];
-            
             snap.forEach(d => {
-                let p = d.data(); p.id = d.id;
-                senaraiPesertaMemoriKawal.push(p);
+                let p = d.data(); p.id = d.id; senaraiPesertaMemoriKawal.push(p);
                 let imgTag = p.gambar ? `<img src="${p.gambar}" class="h-10 w-10 object-cover rounded-full mx-auto border shadow-sm">` : `<div class="h-10 w-10 bg-gray-200 rounded-full mx-auto flex items-center justify-center text-gray-500 text-xs">Tiada</div>`;
-                
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 border-b">
-                        <td class="p-3 border font-black text-center text-lg text-indigo-600">${p.no_giliran}</td>
-                        <td class="p-2 border text-center">${imgTag}</td>
-                        <td class="p-2 border font-bold text-gray-800 uppercase">${p.nama}</td>
-                        <td class="p-2 border text-center">
-                            <button onclick="masukModEdit('${p.id}', '${p.nama.replace(/'/g, "\\'")}', '${p.gambar || ''}', ${p.no_giliran})" class="text-blue-600 font-bold px-2 hover:underline"><i class="fas fa-edit"></i> Edit</button>
-                            <button onclick="padamPeserta('${p.id}')" class="text-red-600 font-bold px-2 hover:underline"><i class="fas fa-trash"></i> Padam</button>
-                        </td>
-                    </tr>`;
+                tbody.innerHTML += `<tr class="hover:bg-slate-50 border-b"><td class="p-3 border font-black text-center text-lg text-indigo-600">${p.no_giliran}</td><td class="p-2 border text-center">${imgTag}</td><td class="p-2 border font-bold text-gray-800 uppercase">${p.nama}</td><td class="p-2 border text-center"><button onclick="masukModEdit('${p.id}', '${p.nama.replace(/'/g, "\\'")}', '${p.gambar || ''}', ${p.no_giliran})" class="text-blue-600 font-bold px-2 hover:underline">Edit</button><button onclick="padamPeserta('${p.id}')" class="text-red-600 font-bold px-2 hover:underline">Padam</button></td></tr>`;
             });
         }
 
         window.masukModEdit = function(id, nama, gambar, noGiliran) {
-            document.getElementById('edit-id-peserta').value = id;
-            document.getElementById('nama-peserta').value = nama;
-            document.getElementById('gambar-lama').value = gambar; 
-            document.getElementById('giliran-asal').value = noGiliran;
-            
-            const giliInput = document.getElementById('no-giliran-input');
-            giliInput.value = noGiliran;
-            giliInput.removeAttribute('readonly');
-            giliInput.classList.remove('bg-gray-100');
-            giliInput.classList.add('bg-white', 'border-indigo-500', 'ring-2', 'ring-indigo-200');
-            
-            // Masukkan lagu pertama jika ada
-            const p = senaraiPesertaMemoriKawal.find(x => x.id === id);
-            const laguInputs = document.querySelectorAll('.item-lagu input');
-            if(p && p.lagu && p.lagu[0]) {
-                laguInputs[0].value = p.lagu[0].tajuk;
-                laguInputs[1].value = p.lagu[0].link;
-            } else {
-                laguInputs[0].value = ""; laguInputs[1].value = "";
-            }
-
-            document.getElementById('label-giliran-pilihan').innerText = "(Boleh Tukar & Auto Susun)";
-            document.getElementById('btn-submit-peserta').innerHTML = "<i class='fas fa-save'></i> Simpan & Susun Kedudukan";
-            document.getElementById('btn-batal-edit').classList.remove('hidden');
-            window.scrollTo(0,0);
+            document.getElementById('edit-id-peserta').value = id; document.getElementById('nama-peserta').value = nama; document.getElementById('gambar-lama').value = gambar; document.getElementById('giliran-asal').value = noGiliran;
+            const giliInput = document.getElementById('no-giliran-input'); giliInput.value = noGiliran; giliInput.removeAttribute('readonly'); giliInput.classList.remove('bg-gray-100'); giliInput.classList.add('bg-white');
+            const p = senaraiPesertaMemoriKawal.find(x => x.id === id); const laguInputs = document.querySelectorAll('.item-lagu input');
+            if(p && p.lagu && p.lagu[0]) { laguInputs[0].value = p.lagu[0].tajuk; laguInputs[1].value = p.lagu[0].link; } else { laguInputs[0].value = ""; laguInputs[1].value = ""; }
+            document.getElementById('label-giliran-pilihan').innerText = "(Boleh Tukar & Auto Susun)"; document.getElementById('btn-submit-peserta').innerText = "Simpan & Susun Kedudukan"; document.getElementById('btn-batal-edit').classList.remove('hidden'); window.scrollTo(0,0);
         }
 
         window.batalModEdit = function() {
-            document.getElementById('form-peserta').reset();
-            document.getElementById('edit-id-peserta').value = "";
-            document.getElementById('gambar-lama').value = "";
-            document.getElementById('giliran-asal').value = "";
-            
-            const giliInput = document.getElementById('no-giliran-input');
-            giliInput.setAttribute('readonly', true);
-            giliInput.classList.add('bg-gray-100');
-            giliInput.classList.remove('bg-white', 'border-indigo-500', 'ring-2', 'ring-indigo-200');
-            giliInput.placeholder = "Auto Dijana";
-            
-            document.getElementById('label-giliran-pilihan').innerText = "(Auto)";
-            document.getElementById('btn-submit-peserta').innerText = "Daftar Peserta Baru";
-            document.getElementById('btn-submit-peserta').classList.remove('opacity-50', 'pointer-events-none');
-            document.getElementById('btn-batal-edit').classList.add('hidden');
+            document.getElementById('form-peserta').reset(); document.getElementById('edit-id-peserta').value = ""; document.getElementById('gambar-lama').value = ""; document.getElementById('giliran-asal').value = "";
+            const giliInput = document.getElementById('no-giliran-input'); giliInput.setAttribute('readonly', true); giliInput.classList.add('bg-gray-100'); giliInput.classList.remove('bg-white');
+            document.getElementById('label-giliran-pilihan').innerText = "(Auto)"; document.getElementById('btn-submit-peserta').innerText = "Daftar Peserta Baru"; document.getElementById('btn-batal-edit').classList.add('hidden');
         }
 
-        window.padamPeserta = async function(id) { 
-            if(confirm("Padam peserta ini? Kedudukan giliran selepasnya akan diturunkan.")) { 
-                await deleteDoc(doc(db, "peserta", id)); muatSenaraiPeserta(); 
-            } 
-        }
+        window.padamPeserta = async function(id) { if(confirm("Padam peserta ini?")) { await deleteDoc(doc(db, "peserta", id)); muatSenaraiPeserta(); } }
 
         // --- TAB 2: HAKIM ---
         document.getElementById('form-hakim').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const nama = document.getElementById('nama-hakim').value; const ic = document.getElementById('ic-hakim').value;
+            e.preventDefault(); const nama = document.getElementById('nama-hakim').value; const ic = document.getElementById('ic-hakim').value;
             try { await addDoc(collection(db, "hakim"), { nama, ic }); document.getElementById('form-hakim').reset(); muatSenaraiHakim(); } catch(err) { alert(err.message); }
         });
         window.muatSenaraiHakim = async function() {
@@ -373,62 +307,42 @@
         // --- TAB 3: CARTA SARINGAN ---
         let senaraiSaringanGlobal = []; 
         window.muatNaikCartaSaringan = async function() {
-            const snap = await getDocs(query(collection(db, "peserta")));
-            senaraiSaringanGlobal = [];
+            const snap = await getDocs(query(collection(db, "peserta"))); senaraiSaringanGlobal = [];
             snap.forEach(d => {
-                let data = d.data(); data.id = d.id;
-                let total = 0, bilangan = 0;
+                let data = d.data(); data.id = d.id; let total = 0, bilangan = 0;
                 if(data.markah_saringan) { for(let h in data.markah_saringan) { total += data.markah_saringan[h]; bilangan++; } }
-                data.purataSaringan = bilangan > 0 ? (total / bilangan) : 0;
-                senaraiSaringanGlobal.push(data);
+                data.purataSaringan = bilangan > 0 ? (total / bilangan) : 0; senaraiSaringanGlobal.push(data);
             });
             senaraiSaringanGlobal.sort((a,b) => b.purataSaringan - a.purataSaringan);
             const tbody = document.getElementById('tabel-saringan'); tbody.innerHTML = "";
             senaraiSaringanGlobal.forEach((p, index) => {
-                let isTop15 = index < 15;
-                let bgClass = p.status === 'Final' ? "bg-green-50" : (isTop15 ? "bg-amber-50" : "");
+                let isTop15 = index < 15; let bgClass = p.status === 'Final' ? "bg-green-50" : (isTop15 ? "bg-amber-50" : "");
                 let statusBadge = p.status === 'Final' ? `<span class="bg-green-600 text-white px-2 py-1 rounded text-xs font-bold">Telah Ke Final</span>` : (isTop15 ? `<span class="bg-amber-200 text-amber-800 px-2 py-1 rounded text-xs font-bold">Top 15</span>` : `<span class="text-gray-400 text-xs font-medium">Luar Carta</span>`);
-                let butangTindakan = p.status === 'Final' ? `<button onclick="tukarStatusPeserta('${p.id}', 'Saringan')" class="bg-red-500 text-white px-3 py-1 rounded text-xs font-bold">Batal (Tarik Diri)</button>` : `<button onclick="tukarStatusPeserta('${p.id}', 'Final')" class="bg-blue-600 text-white px-3 py-1 rounded text-xs font-bold">Pilih Ke Final</button>`;
+                let butangTindakan = p.status === 'Final' ? `<button onclick="tukarStatusPeserta('${p.id}', 'Saringan')" class="bg-red-500 text-white px-3 py-1 rounded text-xs font-bold">Batal</button>` : `<button onclick="tukarStatusPeserta('${p.id}', 'Final')" class="bg-blue-600 text-white px-3 py-1 rounded text-xs font-bold">Pilih Ke Final</button>`;
                 tbody.innerHTML += `<tr class="${bgClass} border-b hover:bg-slate-100"><td class="p-2 text-center font-black">${index+1}</td><td class="p-2 text-center text-gray-500">${p.no_giliran}</td><td class="p-2 font-bold uppercase">${p.nama}</td><td class="p-2 text-center font-bold text-indigo-700">${p.purataSaringan.toFixed(2)}%</td><td class="p-2 text-center">${statusBadge}</td><td class="p-2 text-center">${butangTindakan}</td></tr>`;
             });
         }
-
-        window.tukarStatusPeserta = async function(id, statusBaru) {
-            if(confirm(statusBaru === 'Final' ? "Naikkan ke Final?" : "Batalkan dari Final?")) {
-                await updateDoc(doc(db, "peserta", id), { status: statusBaru });
-                muatNaikCartaSaringan();
-            }
-        }
-
+        window.tukarStatusPeserta = async function(id, statusBaru) { if(confirm("Tukar status finalis?")) { await updateDoc(doc(db, "peserta", id), { status: statusBaru }); muatNaikCartaSaringan(); } }
         window.autoPilihTop15 = async function() {
             if(senaraiSaringanGlobal.length === 0) return alert("Sila kemaskini carta saringan dahulu.");
             if(confirm("Sahkan 15 teratas secara automatik?")) {
-                const batch = writeBatch(db);
-                senaraiSaringanGlobal.forEach((p, index) => { batch.update(doc(db, "peserta", p.id), { status: index < 15 ? "Final" : "Saringan" }); });
+                const batch = writeBatch(db); senaraiSaringanGlobal.forEach((p, index) => { batch.update(doc(db, "peserta", p.id), { status: index < 15 ? "Final" : "Saringan" }); });
                 await batch.commit(); alert("Berjaya!"); muatNaikCartaSaringan();
             }
         }
 
-        // --- TAB 4: SENARAI FINALIS (DENGAN FUNGSI MODAL EDIT LAGU) ---
+        // --- TAB 4: SENARAI FINALIS ---
         window.muatSenaraiFinalis = async function() {
             const snap = await getDocs(query(collection(db, "peserta"), where("status", "==", "Final")));
-            const tbody = document.getElementById('tabel-finalis'); tbody.innerHTML = "";
-            senaraiFinalisMemori = []; 
+            const tbody = document.getElementById('tabel-finalis'); tbody.innerHTML = ""; senaraiFinalisMemori = []; 
             snap.forEach(d => { let p = d.data(); p.id = d.id; senaraiFinalisMemori.push(p); });
-            
             senaraiFinalisMemori.sort((a,b) => a.no_giliran - b.no_giliran);
 
-            if(senaraiFinalisMemori.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-gray-500">Belum ada finalis disahkan. Pilih peserta di Tab Carta Saringan.</td></tr>`;
-                return;
-            }
+            if(senaraiFinalisMemori.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-gray-500">Belum ada finalis.</td></tr>`; return; }
 
-            senaraiFinalisMemori.forEach((p, i) => {
+            senaraiFinalisMemori.forEach((p) => {
                 let imgTag = p.gambar ? `<img src="${p.gambar}" class="h-12 w-12 object-cover rounded border shadow">` : `<div class="h-12 w-12 bg-gray-200 rounded text-xs flex items-center justify-center">Tiada</div>`;
-                
-                // Cek Lagu Final (Lagu array index 1)
-                let laguFinal = p.lagu && p.lagu[1] && p.lagu[1].tajuk !== "" ? p.lagu[1].tajuk : "<span class='text-red-400 font-bold italic text-xs'><i class='fas fa-exclamation-circle'></i> Belum Set Lagu Final</span>";
-
+                let laguFinal = p.lagu && p.lagu[1] && p.lagu[1].tajuk !== "" ? p.lagu[1].tajuk : "<span class='text-red-400 font-bold italic text-xs'>❌ Belum Set Lagu Final</span>";
                 tbody.innerHTML += `
                     <tr class="hover:bg-indigo-50 border-b transition">
                         <td class="p-3 text-center font-black text-indigo-600 text-xl">${p.no_giliran}</td>
@@ -436,109 +350,109 @@
                         <td class="p-3 font-black text-indigo-900 uppercase">${p.nama}</td>
                         <td class="p-3 font-medium text-gray-700">${laguFinal}</td>
                         <td class="p-3 text-center">
-                            <button onclick="bukaModalFinalis('${p.id}')" class="text-indigo-600 hover:text-white hover:bg-indigo-600 text-xs font-bold bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded shadow-sm transition mb-1 sm:mb-0 mr-1"><i class="fas fa-sliders-h"></i> Atur Giliran & Lagu</button>
-                            <button onclick="tukarStatusPeserta('${p.id}', 'Saringan'); muatSenaraiFinalis();" class="text-red-500 hover:text-white hover:bg-red-500 text-xs font-bold bg-red-50 border border-red-200 px-3 py-1.5 rounded shadow-sm transition"><i class="fas fa-times"></i> Gugur</button>
+                            <button onclick="bukaModalFinalis('${p.id}')" class="text-indigo-600 font-bold bg-indigo-50 border px-3 py-1.5 rounded mr-1"><i class="fas fa-sliders-h"></i> Atur</button>
+                            <button onclick="tukarStatusPeserta('${p.id}', 'Saringan'); muatSenaraiFinalis();" class="text-red-500 font-bold bg-red-50 border px-3 py-1.5 rounded"><i class="fas fa-times"></i> Gugur</button>
                         </td>
                     </tr>`;
             });
         }
 
-        // LOGIK MODAL FINALIS
         window.bukaModalFinalis = function(id) {
-            const p = senaraiFinalisMemori.find(x => x.id === id);
-            if(!p) return;
-
-            document.getElementById('edit-f-id').value = p.id;
-            document.getElementById('edit-f-nama').value = p.nama;
-            document.getElementById('edit-f-giliran').value = p.no_giliran;
-            document.getElementById('edit-f-giliran-asal').value = p.no_giliran;
-
-            // Load lagu Final (Index 1) jika ada
-            if(p.lagu && p.lagu[1]) {
-                document.getElementById('edit-f-lagu-tajuk').value = p.lagu[1].tajuk;
-                document.getElementById('edit-f-lagu-link').value = p.lagu[1].link;
-            } else {
-                document.getElementById('edit-f-lagu-tajuk').value = "";
-                document.getElementById('edit-f-lagu-link').value = "";
-            }
-
+            const p = senaraiFinalisMemori.find(x => x.id === id); if(!p) return;
+            document.getElementById('edit-f-id').value = p.id; document.getElementById('edit-f-nama').value = p.nama; document.getElementById('edit-f-giliran').value = p.no_giliran; document.getElementById('edit-f-giliran-asal').value = p.no_giliran;
+            if(p.lagu && p.lagu[1]) { document.getElementById('edit-f-lagu-tajuk').value = p.lagu[1].tajuk; document.getElementById('edit-f-lagu-link').value = p.lagu[1].link; } else { document.getElementById('edit-f-lagu-tajuk').value = ""; document.getElementById('edit-f-lagu-link').value = ""; }
             document.getElementById('modal-edit-finalis').classList.remove('hidden');
         }
-
-        window.tutupModalFinalis = function() {
-            document.getElementById('modal-edit-finalis').classList.add('hidden');
-        }
+        window.tutupModalFinalis = function() { document.getElementById('modal-edit-finalis').classList.add('hidden'); }
 
         window.simpanEditFinalis = async function() {
-            const id = document.getElementById('edit-f-id').value;
-            const giliranBaru = parseInt(document.getElementById('edit-f-giliran').value);
-            const giliranAsal = parseInt(document.getElementById('edit-f-giliran-asal').value);
-            const tajukFinal = document.getElementById('edit-f-lagu-tajuk').value;
-            const linkFinal = document.getElementById('edit-f-lagu-link').value;
-
-            const p = senaraiFinalisMemori.find(x => x.id === id);
-            if(!p) return;
-
-            // Kemaskini array Lagu (Index 1)
-            let laguArray = p.lagu || [];
-            if(laguArray.length === 0) laguArray = [{tajuk: "", link: ""}]; // Pastikan ruang saringan wujud (kosong)
+            const id = document.getElementById('edit-f-id').value; const giliranBaru = parseInt(document.getElementById('edit-f-giliran').value); const giliranAsal = parseInt(document.getElementById('edit-f-giliran-asal').value); const tajukFinal = document.getElementById('edit-f-lagu-tajuk').value; const linkFinal = document.getElementById('edit-f-lagu-link').value;
+            const p = senaraiFinalisMemori.find(x => x.id === id); if(!p) return;
+            let laguArray = p.lagu || []; if(laguArray.length === 0) laguArray = [{tajuk: "", link: ""}];
             laguArray[1] = { tajuk: tajukFinal, link: linkFinal };
-
-            const btn = document.getElementById('btn-simpan-f');
-            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Menyimpan...`;
-            btn.disabled = true;
+            const btn = document.getElementById('btn-simpan-f'); btn.disabled = true;
 
             try {
                 const batch = writeBatch(db);
-
-                // Auto-Arrange Global jika No. Giliran diubah
                 if(giliranBaru !== giliranAsal) {
                     const snapP = await getDocs(query(collection(db, "peserta")));
                     snapP.forEach(d => {
                         let docData = d.data();
                         if(d.id !== id) {
-                            if(giliranBaru < giliranAsal && docData.no_giliran >= giliranBaru && docData.no_giliran < giliranAsal) {
-                                batch.update(doc(db, "peserta", d.id), { no_giliran: docData.no_giliran + 1 });
-                            } else if(giliranBaru > giliranAsal && docData.no_giliran <= giliranBaru && docData.no_giliran > giliranAsal) {
-                                batch.update(doc(db, "peserta", d.id), { no_giliran: docData.no_giliran - 1 });
-                            }
+                            if(giliranBaru < giliranAsal && docData.no_giliran >= giliranBaru && docData.no_giliran < giliranAsal) { batch.update(doc(db, "peserta", d.id), { no_giliran: docData.no_giliran + 1 }); } 
+                            else if(giliranBaru > giliranAsal && docData.no_giliran <= giliranBaru && docData.no_giliran > giliranAsal) { batch.update(doc(db, "peserta", d.id), { no_giliran: docData.no_giliran - 1 }); }
                         }
                     });
                 }
-
                 batch.update(doc(db, "peserta", id), { no_giliran: giliranBaru, lagu: laguArray });
-                await batch.commit();
-
-                tutupModalFinalis();
-                muatSenaraiFinalis(); // Refresh table
-            } catch(err) {
-                alert("Ralat: " + err.message);
-            }
-            
-            btn.innerHTML = `<i class="fas fa-save"></i> Simpan Maklumat`;
+                await batch.commit(); tutupModalFinalis(); muatSenaraiFinalis();
+            } catch(err) { alert(err.message); }
             btn.disabled = false;
         }
 
-        // --- TAB 5: KEPUTUSAN FINAL ---
+        // --- TAB 5: KEPUTUSAN FINAL (KINI BERFUNGSI DENGAN SEKATAN DAN ACAK RAWAK) ---
         window.muatNaikKeputusanFinal = async function() {
             const snap = await getDocs(query(collection(db, "peserta"), where("status", "==", "Final")));
             let senaraiFinal = [];
+            let adaMarkah = false;
+
             snap.forEach(d => {
-                let data = d.data(); let total = 0, bilangan = 0;
-                if(data.markah_final) { for(let h in data.markah_final) { total += data.markah_final[h]; bilangan++; } }
+                let data = d.data(); data.id = d.id; let total = 0, bilangan = 0;
+                if(data.markah_final && Object.keys(data.markah_final).length > 0) { 
+                    for(let h in data.markah_final) { total += data.markah_final[h]; bilangan++; } 
+                    adaMarkah = true;
+                }
                 data.purataFinal = bilangan > 0 ? (total / bilangan) : 0;
                 senaraiFinal.push(data);
             });
-            senaraiFinal.sort((a,b) => b.purataFinal - a.purataFinal);
+
             const container = document.getElementById('papan-pemenang'); container.innerHTML = "";
-            if(senaraiFinal.length === 0) return container.innerHTML = "<p>Tiada data finalis.</p>";
-            senaraiFinal.forEach((p, index) => {
+
+            if(senaraiFinal.length === 0) {
+                return container.innerHTML = "<p class='text-gray-500 py-4'>Belum ada peserta di peringkat Final.</p>";
+            }
+
+            // PERUBAHAN 1: Jika belum ada sebarang markah final dari hakim
+            if(!adaMarkah) {
+                return container.innerHTML = "<div class='bg-indigo-50 border border-indigo-200 text-indigo-900 p-4 rounded-xl font-bold'><i class='fas fa-info-circle mr-1'></i> Sesi pertandingan belum bermula. Tiada markah muktamad untuk dijana buat masa ini.</div>";
+            }
+
+            // Susun mengikut markah tertinggi ke terendah
+            senaraiFinal.sort((a,b) => b.purataFinal - a.purataFinal);
+
+            // PERUBAHAN 2: Pecahkan keputusan kepada Top 7 dan Saguhati sahaja
+            let top7 = senaraiFinal.slice(0, 7);
+            let saguhati = senaraiFinal.slice(7);
+
+            // Mengacak (Shuffle) baki peserta saguhati bagi melindungi kedudukan tercorot
+            for (let i = saguhati.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [saguhati[i], saguhati[j]] = [saguhati[j], saguhati[i]];
+            }
+
+            // Render Senarai Rasmi Kedudukan Top 7
+            top7.forEach((p, index) => {
                 let div = document.createElement('div');
-                let imgHtml = p.gambar ? `<img src="${p.gambar}" class="h-16 w-16 object-cover rounded-full border-2 border-white shadow-md">` : ``;
-                let style = index === 0 ? "bg-amber-100 border-2 border-amber-400 font-black text-xl text-amber-900" : index === 1 ? "bg-slate-200 border-slate-400 font-bold text-lg text-slate-800" : index === 2 ? "bg-orange-100 border-orange-300 font-bold text-lg text-orange-900" : "bg-white border text-gray-800 font-bold";
-                let title = index === 0 ? "🥇 JOHAN" : index === 1 ? "🥈 NAIB JOHAN" : index === 2 ? "🥉 TEMPAT KETIGA" : `Ked. ${index+1}`;
-                div.className = `${style} p-4 rounded-xl flex items-center gap-4 shadow-sm`;
-                div.innerHTML = `<div class="w-24 text-center shrink-0"><span class="block text-sm opacity-70 mb-1">${title}</span>${imgHtml}</div><span class="uppercase flex-grow text-left">${p.nama}</span>`;
+                let imgHtml = p.gambar ? `<img src="${p.gambar}" class="h-16 w-16 object-cover rounded-full border-2 border-white shadow-md mx-auto">` : ``;
+                
+                let style = ""; let title = "";
+                if(index === 0) { style = "bg-amber-100 border-2 border-amber-400 font-black text-xl text-amber-900"; title = "🥇 JOHAN"; }
+                else if(index === 1) { style = "bg-slate-200 border-slate-400 font-bold text-lg text-slate-800"; title = "🥈 NAIB JOHAN"; }
+                else if(index === 2) { style = "bg-orange-100 border-orange-300 font-bold text-lg text-orange-900"; title = "🥉 TEMPAT KETIGA"; }
+                else { style = "bg-white border text-gray-800 font-bold"; title = `Kedudukan Ke-${index + 1}`; }
+                
+                div.className = `${style} p-4 rounded-xl flex items-center gap-4 shadow-sm mb-2 fade-in`;
+                div.innerHTML = `<div class="w-28 text-center shrink-0"><span class="block text-xs opacity-70 mb-1">${title}</span>${imgHtml}</div><span class="uppercase flex-grow text-left font-black tracking-wide">${p.nama}</span>`;
+                container.appendChild(div);
+            });
+
+            // Render Senarai Penerima Hadiah Saguhati (Rawak Tanpa Angka Kedudukan)
+            saguhati.forEach((p) => {
+                let div = document.createElement('div');
+                let imgHtml = p.gambar ? `<img src="${p.gambar}" class="h-12 w-12 object-cover rounded-full border border-gray-200 shadow-sm mx-auto">` : ``;
+                
+                div.className = "bg-gray-50 border border-gray-200 text-gray-700 font-medium p-3 rounded-xl flex items-center gap-4 mb-2 opacity-90 shadow-sm fade-in";
+                div.innerHTML = `<div class="w-28 text-center shrink-0"><span class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">🏅 SAGUHATI</span>${imgHtml}</div><span class="uppercase flex-grow text-left font-bold text-slate-600">${p.nama}</span>`;
                 container.appendChild(div);
             });
         }
