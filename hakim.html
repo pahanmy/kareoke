@@ -13,6 +13,17 @@
 </head>
 <body class="bg-gray-100 font-sans antialiased text-gray-900 h-screen flex flex-col">
 
+    <nav class="bg-indigo-900 p-4 text-white shadow-lg z-20 sticky top-0">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold tracking-wider">🎙️ E-JURI KARAOKE</h1>
+            
+            <div id="bahagian-pengguna" class="hidden flex items-center gap-3">
+                <div class="font-medium hidden sm:block">Hakim: <span id="label-hakim" class="text-amber-400 font-bold"></span></div>
+                <button onclick="logKeluar()" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 text-sm font-bold rounded shadow transition">Log Keluar</button>
+            </div>
+        </div>
+    </nav>
+
     <div id="skrin-login" class="flex-grow flex items-center justify-center p-4">
         <div class="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full text-center border-t-4 border-indigo-600 relative overflow-hidden">
             <h2 class="text-2xl font-black text-gray-800 mb-2">Log Masuk Juri</h2>
@@ -26,7 +37,7 @@
                 <p class="text-xs text-indigo-500 font-bold mb-6 uppercase tracking-wider bg-indigo-50 py-1 rounded">Masukkan 12 Digit (Tanpa Sempang)</p>
             </div>
 
-            <button onclick="sahkanHakim()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg shadow-md transition-all text-lg flex justify-center items-center gap-2">
+            <button id="btn-login" onclick="sahkanHakim()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg shadow-md transition-all text-lg flex justify-center items-center gap-2">
                 Sahkan Identiti <span class="text-xl">➔</span>
             </button>
             <p id="msg-login" class="text-red-500 mt-4 text-sm font-bold bg-red-50 p-2 rounded hidden"></p>
@@ -35,10 +46,10 @@
 
     <div id="skrin-dashboard" class="hidden flex-grow flex flex-col w-full">
         
-        <div class="bg-indigo-900 pt-8 pb-10 px-4 text-center rounded-b-[40px] shadow-lg relative overflow-hidden">
+        <div class="bg-indigo-900 pt-6 pb-10 px-4 text-center rounded-b-[40px] shadow-lg relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-full bg-white opacity-5"></div>
-            <p class="text-indigo-300 text-xs sm:text-sm uppercase tracking-[0.3em] font-bold mb-2">Panel Juri Profesional</p>
-            <h1 id="nama-hakim-besar" class="text-3xl sm:text-5xl font-black text-amber-400 drop-shadow-md uppercase tracking-wide">NAMA HAKIM</h1>
+            <p class="text-indigo-300 text-xs sm:text-sm uppercase tracking-[0.3em] font-bold mb-1">Panel Juri Profesional</p>
+            <h1 id="nama-hakim-besar" class="text-3xl sm:text-4xl font-black text-amber-400 drop-shadow-md uppercase tracking-wide">NAMA HAKIM</h1>
         </div>
 
         <div class="p-4 sm:p-6 container mx-auto max-w-5xl -mt-6 relative z-10">
@@ -57,8 +68,9 @@
                         <thead>
                             <tr class="bg-gray-50 text-gray-600 border-b border-gray-200">
                                 <th class="p-4 font-bold text-center w-16">Giliran</th>
+                                <th class="p-4 font-bold text-center w-16">Gambar</th>
                                 <th class="p-4 font-bold">Nama Peserta</th>
-                                <th class="p-4 font-bold text-center">Status Borang</th>
+                                <th class="p-4 font-bold text-center">Status</th>
                                 <th class="p-4 font-bold text-center">Markah Anda</th>
                                 <th class="p-4 font-bold text-center">Tindakan</th>
                             </tr>
@@ -83,9 +95,12 @@
         <div class="bg-gray-50 w-full max-w-2xl rounded-2xl shadow-2xl modal-masuk flex flex-col max-h-[95vh] sm:max-h-[90vh]">
             
             <div class="bg-indigo-700 p-4 sm:p-5 text-white flex justify-between items-center rounded-t-2xl shadow-md z-10">
-                <div>
-                    <span id="modal-giliran" class="bg-amber-400 text-indigo-900 px-2 py-0.5 rounded text-xs font-black uppercase">Giliran 1</span>
-                    <h2 id="modal-nama" class="text-xl sm:text-2xl font-black mt-1 uppercase tracking-wide">Nama Peserta</h2>
+                <div class="flex items-center gap-4">
+                    <div id="modal-gambar-container" class="hidden sm:block"></div>
+                    <div>
+                        <span id="modal-giliran" class="bg-amber-400 text-indigo-900 px-2 py-0.5 rounded text-xs font-black uppercase">Giliran 1</span>
+                        <h2 id="modal-nama" class="text-xl sm:text-2xl font-black mt-1 uppercase tracking-wide">Nama Peserta</h2>
+                    </div>
                 </div>
                 <button onclick="tutupModal()" class="text-white hover:text-red-300 font-black text-3xl leading-none">&times;</button>
             </div>
@@ -95,7 +110,7 @@
                 <div class="bg-blue-50 border-l-4 border-blue-500 p-3 mb-5 rounded shadow-sm">
                     <p class="text-xs sm:text-sm text-blue-900 font-medium flex items-start gap-2">
                         <span class="text-lg leading-none">💡</span>
-                        <span><strong>Bantuan Sistem:</strong> Markah di bawah telah disetkan pada paras <strong>50% (Markah Pertengahan)</strong> sebagai cadangan untuk memudahkan urusan anda. Sila laras dan tukar markah ini mengikut budi bicara serta kualiti persembahan peserta.</span>
+                        <span><strong>Bantuan Sistem:</strong> Markah disetkan pada paras <strong>50% (Pertengahan)</strong> sebagai asas. Sila laras markah mengikut persembahan peserta.</span>
                     </p>
                 </div>
 
@@ -158,8 +173,7 @@
 
                     <div class="border border-gray-200 rounded-xl p-4 bg-white shadow-sm">
                         <h3 class="font-black text-indigo-800 mb-2 border-b pb-2 uppercase text-sm">📝 Komen & Cadangan (Pilihan)</h3>
-                        <p class="text-xs text-gray-500 mb-3">Tinggalkan nota penambahbaikan buat peserta (terutamanya berguna jika mereka layak ke pusingan Final).</p>
-                        <textarea id="m-komen" rows="3" class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:border-indigo-500 transition text-sm text-gray-700 placeholder-gray-400" placeholder="Contoh: Kawalan nafas perlu lebih konsisten di bahagian korus..."></textarea>
+                        <textarea id="m-komen" rows="3" class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:border-indigo-500 transition text-sm text-gray-700 placeholder-gray-400" placeholder="Nota penambahbaikan buat peserta..."></textarea>
                     </div>
 
                 </div>
@@ -194,29 +208,62 @@
         let namaHakimSemasa = "";
         let senaraiPesertaMemori = [];
 
-        window.sahkanHakim = async function() {
+        // SEMAK SESI AUTO-LOGIN BILA BUKA PAGE
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedIC = localStorage.getItem('hakim_ic');
+            if(savedIC) {
+                document.getElementById('input-ic').value = savedIC;
+                sahkanHakim(true); // Login secara senyap
+            }
+        });
+
+        // FUNGSI LOG KELUAR (LOGOUT)
+        window.logKeluar = function() {
+            if(confirm("Adakah anda pasti untuk log keluar?")) {
+                localStorage.removeItem('hakim_ic');
+                location.reload(); // Refresh untuk kosongkan memori sepenuhnya
+            }
+        }
+
+        window.sahkanHakim = async function(isAutoLogin = false) {
             const icInput = document.getElementById('input-ic').value.trim();
             const msg = document.getElementById('msg-login');
+            const btn = document.getElementById('btn-login');
             
-            if(icInput.length !== 12) {
+            if(!isAutoLogin && icInput.length !== 12) {
                 msg.innerText = "Ralat: Sila pastikan anda memasukkan tepat 12 digit nombor IC.";
                 msg.classList.remove('hidden');
                 setTimeout(() => msg.classList.add('hidden'), 4000);
                 return;
             }
 
+            if(!isAutoLogin) btn.innerText = "Mengesahkan...";
+
             const snap = await getDocs(query(collection(db, "hakim"), where("ic", "==", icInput)));
 
             if(!snap.empty) {
+                // Simpan Sesi
+                localStorage.setItem('hakim_ic', icInput);
+                
                 namaHakimSemasa = snap.docs[0].data().nama;
+                
                 document.getElementById('skrin-login').classList.add('hidden');
                 document.getElementById('skrin-dashboard').classList.remove('hidden');
+                document.getElementById('bahagian-pengguna').classList.remove('hidden');
+                
                 document.getElementById('nama-hakim-besar').innerText = namaHakimSemasa; 
+                document.getElementById('label-hakim').innerText = namaHakimSemasa; 
+                
                 muatPesertaUntukDinilai();
             } else {
-                msg.innerText = "Akses Ditolak: Nombor IC tidak berdaftar dalam sistem.";
-                msg.classList.remove('hidden');
-                setTimeout(() => msg.classList.add('hidden'), 4000);
+                if(!isAutoLogin) {
+                    msg.innerText = "Akses Ditolak: Nombor IC tidak berdaftar dalam sistem.";
+                    msg.classList.remove('hidden');
+                    btn.innerHTML = `Sahkan Identiti <span class="text-xl">➔</span>`;
+                    setTimeout(() => msg.classList.add('hidden'), 4000);
+                } else {
+                    localStorage.removeItem('hakim_ic'); // Jika data IC dalam db kena delete, clearkan localstorage
+                }
             }
         }
 
@@ -229,7 +276,7 @@
             tbody.innerHTML = "";
 
             if(snap.empty) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-gray-500 font-medium">Tiada peserta dijumpai untuk pusingan ${tahap}.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-gray-500 font-medium">Tiada peserta dijumpai untuk pusingan ${tahap}.</td></tr>`;
                 return;
             }
 
@@ -246,6 +293,11 @@
                     sudahDinilai = true; markah = p.markah_final[namaHakimSemasa];
                 }
 
+                // PAPARAN GAMBAR AVATAR KECIL DI JADUAL
+                let imgTag = p.gambar 
+                    ? `<img src="${p.gambar}" class="h-10 w-10 object-cover rounded-full mx-auto border border-gray-300 shadow-sm">` 
+                    : `<div class="h-10 w-10 bg-gray-200 rounded-full mx-auto flex items-center justify-center text-[10px] text-gray-400">Tiada</div>`;
+
                 let badge = sudahDinilai 
                     ? `<span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold border border-green-200">✅ Selesai</span>`
                     : `<span class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-bold border border-amber-200">⏳ Menunggu</span>`;
@@ -255,8 +307,9 @@
                     : `<button onclick="bukaModalPenilaian('${p.id}')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-1 rounded font-bold text-sm shadow-sm transition">Buka Borang</button>`;
 
                 tbody.innerHTML += `
-                    <tr class="hover:bg-indigo-50/50 transition">
+                    <tr class="hover:bg-indigo-50/50 transition border-b border-gray-100">
                         <td class="p-4 text-center font-black text-gray-400 text-lg">${p.no_giliran}</td>
+                        <td class="p-4 text-center">${imgTag}</td>
                         <td class="p-4 font-bold text-gray-800 uppercase">${p.nama}</td>
                         <td class="p-4 text-center">${badge}</td>
                         <td class="p-4 text-center font-black ${sudahDinilai ? 'text-indigo-600' : 'text-gray-300'} text-lg">${sudahDinilai ? markah + '%' : '-'}</td>
@@ -296,15 +349,22 @@
             document.getElementById('modal-id-peserta').value = p.id;
             document.getElementById('modal-giliran').innerText = `Giliran ${p.no_giliran}`;
             document.getElementById('modal-nama').innerText = p.nama;
+            
+            // PAPARAN GAMBAR DALAM MODAL BORANG
+            const imgContainer = document.getElementById('modal-gambar-container');
+            if(p.gambar) {
+                imgContainer.innerHTML = `<img src="${p.gambar}" class="h-12 w-12 object-cover rounded-full border-2 border-amber-400 shadow">`;
+                imgContainer.classList.remove('hidden');
+            } else {
+                imgContainer.classList.add('hidden');
+            }
 
-            // Masukkan markah Auto-Pertengahan bila borang dibuka
             inputIDs.forEach(id => {
                 document.getElementById('m-' + id).value = markahPertengahan[id];
                 document.getElementById('slide-' + id).value = markahPertengahan[id];
             });
             kiraMarkahTotal();
 
-            // Semak jika ada komen yang pernah ditulis sebelum ini (Edit mode)
             let komenLama = "";
             const tahap = document.getElementById('pilih-tahap').value;
             if(tahap === "Saringan" && p.komen_saringan && p.komen_saringan[namaHakimSemasa]) {
@@ -331,7 +391,6 @@
                 const docRef = doc(db, "peserta", idPeserta);
                 const kemaskini = {};
                 
-                // Simpan Markah & Komen
                 if(tahap === "Saringan") {
                     kemaskini[`markah_saringan.${namaHakimSemasa}`] = total;
                     kemaskini[`komen_saringan.${namaHakimSemasa}`] = komen;
@@ -342,11 +401,11 @@
 
                 const btn = event.currentTarget;
                 let textAsal = btn.innerText;
-                btn.innerText = "MENYIMPAN..."; btn.classList.add('opacity-50');
+                btn.innerText = "MENYIMPAN..."; btn.classList.add('opacity-50', 'pointer-events-none');
                 
                 await updateDoc(docRef, kemaskini);
                 
-                btn.innerText = "BERJAYA DISIMPAN!"; btn.classList.remove('opacity-50');
+                btn.innerText = "BERJAYA DISIMPAN!"; btn.classList.remove('opacity-50', 'pointer-events-none');
                 setTimeout(() => {
                     btn.innerText = textAsal;
                     tutupModal();
