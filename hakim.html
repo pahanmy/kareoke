@@ -23,7 +23,6 @@
                        oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                        class="w-full border-2 border-gray-300 p-3 rounded-lg text-center text-2xl font-bold tracking-[0.15em] mb-2 focus:outline-none focus:border-indigo-600 transition shadow-inner text-indigo-900" 
                        placeholder="850101135566">
-                
                 <p class="text-xs text-indigo-500 font-bold mb-6 uppercase tracking-wider bg-indigo-50 py-1 rounded">Masukkan 12 Digit (Tanpa Sempang)</p>
             </div>
 
@@ -64,8 +63,7 @@
                                 <th class="p-4 font-bold text-center">Tindakan</th>
                             </tr>
                         </thead>
-                        <tbody id="senarai-peserta-body" class="divide-y divide-gray-100">
-                            </tbody>
+                        <tbody id="senarai-peserta-body" class="divide-y divide-gray-100"></tbody>
                     </table>
                 </div>
             </div>
@@ -93,6 +91,14 @@
             </div>
 
             <div class="p-4 sm:p-6 overflow-y-auto flex-grow relative">
+                
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-3 mb-5 rounded shadow-sm">
+                    <p class="text-xs sm:text-sm text-blue-900 font-medium flex items-start gap-2">
+                        <span class="text-lg leading-none">💡</span>
+                        <span><strong>Bantuan Sistem:</strong> Markah di bawah telah disetkan pada paras <strong>50% (Markah Pertengahan)</strong> sebagai cadangan untuk memudahkan urusan anda. Sila laras dan tukar markah ini mengikut budi bicara serta kualiti persembahan peserta.</span>
+                    </p>
+                </div>
+
                 <input type="hidden" id="modal-id-peserta">
                 
                 <div class="space-y-5">
@@ -150,6 +156,12 @@
                         </div>
                     </div>
 
+                    <div class="border border-gray-200 rounded-xl p-4 bg-white shadow-sm">
+                        <h3 class="font-black text-indigo-800 mb-2 border-b pb-2 uppercase text-sm">📝 Komen & Cadangan (Pilihan)</h3>
+                        <p class="text-xs text-gray-500 mb-3">Tinggalkan nota penambahbaikan buat peserta (terutamanya berguna jika mereka layak ke pusingan Final).</p>
+                        <textarea id="m-komen" rows="3" class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:border-indigo-500 transition text-sm text-gray-700 placeholder-gray-400" placeholder="Contoh: Kawalan nafas perlu lebih konsisten di bahagian korus..."></textarea>
+                    </div>
+
                 </div>
             </div>
 
@@ -186,7 +198,6 @@
             const icInput = document.getElementById('input-ic').value.trim();
             const msg = document.getElementById('msg-login');
             
-            // VALIDASI TAMBAHAN: Mesti tepat 12 digit
             if(icInput.length !== 12) {
                 msg.innerText = "Ralat: Sila pastikan anda memasukkan tepat 12 digit nombor IC.";
                 msg.classList.remove('hidden');
@@ -256,8 +267,6 @@
         }
 
         const inputIDs = ['vokal', 'tempo', 'penghayatan', 'sebutan', 'gaya', 'pakaian'];
-        
-        // MARKAH PERTENGAHAN / DEFAULT SCORES (TOTAL = 50%)
         const markahPertengahan = { vokal: 15, tempo: 7, penghayatan: 7, sebutan: 8, gaya: 8, pakaian: 5 };
 
         window.selaraskanInput = function(sliderId, inputId) {
@@ -295,6 +304,16 @@
             });
             kiraMarkahTotal();
 
+            // Semak jika ada komen yang pernah ditulis sebelum ini (Edit mode)
+            let komenLama = "";
+            const tahap = document.getElementById('pilih-tahap').value;
+            if(tahap === "Saringan" && p.komen_saringan && p.komen_saringan[namaHakimSemasa]) {
+                komenLama = p.komen_saringan[namaHakimSemasa];
+            } else if(tahap === "Final" && p.komen_final && p.komen_final[namaHakimSemasa]) {
+                komenLama = p.komen_final[namaHakimSemasa];
+            }
+            document.getElementById('m-komen').value = komenLama;
+
             document.getElementById('modal-penilaian').classList.remove('hidden');
         }
 
@@ -304,14 +323,22 @@
 
         window.hantarKeputusan = async function() {
             const total = kiraMarkahTotal();
+            const komen = document.getElementById('m-komen').value.trim();
             const idPeserta = document.getElementById('modal-id-peserta').value;
             const tahap = document.getElementById('pilih-tahap').value;
 
             try {
                 const docRef = doc(db, "peserta", idPeserta);
                 const kemaskini = {};
-                if(tahap === "Saringan") kemaskini[`markah_saringan.${namaHakimSemasa}`] = total;
-                else kemaskini[`markah_final.${namaHakimSemasa}`] = total;
+                
+                // Simpan Markah & Komen
+                if(tahap === "Saringan") {
+                    kemaskini[`markah_saringan.${namaHakimSemasa}`] = total;
+                    kemaskini[`komen_saringan.${namaHakimSemasa}`] = komen;
+                } else {
+                    kemaskini[`markah_final.${namaHakimSemasa}`] = total;
+                    kemaskini[`komen_final.${namaHakimSemasa}`] = komen;
+                }
 
                 const btn = event.currentTarget;
                 let textAsal = btn.innerText;
@@ -328,32 +355,22 @@
             } catch (err) { alert("Ralat menghantar markah: " + err.message); }
         }
 
-        // FUNGSI PENGESAHAN KESELURUHAN & AUTO-TUKAR KE FINAL
         window.sahkanSesiKeseluruhan = function() {
             const tahap = document.getElementById('pilih-tahap').value;
-            
-            // Kira berapa peserta telah dinilai
             let jumlahDinilai = 0;
             senaraiPesertaMemori.forEach(p => {
                 if(tahap === "Saringan" && p.markah_saringan && p.markah_saringan[namaHakimSemasa]) jumlahDinilai++;
                 if(tahap === "Final" && p.markah_final && p.markah_final[namaHakimSemasa]) jumlahDinilai++;
             });
-            
             const jumlahSemua = senaraiPesertaMemori.length;
 
-            if(jumlahSemua === 0) {
-                alert("Tiada peserta untuk dinilai pada tahap ini.");
-                return;
-            }
+            if(jumlahSemua === 0) return alert("Tiada peserta untuk dinilai pada tahap ini.");
 
-            // Pop-up Pengesahan
             const mesejSahkan = `Anda telah menilai ${jumlahDinilai} daripada ${jumlahSemua} peserta untuk peringkat ${tahap}.\n\nAdakah anda pasti untuk menghantar dan mengesahkan keputusan bagi sesi ini?`;
             
             if(confirm(mesejSahkan)) {
-                // Ucapan Terima Kasih
                 alert(`Terima Kasih Yang Berbahagia Juri ${namaHakimSemasa}!\n\nPenilaian anda untuk peringkat ${tahap} telah direkodkan ke pangkalan data utama.`);
                 
-                // Jika Saringan, Auto Tukar ke Final
                 if(tahap === "Saringan") {
                     document.getElementById('pilih-tahap').value = "Final";
                     muatPesertaUntukDinilai();
