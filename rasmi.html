@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keputusan Rasmi - Karaoke Astri & Rifaie</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .bg-gold-gradient { background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); }
+        .bg-silver-gradient { background: linear-gradient(135deg, #8e9eab, #eef2f3, #8e9eab); }
+        .bg-bronze-gradient { background: linear-gradient(135deg, #cd7f32, #f5deb3, #a0522d); }
+        .tab-btn.aktif { border-bottom: 4px solid #bf953f; color: #bf953f; font-weight: 900; }
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans antialiased text-gray-900 min-h-screen flex flex-col">
+
+    <header class="bg-slate-900 text-white pt-12 pb-6 px-4 shadow-xl text-center border-b-4 border-yellow-500 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
+        <div class="relative z-10 container mx-auto">
+            <i class="fas fa-crown text-4xl text-yellow-400 mb-4 drop-shadow-lg"></i>
+            <h1 class="text-3xl md:text-5xl font-black uppercase tracking-widest text-transparent bg-clip-text bg-gold-gradient mb-2">Keputusan Rasmi</h1>
+            <p class="text-slate-300 font-medium tracking-widest uppercase text-sm md:text-base">Pertandingan Karaoke Astri & Rifaie</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 max-w-4xl flex-grow mt-6">
+        
+        <div class="flex justify-center border-b-2 border-slate-200 mb-8">
+            <button onclick="tukarTabPapan('papan-final', this)" class="tab-btn aktif px-6 py-3 text-lg font-bold text-slate-500 uppercase tracking-wider transition-colors hover:text-yellow-600">🏆 Peringkat Final</button>
+            <button onclick="tukarTabPapan('papan-saringan', this)" class="tab-btn px-6 py-3 text-lg font-bold text-slate-500 uppercase tracking-wider transition-colors hover:text-yellow-600">🎤 Peringkat Saringan</button>
+        </div>
+
+        <div id="papan-final" class="papan-content fade-in block">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-black text-slate-800 uppercase">Kedudukan Juara Final</h2>
+                <p class="text-slate-500 text-sm mt-1">Tahniah kepada semua pemenang yang telah menawan hati juri!</p>
+            </div>
+
+            <div id="senarai-final" class="space-y-4">
+                <div class="text-center text-slate-400 py-10"><i class="fas fa-spinner fa-spin text-3xl mb-3"></i><br>Sedang mengira keputusan...</div>
+            </div>
+        </div>
+
+        <div id="papan-saringan" class="papan-content fade-in hidden">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-black text-slate-800 uppercase">Kedudukan Peringkat Saringan</h2>
+                <p class="text-slate-500 text-sm mt-1">Kedudukan keseluruhan peserta berdasarkan penilaian awal.</p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-600 uppercase text-xs tracking-wider border-b border-slate-200">
+                                <th class="p-4 text-center font-black w-20">Ked.</th>
+                                <th class="p-4 text-center w-20">Avatar</th>
+                                <th class="p-4 font-black">Nama Peserta</th>
+                                <th class="p-4 text-center font-black">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="senarai-saringan" class="divide-y divide-slate-100">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-center py-6 text-slate-400 text-sm mt-auto border-t-2 border-slate-800">
+        <p>Keputusan adalah muktamad. © 2026 Astri & Rifaie Wedding</p>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, query } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // GUNA CONFIG FIREBASE ANDA
+        const firebaseConfig = {
+            apiKey: "AIzaSyCwDP8KCl2r6QL1DOAQTMGx5-pcwub9mYM",
+            authDomain: "kareoke-83a74.firebaseapp.com",
+            projectId: "kareoke-83a74",
+            storageBucket: "kareoke-83a74.firebasestorage.app",
+            messagingSenderId: "740423962434",
+            appId: "1:740423962434:web:f3460cc576f33574e802db"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Fungsi Tukar Tab
+        window.tukarTabPapan = function(tabId, btnElemen) {
+            document.querySelectorAll('.papan-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(tabId).classList.remove('hidden');
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('aktif'));
+            btnElemen.classList.add('aktif');
+        }
+
+        async function muatKeputusanPenuh() {
+            try {
+                const snap = await getDocs(query(collection(db, "peserta")));
+                let senaraiSaringan = [];
+                let senaraiFinal = [];
+
+                // Asingkan data & kira purata tertutup (tanpa tunjuk di UI)
+                snap.forEach(d => {
+                    let p = d.data();
+                    
+                    // Kira Saringan
+                    let totalS = 0, countS = 0;
+                    if(p.markah_saringan) {
+                        for(let h in p.markah_saringan) { totalS += p.markah_saringan[h]; countS++; }
+                    }
+                    p.purataSaringan = countS > 0 ? (totalS / countS) : -1;
+                    if(p.purataSaringan > -1) senaraiSaringan.push(p);
+
+                    // Kira Final
+                    let totalF = 0, countF = 0;
+                    if(p.markah_final) {
+                        for(let h in p.markah_final) { totalF += p.markah_final[h]; countF++; }
+                    }
+                    p.purataFinal = countF > 0 ? (totalF / countF) : -1;
+                    if(p.purataFinal > -1 && p.status === 'Final') senaraiFinal.push(p);
+                });
+
+                // Susun ikut Markah Tertinggi
+                senaraiSaringan.sort((a, b) => b.purataSaringan - a.purataSaringan);
+                senaraiFinal.sort((a, b) => b.purataFinal - a.purataFinal);
+
+                renderSaringan(senaraiSaringan);
+                renderFinal(senaraiFinal);
+
+            } catch(err) {
+                console.error("Ralat memuatkan keputusan: ", err);
+                document.getElementById('senarai-final').innerHTML = `<div class="text-red-500 text-center font-bold">Ralat memuatkan data pelayan.</div>`;
+            }
+        }
+
+        function renderSaringan(data) {
+            const tbody = document.getElementById('senarai-saringan');
+            tbody.innerHTML = "";
+
+            if(data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400">Keputusan saringan belum dimuktamadkan.</td></tr>`;
+                return;
+            }
+
+            data.forEach((p, index) => {
+                let imgTag = p.gambar 
+                    ? `<img src="${p.gambar}" class="h-10 w-10 object-cover rounded-full mx-auto border-2 border-slate-200">` 
+                    : `<div class="h-10 w-10 bg-slate-200 rounded-full mx-auto flex items-center justify-center text-[10px] text-slate-500"><i class="fas fa-user"></i></div>`;
+
+                let isTop15 = p.status === 'Final';
+                let statusTag = isTop15 
+                    ? `<span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-xs font-black uppercase"><i class="fas fa-check-circle mr-1"></i> Layak Ke Final</span>`
+                    : `<span class="text-slate-400 text-xs font-bold uppercase">Selesai Beraksi</span>`;
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="p-4 text-center font-black text-slate-500 text-lg">${index + 1}</td>
+                        <td class="p-4 text-center">${imgTag}</td>
+                        <td class="p-4 font-black text-slate-700 uppercase">${p.nama}</td>
+                        <td class="p-4 text-center">${statusTag}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderFinal(data) {
+            const container = document.getElementById('senarai-final');
+            container.innerHTML = "";
+
+            if(data.length === 0) {
+                container.innerHTML = `<div class="bg-white p-8 rounded-2xl shadow-sm text-center text-slate-400 border border-slate-200">Keputusan final belum dinilai oleh juri.</div>`;
+                return;
+            }
+
+            data.forEach((p, index) => {
+                let card = document.createElement('div');
+                let imgHtml = p.gambar ? `<img src="${p.gambar}" class="h-16 w-16 md:h-20 md:w-20 object-cover rounded-full border-4 border-white shadow-lg z-10 relative">` : `<div class="h-16 w-16 md:h-20 md:w-20 bg-slate-100 rounded-full border-4 border-white shadow-lg z-10 relative flex items-center justify-center text-slate-400"><i class="fas fa-user text-2xl"></i></div>`;
+                
+                // Gayakan Podium Top 3
+                if (index === 0) {
+                    // JOHAN
+                    card.className = "bg-gold-gradient p-1 rounded-2xl shadow-xl transform transition hover:-translate-y-1";
+                    card.innerHTML = `
+                        <div class="bg-white/90 backdrop-blur-sm p-4 md:p-6 rounded-xl flex items-center gap-4 relative overflow-hidden">
+                            <div class="absolute -right-4 -top-4 text-yellow-500/20 text-9xl"><i class="fas fa-trophy"></i></div>
+                            <div class="flex-shrink-0 relative">
+                                <div class="absolute -top-3 -left-3 bg-yellow-500 text-white h-8 w-8 rounded-full flex items-center justify-center font-black z-20 shadow-md">1</div>
+                                ${imgHtml}
+                            </div>
+                            <div class="flex-grow z-10">
+                                <div class="text-yellow-600 font-black tracking-widest uppercase text-xs md:text-sm mb-1">🥇 Johan Keseluruhan</div>
+                                <div class="text-xl md:text-3xl font-black text-slate-800 uppercase">${p.nama}</div>
+                            </div>
+                        </div>
+                    `;
+                } else if (index === 1) {
+                    // NAIB JOHAN
+                    card.className = "bg-silver-gradient p-1 rounded-2xl shadow-md transform transition hover:-translate-y-1 ml-0 md:ml-8";
+                    card.innerHTML = `
+                        <div class="bg-white/90 backdrop-blur-sm p-4 rounded-xl flex items-center gap-4 relative">
+                            <div class="flex-shrink-0 relative">
+                                <div class="absolute -top-2 -left-2 bg-slate-400 text-white h-6 w-6 rounded-full flex items-center justify-center font-black z-20 shadow-sm text-xs">2</div>
+                                ${imgHtml}
+                            </div>
+                            <div>
+                                <div class="text-slate-500 font-black tracking-widest uppercase text-xs mb-1">🥈 Naib Johan</div>
+                                <div class="text-lg md:text-2xl font-black text-slate-800 uppercase">${p.nama}</div>
+                            </div>
+                        </div>
+                    `;
+                } else if (index === 2) {
+                    // KETIGA
+                    card.className = "bg-bronze-gradient p-1 rounded-2xl shadow-md transform transition hover:-translate-y-1 ml-0 md:ml-16";
+                    card.innerHTML = `
+                        <div class="bg-white/90 backdrop-blur-sm p-4 rounded-xl flex items-center gap-4 relative">
+                            <div class="flex-shrink-0 relative">
+                                <div class="absolute -top-2 -left-2 bg-amber-700 text-white h-6 w-6 rounded-full flex items-center justify-center font-black z-20 shadow-sm text-xs">3</div>
+                                ${imgHtml}
+                            </div>
+                            <div>
+                                <div class="text-amber-700 font-black tracking-widest uppercase text-xs mb-1">🥉 Tempat Ketiga</div>
+                                <div class="text-lg md:text-xl font-black text-slate-800 uppercase">${p.nama}</div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // TEMPAT KE-4 DAN KE BAWAH
+                    card.className = "bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4 ml-0 md:ml-24";
+                    let imgSmall = p.gambar ? `<img src="${p.gambar}" class="h-12 w-12 object-cover rounded-full border border-slate-200">` : `<div class="h-12 w-12 bg-slate-100 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 text-xs"><i class="fas fa-user"></i></div>`;
+                    card.innerHTML = `
+                        <div class="text-slate-400 font-black w-8 text-center text-lg">${index + 1}</div>
+                        ${imgSmall}
+                        <div class="font-bold text-slate-700 uppercase flex-grow">${p.nama}</div>
+                    `;
+                }
+                
+                container.appendChild(card);
+            });
+        }
+
+        // Muat Data Automatik
+        muatKeputusanPenuh();
+    </script>
+</body>
+</html>
