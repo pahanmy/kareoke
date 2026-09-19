@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KARAOKE Majlis</title>
+    <title>KARAOKE Spark</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -27,11 +27,12 @@
 
         <div class="relative z-10 container mx-auto max-w-4xl">
             <p class="text-sm md:text-base font-bold uppercase tracking-[0.3em] mb-4 text-white/80">Jom Memeriahkan Pertandingan Karaoke!</p>
-            <h2 class="text-xl md:text-2xl font-medium mb-1">Sempena Majlis Perkahwinan</h2>
-            <h1 id="paparan_nama_majlis" class="text-4xl md:text-6xl font-black mb-6 drop-shadow-lg text-yellow-300">Memuatkan...</h1>
+            
+            <!-- Frasa "Sempena Majlis Perkahwinan" telah dibuang di sini -->
+            <h1 id="paparan_nama_majlis" class="text-4xl md:text-6xl font-black mb-6 mt-2 drop-shadow-lg text-yellow-300">Memuatkan...</h1>
             
             <p class="text-lg md:text-xl font-medium mb-8 max-w-2xl mx-auto leading-relaxed">
-                Sambutan sangat menggalakkan setakat ini! Pelbagai suara hebat bakal beraksi dan menghiburkan semua yang hadir. Bahhh jangan malu-malu, kita gegarkan malam ini! 🎤✨
+                Sambutan sangat menggalakkan setakat ini! Pelbagai suara hebat bakal beraksi dan menghiburkan semua yang hadir. Bahhh jangan malu-malu, kita gegarkan pentas ini! 🎤✨
             </p>
 
             <!-- KAD INFO ACARA -->
@@ -113,7 +114,7 @@
 
     <!-- Footer dengan Ikon Rahsia Admin -->
     <footer class="bg-slate-900 text-center py-6 text-slate-400 text-sm relative mt-auto border-t-4 border-slate-800">
-        <p>Hakcipta Terpelihara © 2026 | Dikuasakan untuk Majlis Perkahwinan</p>
+        <p>Hakcipta Terpelihara © 2026 | Dikuasakan oleh Spark Karaoke System</p>
         
         <!-- Butang Akses Admin Rahsia (Diletakkan di hujung kanan bawah) -->
         <button onclick="bukaModalAkses()" class="absolute bottom-6 right-6 text-slate-700 hover:text-slate-400 transition cursor-pointer" title="Akses Admin" style="outline: none;">
@@ -200,7 +201,7 @@
                 const docSnap = await getDoc(doc(db, "tetapan", "info_majlis"));
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    currentMajlis = data.nama_majlis || "Astri & Rifaie"; 
+                    currentMajlis = data.nama_majlis || "Spark Karaoke"; 
 
                     document.getElementById('paparan_nama_majlis').innerHTML = currentMajlis;
                     
