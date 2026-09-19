@@ -75,8 +75,8 @@
 
     <main class="container mx-auto p-4 max-w-5xl -mt-8 relative z-20 space-y-6 flex-grow">
         
-        <!-- BANNER UNDIAN AWAM (SANGAT JELAS) -->
-        <div class="bg-gradient-to-r from-amber-500 to-orange-500 rounded-[2rem] shadow-2xl p-8 md:p-10 text-center transform transition hover:-translate-y-1 relative overflow-hidden border-4 border-white">
+        <!-- BANNER UNDIAN AWAM (Dinamik - Muncul jika juri bebas aktif) -->
+        <div id="banner-undian" class="hidden bg-gradient-to-r from-amber-500 to-orange-500 rounded-[2rem] shadow-2xl p-8 md:p-10 text-center transform transition hover:-translate-y-1 relative overflow-hidden border-4 border-white mt-4">
             <div class="absolute -right-10 -top-10 text-white/20 text-9xl"><i class="fas fa-vote-yea"></i></div>
             <div class="relative z-10">
                 <h2 class="text-3xl md:text-4xl font-black text-white uppercase tracking-widest mb-3 drop-shadow-md">Undian Awam Dibuka!</h2>
@@ -87,8 +87,11 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-            <div class="bg-white rounded-2xl shadow-md p-6 border-l-8 border-indigo-600 flex items-center justify-between hover:shadow-lg transition">
+        <!-- PORTAL JURI & KEPUTUSAN -->
+        <div id="susunan-kad-bawah" class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4 transition-all duration-300">
+            
+            <!-- Kad Juri (Dinamik - Hilang jika undian awam aktif) -->
+            <div id="kad-juri" class="bg-white rounded-2xl shadow-md p-6 border-l-8 border-indigo-600 flex items-center justify-between hover:shadow-lg transition">
                 <div>
                     <h3 class="font-black text-xl text-indigo-900 mb-1">Portal Juri</h3>
                     <p class="text-sm text-gray-500 mb-4">Akses khas untuk panel hakim.</p>
@@ -96,7 +99,9 @@
                 </div>
                 <div class="text-indigo-200 text-5xl opacity-50"><i class="fas fa-user-tie"></i></div>
             </div>
-            <div class="bg-white rounded-2xl shadow-md p-6 border-l-8 border-yellow-500 flex items-center justify-between hover:shadow-lg transition">
+
+            <!-- Kad Keputusan (Sentiasa ada) -->
+            <div id="kad-keputusan" class="bg-white rounded-2xl shadow-md p-6 border-l-8 border-yellow-500 flex items-center justify-between hover:shadow-lg transition w-full">
                 <div>
                     <h3 class="font-black text-xl text-yellow-600 mb-1">Keputusan Rasmi</h3>
                     <p class="text-sm text-gray-500 mb-4">Papan pemenang (LIVE).</p>
@@ -104,8 +109,10 @@
                 </div>
                 <div class="text-yellow-200 text-5xl opacity-50"><i class="fas fa-crown"></i></div>
             </div>
+
         </div>
 
+        <!-- SENARAI PESERTA -->
         <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 mt-8 mb-16">
             <h2 class="text-2xl font-black mb-2 text-pink-600 border-b-2 border-pink-100 pb-4 flex justify-between items-center">
                 <span><i class="fas fa-list-ol mr-2"></i> Barisan Peserta Berdaftar</span>
@@ -232,19 +239,41 @@
                     document.getElementById('paparan_masa_final').innerText = formatMasaBM(data.masa_final);
                     document.getElementById('paparan_lokasi').innerText = data.lokasi || "Sila rujuk jemputan rasmi";
                     
+                    // A. Logik Peringkat Pertandingan
                     const kotakSaringan = document.getElementById('kad-saringan');
-                    const gridKad = document.getElementById('susunan-kad-acara');
+                    const gridKadAcara = document.getElementById('susunan-kad-acara');
                     
                     if(data.peringkat_pertandingan === "final-sahaja") {
                         kotakSaringan.classList.add('hidden');
-                        gridKad.classList.remove('md:grid-cols-2');
-                        gridKad.classList.add('max-w-md');
+                        gridKadAcara.classList.remove('md:grid-cols-2');
+                        gridKadAcara.classList.add('max-w-md');
                     } else {
                         kotakSaringan.classList.remove('hidden');
-                        gridKad.classList.add('md:grid-cols-2');
-                        gridKad.classList.remove('max-w-md');
+                        gridKadAcara.classList.add('md:grid-cols-2');
+                        gridKadAcara.classList.remove('max-w-md');
                     }
 
+                    // B. Logik Kaedah Penjurian (Juri vs Undian Awam)
+                    const kaedahPenjurian = data.kaedah_penjurian || "juri-100";
+                    const bannerUndian = document.getElementById('banner-undian');
+                    const kadJuri = document.getElementById('kad-juri');
+                    const gridKadBawah = document.getElementById('susunan-kad-bawah');
+
+                    if (kaedahPenjurian === 'juri-bebas') {
+                        // Buka banner undian, sorok portal juri
+                        bannerUndian.classList.remove('hidden');
+                        kadJuri.classList.add('hidden');
+                        gridKadBawah.classList.remove('md:grid-cols-2');
+                        gridKadBawah.classList.add('max-w-md', 'mx-auto');
+                    } else {
+                        // Buka portal juri, sorok banner undian
+                        bannerUndian.classList.add('hidden');
+                        kadJuri.classList.remove('hidden');
+                        gridKadBawah.classList.add('md:grid-cols-2');
+                        gridKadBawah.classList.remove('max-w-md', 'mx-auto');
+                    }
+
+                    // C. Logik Tema Warna
                     if(data.tema_warna) {
                         document.getElementById('header-bg').className = `${data.tema_warna} text-white pt-16 pb-20 px-4 shadow-2xl relative overflow-hidden text-center rounded-b-[3rem] transition-all duration-500`;
                     }
