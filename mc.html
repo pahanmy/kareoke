@@ -25,16 +25,17 @@
                 <i class="fas fa-headset mr-1"></i> Skrin Pengacara Majlis
             </div>
             <h1 class="text-3xl md:text-5xl font-black uppercase tracking-wider text-amber-400 drop-shadow-md">🎙️ PORTAL MC</h1>
-            <p class="text-slate-400 font-medium text-sm sm:text-base mt-1 uppercase tracking-widest">Karaoke Perkahwinan Astri & Rifaie</p>
+            <!-- Nama program kini dinamik -->
+            <p id="paparan_nama_majlis" class="text-slate-400 font-medium text-sm sm:text-base mt-2 uppercase tracking-widest">Memuatkan Maklumat...</p>
         </div>
     </header>
 
     <main class="container mx-auto p-4 max-w-5xl flex-grow mt-4 space-y-6">
         
-        <div class="grid grid-cols-3 gap-2 bg-slate-900/60 p-1.5 rounded-xl border border-slate-800 max-w-3xl mx-auto shadow-inner">
+        <div id="kumpulan-tab-mc" class="grid grid-cols-3 gap-2 bg-slate-900/60 p-1.5 rounded-xl border border-slate-800 max-w-3xl mx-auto shadow-inner transition-all">
             <button onclick="tukarTabMC('sesi-info', this)" class="tab-mc aktif px-2 py-2.5 text-xs sm:text-sm font-bold uppercase rounded-lg text-slate-400 transition duration-200">📝 Skrip & Info</button>
-            <button onclick="tukarTabMC('sesi-saringan', this)" class="tab-mc px-2 py-2.5 text-xs sm:text-sm font-bold uppercase rounded-lg text-slate-400 transition duration-200">🎤 Saringan</button>
-            <button onclick="tukarTabMC('sesi-final', this)" class="tab-mc px-2 py-2.5 text-xs sm:text-sm font-bold uppercase rounded-lg text-slate-400 transition duration-200">🏆 Final</button>
+            <button id="btn-tab-saringan" onclick="tukarTabMC('sesi-saringan', this)" class="tab-mc px-2 py-2.5 text-xs sm:text-sm font-bold uppercase rounded-lg text-slate-400 transition duration-200">🎤 Saringan</button>
+            <button id="btn-tab-final" onclick="tukarTabMC('sesi-final', this)" class="tab-mc px-2 py-2.5 text-xs sm:text-sm font-bold uppercase rounded-lg text-slate-400 transition duration-200">🏆 Final</button>
         </div>
 
         <div class="text-right">
@@ -43,107 +44,12 @@
             </button>
         </div>
 
+        <!-- TAB INFO & SKRIP -->
         <div id="sesi-info" class="tab-mc-content fade-in block space-y-6">
             
             <div class="text-center sm:text-left border-l-4 border-amber-500 pl-3 py-1 mb-2">
                 <h2 class="text-xl font-black uppercase tracking-wide">Panduan Pengacara Majlis</h2>
                 <p class="text-xs text-slate-400">Rujukan fakta, senarai penaja, dan skrip promosi acara.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="glass-mc p-5 rounded-2xl border-t-4 border-blue-500">
-                    <h3 class="text-lg font-black text-amber-400 mb-3 uppercase tracking-wider"><i class="fas fa-chart-pie mr-2 text-blue-400"></i> Rumusan Peserta</h3>
-                    <ul class="space-y-3 text-sm text-slate-300">
-                        <li class="flex justify-between items-center border-b border-slate-700/50 pb-2">
-                            <span>Total Peserta Saringan</span> <span class="bg-slate-800 px-3 py-1 rounded-md font-black text-white">26 Orang</span>
-                        </li>
-                        <li class="flex justify-between items-center border-b border-slate-700/50 pb-2">
-                            <span>Peserta Menarik Diri</span> <span class="bg-red-900/50 text-red-400 px-3 py-1 rounded-md font-black">3 Orang</span>
-                        </li>
-                        <li class="flex justify-between items-center pt-1">
-                            <span>Layak Bertanding Final</span> <span class="bg-green-900/50 text-green-400 px-3 py-1 rounded-md font-black">15 Orang (Top 15)</span>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div class="glass-mc p-5 rounded-2xl border-t-4 border-purple-500">
-                    <h3 class="text-lg font-black text-amber-400 mb-3 uppercase tracking-wider"><i class="fas fa-gavel mr-2 text-purple-400"></i> Barisan Panel Juri</h3>
-                    <ul class="space-y-3 text-sm text-slate-300 font-medium">
-                        <li class="flex items-center gap-3 bg-slate-800/50 p-2 rounded-lg border border-slate-700">
-                            <div class="bg-purple-500/20 text-purple-400 h-8 w-8 rounded flex items-center justify-center font-bold">1</div>
-                            <div class="flex-grow">En. Alhadi bin Haji Ekni</div>
-                            <span class="text-[10px] bg-purple-600 text-white px-2 py-0.5 rounded uppercase font-bold">Ketua Juri</span>
-                        </li>
-                        <li class="flex items-center gap-3 p-1 pl-2">
-                            <div class="bg-slate-800 text-slate-500 h-6 w-6 rounded flex items-center justify-center text-xs font-bold">2</div>
-                            <div>Cik Siti Khuzaimah</div>
-                        </li>
-                        <li class="flex items-center gap-3 p-1 pl-2">
-                            <div class="bg-slate-800 text-slate-500 h-6 w-6 rounded flex items-center justify-center text-xs font-bold">3</div>
-                            <div>Pn. Nur Afiqah bt. Anis</div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="glass-mc p-6 rounded-2xl border-l-4 border-emerald-500 shadow-lg">
-                <h3 class="text-xl font-black text-amber-400 mb-5 uppercase tracking-wide text-center"><i class="fas fa-gift mr-2 text-emerald-400"></i> Senarai Hadiah, Penaja & Penyampai</h3>
-                
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div>
-                        <h4 class="font-bold text-white mb-3 text-sm border-b border-slate-700 pb-1">Bentuk Tajaan Utama:</h4>
-                        <ul class="space-y-2 text-xs text-slate-300 leading-relaxed">
-                            <li><i class="fas fa-money-bill-wave text-emerald-400 w-5"></i> <b>Sumbangan Wang Tunai ditaja oleh:</b> Enak Amat Group, Pak Amat Homestay, dan Pak Siri Homestay.</li>
-                            <li><i class="fas fa-shopping-bag text-pink-400 w-5"></i> <b>Hamper Barangan ditaja oleh:</b> Kedai Souvenir Farah Enterprise.</li>
-                            <li><i class="fas fa-trophy text-amber-400 w-5"></i> <b>Piala Kemenangan (Top 3) ditaja oleh:</b> Spark Team.</li>
-                        </ul>
-                        <div class="mt-4 bg-slate-900/60 p-3 rounded-lg border border-slate-800">
-                            <h4 class="font-bold text-slate-400 text-[11px] uppercase mb-1">Ganjaran Finalis:</h4>
-                            <p class="text-xs text-slate-300"><b>Johan, Naib & Ketiga:</b> Wang Tunai + Hamper + Piala<br><b>Saguhati (Baki 12 Finalis):</b> Wang Tunai + Hamper</p>
-                        </div>
-                    </div>
-
-                    <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
-                        <h4 class="font-bold text-amber-500 mb-3 text-sm uppercase">Jemputan Penyampai Hadiah:</h4>
-                        <ul class="space-y-3 text-xs text-slate-300">
-                            <li class="flex items-start gap-2">
-                                <span class="bg-slate-700 text-white px-2 py-0.5 rounded w-24 text-center font-bold shrink-0">Saguhati 6-10</span>
-                                <span><b>En Razali bin Ahmad</b> <br><i class="text-slate-500">(Wakil Pak Siri Homestay)</i></span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="bg-slate-700 text-white px-2 py-0.5 rounded w-24 text-center font-bold shrink-0">Saguhati 1-5</span>
-                                <span><b>Mohd Satar</b> <br><i class="text-slate-500">(Wakil Enak Amat Group)</i></span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="bg-amber-600/30 text-amber-500 px-2 py-0.5 rounded w-24 text-center font-bold shrink-0">Tempat 4 & 5</span>
-                                <span><b>Wati binti Ahmad</b> <br><i class="text-slate-500">(Wakil Pak Amat Homestay)</i></span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="bg-amber-500 text-slate-900 px-2 py-0.5 rounded w-24 text-center font-black shrink-0">Juara Top 3</span>
-                                <span><b>Ubi binti Ahmad</b></span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <h3 class="text-xl font-black text-amber-400 mt-8 mb-2 uppercase tracking-wide text-center"><i class="fas fa-bullhorn mr-2"></i> Skrip Pengumuman Tajaan (MC)</h3>
-            
-            <div class="grid grid-cols-1 gap-4">
-                <div class="glass-mc p-5 rounded-2xl skrip-box">
-                    <h4 class="font-black text-white text-sm mb-2 uppercase"><i class="fas fa-home text-amber-500 mr-1"></i> Pak Amat Homestay & Pak Siri Homestay</h4>
-                    <p class="text-slate-300 text-base leading-relaxed italic">"Kepada para tetamu yang hadir, jika anda ingin menikmati suasana desa yang indah dan menginap dengan selesa bersama keluarga, datanglah menginap di homestay kami iaitu Pak Amat Homestay dan Pak Siri Homestay."</p>
-                </div>
-
-                <div class="glass-mc p-5 rounded-2xl skrip-box">
-                    <h4 class="font-black text-white text-sm mb-2 uppercase"><i class="fas fa-store text-pink-400 mr-1"></i> Kedai Souvenir Farah Enterprise</h4>
-                    <p class="text-slate-300 text-base leading-relaxed italic">"Jangan lupa untuk sokong penaja hamper kita! Kedai Farah Enterprise menjual pelbagai pilihan tudung, produk kecantikan, dan pelbagai barang keperluan mampu milik dengan harga yang sangat berpatutan. Berkunjunglah ke kedai kami!"</p>
-                </div>
-
-                <div class="glass-mc p-5 rounded-2xl skrip-box border-l-4 border-indigo-500">
-                    <h4 class="font-black text-white text-sm mb-2 uppercase"><i class="fas fa-laptop-code text-indigo-400 mr-1"></i> Pengenalan Sistem Juri Spark</h4>
-                    <p class="text-slate-300 text-base leading-relaxed italic">"Untuk makluman hadirin sekalian, proses penjurian kita pada malam ini adalah bertaraf profesional kerana kita menggunakan <b>Sistem Spark Karaoke oleh Pahan Studio</b>. Ia adalah satu aplikasi inovasi janaan tempatan daripada team Spark oleh En. Farhan yang mampu mengurus sistem penghakiman menjadi lebih efisien, pantas dan teratur. Spark, inovasi dari Belawai untuk warga Belawai semua!"</p>
-                </div>
             </div>
 
             <div class="glass-mc p-6 rounded-2xl mt-4">
@@ -166,26 +72,26 @@
                     </div>
                 </div>
                 <div class="text-xs text-slate-400 bg-slate-800/50 p-3 rounded-lg text-center">
-                    <b>Syarat Am:</b> Keputusan panel hakim adalah muktamad dan sebarang bantahan tidak akan dilayan. Pemarkahan diurus sepenuhnya melalui sistem tanpa manipulasi manual.
+                    <b>Makluman:</b> Anda boleh mengubah atau menambah skrip penaja di dalam fail kod HTML (mc.html) mengikut kesesuaian acara anda.
                 </div>
             </div>
 
         </div>
 
+        <!-- TAB SARINGAN -->
         <div id="sesi-saringan" class="tab-mc-content fade-in hidden space-y-4">
-            <div class="text-center sm:text-left border-l-4 border-amber-500 pl-3 py-1 mb-4 flex flex-col sm:flex-row justify-between items-center gap-2">
-                <div>
-                    <h2 class="text-xl font-black uppercase tracking-wide">Pusingan Saringan</h2>
-                    <p class="text-xs text-slate-400">Tandakan pada petak <b>"Selesai"</b> untuk menyimpan rekod peserta yang sudah beraksi.</p>
-                </div>
+            <div class="text-center sm:text-left border-l-4 border-amber-500 pl-3 py-1 mb-4">
+                <h2 class="text-xl font-black uppercase tracking-wide">Pusingan Saringan</h2>
+                <p class="text-xs text-slate-400">Tandakan pada petak <b>"Selesai"</b> untuk menyimpan rekod peserta yang sudah beraksi.</p>
             </div>
             <div id="konten-saringan" class="space-y-4"></div>
         </div>
 
+        <!-- TAB FINAL -->
         <div id="sesi-final" class="tab-mc-content fade-in hidden space-y-4">
             <div class="text-center sm:text-left border-l-4 border-amber-500 pl-3 py-1 mb-4">
-                <h2 class="text-xl font-black uppercase tracking-wide">Pusingan Final (Top 15)</h2>
-                <p class="text-xs text-slate-400">Tandakan pada petak <b>"Selesai"</b> untuk menyimpan rekod finalis yang sudah beraksi.</p>
+                <h2 class="text-xl font-black uppercase tracking-wide">Pusingan Final</h2>
+                <p class="text-xs text-slate-400">Tandakan pada petak <b>"Selesai"</b> untuk menyimpan rekod peserta yang sudah beraksi di pentas akhir.</p>
             </div>
             <div id="konten-final" class="space-y-4"></div>
         </div>
@@ -193,12 +99,12 @@
     </main>
 
     <footer class="bg-slate-950 text-center py-4 text-slate-500 text-xs mt-auto border-t border-slate-900">
-        <p>© 2026 Astri & Rifaie Wedding | Dibuat khas untuk kegunaan pengacara majlis</p>
+        <p>© 2026 <span id="footer_nama_majlis">Spark Karaoke System</span> | Dibuat khas untuk kegunaan pengacara majlis</p>
     </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCwDP8KCl2r6QL1DOAQTMGx5-pcwub9mYM",
@@ -211,6 +117,10 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        let currentMajlis = "";
+        let peringkatSemasa = "";
+
+        // Fungsi Tukar Tab
         window.tukarTabMC = function(tabId, btnElemen) {
             document.querySelectorAll('.tab-mc-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(tabId).classList.remove('hidden');
@@ -218,35 +128,82 @@
             btnElemen.classList.add('aktif');
         }
 
+        // 1. Dapatkan Info Majlis
+        async function muatInfoMajlis() {
+            try {
+                const docSnap = await getDoc(doc(db, "tetapan", "info_majlis"));
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    currentMajlis = data.nama_majlis || "Spark Karaoke";
+                    peringkatSemasa = data.peringkat_pertandingan || "saringan-final";
+                    
+                    document.getElementById('paparan_nama_majlis').innerText = currentMajlis;
+                    document.getElementById('footer_nama_majlis').innerText = currentMajlis;
+
+                    // Logik jika format "Terus Final Sahaja"
+                    if(peringkatSemasa === 'final-sahaja') {
+                        document.getElementById('btn-tab-saringan').classList.add('hidden');
+                        document.getElementById('kumpulan-tab-mc').classList.remove('grid-cols-3');
+                        document.getElementById('kumpulan-tab-mc').classList.add('grid-cols-2'); // Betulkan grid
+                    }
+
+                    muatDataMC(); 
+                }
+            } catch (err) { console.error("Gagal muat info majlis", err); }
+        }
+
+        // 2. Dapatkan Data Peserta Untuk MC
         window.muatDataMC = async function() {
+            if(!currentMajlis) return; // Pastikan nama majlis dah ditarik
+
             const loaders = `<div class="text-center py-12 text-slate-400"><i class="fas fa-circle-notch fa-spin text-3xl mb-2 text-amber-500"></i><br>Menarik pangkalan data terkini...</div>`;
             document.getElementById('konten-saringan').innerHTML = loaders;
             document.getElementById('konten-final').innerHTML = loaders;
 
             try {
-                const snap = await getDocs(query(collection(db, "peserta"), orderBy("no_giliran", "asc")));
+                // Filter hanya untuk majlis yang sedang aktif
+                const q = query(collection(db, "peserta"), where("majlis", "==", currentMajlis));
+                const snap = await getDocs(q);
+                
+                let senaraiPeserta = [];
+                snap.forEach(d => { let p = d.data(); p.id = d.id; senaraiPeserta.push(p); });
+                
+                // Susun ikut giliran menggunakan javascript untuk elak isu composite index
+                senaraiPeserta.sort((a,b) => a.no_giliran - b.no_giliran);
                 
                 let htmlSaringan = "";
                 let htmlFinal = "";
 
-                snap.forEach(d => {
-                    let p = d.data(); p.id = d.id; 
-                    
-                    let komenSaringanHTML = binaBlokKomen(p.komen_saringan, p.emoji_saringan);
-                    let laguSaringan = p.lagu && p.lagu[0] ? p.lagu[0].tajuk : "Tiada maklumat lagu";
-                    let tajukSaringanHTML = `<div class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-2"><i class="far fa-comments mr-1"></i> Nota Juri:</div>`;
-                    
-                    htmlSaringan += binaKadMC(p, laguSaringan, tajukSaringanHTML + komenSaringanHTML, "Saringan", p.mc_selesai_saringan || false);
+                senaraiPeserta.forEach(p => {
+                    // Jika ada Saringan
+                    if(peringkatSemasa !== 'final-sahaja') {
+                        let komenSaringanHTML = binaBlokKomen(p.komen_saringan, p.emoji_saringan);
+                        let laguSaringan = p.lagu && p.lagu[0] ? p.lagu[0].tajuk : "Tiada maklumat lagu";
+                        let tajukSaringanHTML = `<div class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-2"><i class="far fa-comments mr-1"></i> Nota Juri:</div>`;
+                        
+                        htmlSaringan += binaKadMC(p, laguSaringan, tajukSaringanHTML + komenSaringanHTML, "Saringan", p.mc_selesai_saringan || false);
+                    }
 
-                    if(p.status === "Final") {
+                    // Jika di Peringkat Final ATAU format majlis adalah 'Terus Final'
+                    if(p.status === "Final" || peringkatSemasa === 'final-sahaja') {
                         let komenFinalHTML = binaBlokKomen(p.komen_final, p.emoji_final);
+                        let komenSaringanHTML = binaBlokKomen(p.komen_saringan, p.emoji_saringan);
+                        
+                        // Gunakan lagu final jika ada, jika tidak guna lagu saringan
                         let laguFinal = p.lagu && p.lagu[1] && p.lagu[1].tajuk !== "" ? p.lagu[1].tajuk : (p.lagu && p.lagu[0] ? p.lagu[0].tajuk : "Tiada maklumat lagu");
                         
-                        let gabunganKomen = `
-                            <div class="mb-4 bg-slate-800/30 p-3 rounded-xl border border-slate-700/50">
-                                <div class="text-[11px] text-amber-500 font-black uppercase tracking-widest mb-2"><i class="fas fa-history mr-1"></i> Imbasan Komen Saringan:</div>
-                                ${komenSaringanHTML}
-                            </div>
+                        let gabunganKomen = "";
+                        
+                        if(peringkatSemasa !== 'final-sahaja') {
+                            gabunganKomen += `
+                                <div class="mb-4 bg-slate-800/30 p-3 rounded-xl border border-slate-700/50">
+                                    <div class="text-[11px] text-amber-500 font-black uppercase tracking-widest mb-2"><i class="fas fa-history mr-1"></i> Imbasan Komen Saringan:</div>
+                                    ${komenSaringanHTML}
+                                </div>
+                            `;
+                        }
+
+                        gabunganKomen += `
                             <div class="pt-2">
                                 <div class="text-[11px] text-green-400 font-black uppercase tracking-widest mb-2"><i class="far fa-comments mr-1"></i> Ulasan Juri Final:</div>
                                 ${komenFinalHTML}
@@ -258,7 +215,7 @@
                 });
 
                 document.getElementById('konten-saringan').innerHTML = htmlSaringan || `<div class="text-center text-slate-500 py-8">Belum ada peserta berdaftar.</div>`;
-                document.getElementById('konten-final').innerHTML = htmlFinal || `<div class="text-center text-slate-500 py-8">Menunggu urusetia mengesahkan Top 15.</div>`;
+                document.getElementById('konten-final').innerHTML = htmlFinal || `<div class="text-center text-slate-500 py-8">Menunggu keputusan peserta dari pusingan saringan.</div>`;
 
             } catch (err) {
                 const ralatHTML = `<div class="text-center text-red-400 py-8 font-bold">Ralat memuatkan pangkalan data. Sila muat semula skrin.</div>`;
@@ -348,7 +305,8 @@
             return adaKomen ? senaraiBlok : `<div class="text-slate-500 text-[11px] italic p-2 bg-slate-900/10 rounded-lg border border-dashed border-slate-800/50">Belum ada nota maklum balas daripada panel juri bagi pusingan ini.</div>`;
         }
 
-        muatDataMC();
+        // Mula sistem
+        muatInfoMajlis();
     </script>
 </body>
 </html>
