@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Undian Awam - Spark Karaoke</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .checkbox-peserta:checked + div {
+            border-color: #f59e0b;
+            background-color: #fffbeb;
+            transform: scale(1.02);
+            box-shadow: 0 10px 15px -3px rgba(245, 158, 11, 0.3);
+        }
+        .checkbox-peserta:checked + div .ikon-check { display: block; }
+    </style>
+</head>
+<body class="bg-slate-100 font-sans antialiased text-slate-800 min-h-screen flex flex-col">
+
+    <header class="bg-indigo-900 text-white p-6 shadow-xl text-center border-b-4 border-amber-500 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
+        <div class="relative z-10">
+            <h1 class="text-3xl font-black uppercase tracking-widest text-amber-400 drop-shadow-md"><i class="fas fa-vote-yea mr-2"></i> Portal Undian Awam</h1>
+            <p class="text-indigo-200 text-sm mt-1">Sokong bintang pilihan anda! Terhad kepada 3 peserta sahaja.</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 max-w-3xl flex-grow mt-6">
+        
+        <div id="ruang-amaran" class="hidden bg-rose-100 border border-rose-400 text-rose-700 px-4 py-3 rounded-xl mb-6 font-bold shadow-sm text-center">
+            Mesej Amaran
+        </div>
+
+        <div id="borang-undian" class="bg-white p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200">
+            
+            <!-- Bahagian Masukkan IC -->
+            <div class="mb-8 bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                <label class="block text-sm font-black text-slate-700 uppercase tracking-widest mb-2"><i class="fas fa-id-card text-indigo-500 mr-2"></i> No. Kad Pengenalan (IC)</label>
+                <p class="text-xs text-slate-500 mb-3 font-medium">Sistem hanya membenarkan 1 kali undian bagi setiap 1 jam untuk mengelakkan *spam*.</p>
+                <input type="text" id="ic-pengundi" inputmode="numeric" maxlength="12" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="w-full border-2 border-indigo-200 p-4 rounded-xl text-center text-xl font-black tracking-[0.2em] focus:border-amber-500 focus:outline-none transition bg-white" placeholder="CONTOH: 900101135566">
+            </div>
+
+            <!-- Senarai Peserta -->
+            <div class="mb-4 flex justify-between items-end border-b border-slate-100 pb-2">
+                <h3 class="font-black text-slate-800 uppercase tracking-wide">Pilih Peserta (Max 3)</h3>
+                <span id="kaunter-pilihan" class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-black shadow-sm">0 / 3 Dipilih</span>
+            </div>
+            
+            <div id="senarai-peserta-undian" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                <!-- Data peserta masuk di sini -->
+                <div class="text-center p-4 text-slate-400 font-bold col-span-full"><i class="fas fa-spinner fa-spin mr-2"></i> Memuatkan senarai...</div>
+            </div>
+
+            <button id="btn-hantar-undi" onclick="hantarUndian()" class="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-black py-4 rounded-xl shadow-lg transition transform hover:-translate-y-1 uppercase tracking-widest text-lg">
+                Hantar Undian Rasmi <i class="fas fa-paper-plane ml-2"></i>
+            </button>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-center py-6 text-slate-500 text-sm mt-auto border-t border-slate-800">
+        <p>Hakcipta Terpelihara © 2026 | Spark Karaoke System</p>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, doc, setDoc, getDoc, updateDoc, increment, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCwDP8KCl2r6QL1DOAQTMGx5-pcwub9mYM",
+            authDomain: "kareoke-83a74.firebaseapp.com",
+            projectId: "kareoke-83a74",
+            storageBucket: "kareoke-83a74.firebasestorage.app",
+            messagingSenderId: "740423962434",
+            appId: "1:740423962434:web:f3460cc576f33574e802db"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let pesertaDipilih = 0;
+
+        // Load peserta
+        async function muatSenaraiUntukDiundi() {
+            try {
+                // Semak mode penjurian terlebih dahulu
+                const docSnap = await getDoc(doc(db, "tetapan", "info_majlis"));
+                if(docSnap.exists() && docSnap.data().kaedah_penjurian === 'juri-100') {
+                    document.getElementById('borang-undian').innerHTML = `<div class="text-center p-10"><i class="fas fa-lock text-6xl text-slate-300 mb-4"></i><h2 class="text-2xl font-black text-slate-700 uppercase">Undian Awam Ditutup</h2><p class="text-slate-500 mt-2">Sistem majlis ini menggunakan kaedah Juri Profesional 100%.</p></div>`;
+                    return;
+                }
+
+                // Jika undian awam aktif, muat peserta
+                const snap = await getDocs(query(collection(db, "peserta"), orderBy("no_giliran", "asc")));
+                const container = document.getElementById('senarai-peserta-undian');
+                container.innerHTML = "";
+
+                snap.forEach(d => {
+                    let p = d.data();
+                    let img = p.gambar ? `<img src="${p.gambar}" class="h-12 w-12 object-cover rounded-full border shadow-sm">` : `<div class="h-12 w-12 bg-slate-200 rounded-full flex items-center justify-center text-slate-400 text-xs"><i class="fas fa-user"></i></div>`;
+                    
+                    container.innerHTML += `
+                        <label class="relative cursor-pointer group">
+                            <input type="checkbox" class="checkbox-peserta absolute opacity-0 w-0 h-0" value="${d.id}" onchange="semakHad(this)">
+                            <div class="bg-slate-50 border-2 border-slate-200 p-4 rounded-xl flex items-center gap-4 transition-all duration-300 group-hover:border-amber-300">
+                                ${img}
+                                <div>
+                                    <div class="text-[10px] text-slate-400 font-black uppercase tracking-wider mb-0.5">Giliran ${p.no_giliran}</div>
+                                    <div class="font-bold text-slate-800 uppercase text-sm">${p.nama}</div>
+                                </div>
+                                <div class="ikon-check hidden absolute right-4 top-1/2 -translate-y-1/2 text-amber-500 text-2xl drop-shadow-sm">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                            </div>
+                        </label>
+                    `;
+                });
+            } catch(err) {
+                document.getElementById('senarai-peserta-undian').innerHTML = "Ralat sistem. Sila muat semula.";
+            }
+        }
+
+        // Logic Checkbox (Max 3)
+        window.semakHad = function(checkbox) {
+            const semuaCheckboxes = document.querySelectorAll('.checkbox-peserta');
+            let jumlahChecked = document.querySelectorAll('.checkbox-peserta:checked').length;
+            
+            if (jumlahChecked > 3) {
+                checkbox.checked = false; // Batalkan tick
+                paparAmaran("Anda hanya boleh memilih maksimum 3 orang peserta sahaja!");
+            } else {
+                document.getElementById('kaunter-pilihan').innerText = `${jumlahChecked} / 3 Dipilih`;
+                if(jumlahChecked === 3) document.getElementById('kaunter-pilihan').className = "bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-black shadow-sm";
+                else document.getElementById('kaunter-pilihan').className = "bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-black shadow-sm";
+            }
+        }
+
+        window.paparAmaran = function(mesej) {
+            const divAmaran = document.getElementById('ruang-amaran');
+            divAmaran.innerHTML = `<i class="fas fa-exclamation-triangle mr-2"></i> ${mesej}`;
+            divAmaran.classList.remove('hidden');
+            setTimeout(() => { divAmaran.classList.add('hidden'); }, 4000);
+        }
+
+        window.hantarUndian = async function() {
+            const ic = document.getElementById('ic-pengundi').value;
+            const checkedBoxes = document.querySelectorAll('.checkbox-peserta:checked');
+            
+            if (ic.length !== 12) {
+                return paparAmaran("Sila masukkan nombor IC yang sah (12 digit tanpa sempang).");
+            }
+            if (checkedBoxes.length === 0) {
+                return paparAmaran("Sila pilih sekurang-kurangnya 1 peserta sebelum menghantar undian.");
+            }
+
+            const btn = document.getElementById('btn-hantar-undi');
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Memproses...`;
+            btn.disabled = true;
+
+            try {
+                const undiRef = doc(db, "rekod_undian_awam", ic);
+                const undiSnap = await getDoc(undiRef);
+                const masaSekarang = Date.now();
+                const SATU_JAM = 3600000; // 1 jam dalam milisaat
+
+                // Cek Cooldown 1 Jam
+                if (undiSnap.exists()) {
+                    const masaAkhirUndi = undiSnap.data().waktu_undi;
+                    const bezaMasa = masaSekarang - masaAkhirUndi;
+                    
+                    if (bezaMasa < SATU_JAM) {
+                        let bakiMinit = Math.ceil((SATU_JAM - bezaMasa) / 60000);
+                        paparAmaran(`Akses Ditolak! Anda perlu menunggu ${bakiMinit} minit lagi sebelum boleh mengundi semula.`);
+                        btn.innerHTML = `Hantar Undian Rasmi <i class="fas fa-paper-plane ml-2"></i>`;
+                        btn.disabled = false;
+                        return;
+                    }
+                }
+
+                // Simpan rekod IC dan masa undi
+                let senaraiIdPilihan = [];
+                checkedBoxes.forEach(cb => senaraiIdPilihan.push(cb.value));
+
+                await setDoc(undiRef, {
+                    ic: ic,
+                    waktu_undi: masaSekarang,
+                    pilihan: senaraiIdPilihan
+                });
+
+                // Tambah point 'undi_awam' ke dalam data peserta
+                for (let id of senaraiIdPilihan) {
+                    await updateDoc(doc(db, "peserta", id), {
+                        undi_awam: increment(1)
+                    });
+                }
+
+                // Reset form & berjaya
+                document.getElementById('ic-pengundi').value = "";
+                checkedBoxes.forEach(cb => cb.checked = false);
+                document.getElementById('kaunter-pilihan').innerText = "0 / 3 Dipilih";
+                document.getElementById('kaunter-pilihan').className = "bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-black shadow-sm";
+                
+                alert("Tahniah! Undian anda telah berjaya direkodkan. Terima kasih kerana menyokong.");
+                
+            } catch (err) {
+                paparAmaran("Ralat sistem: " + err.message);
+            }
+
+            btn.innerHTML = `Hantar Undian Rasmi <i class="fas fa-paper-plane ml-2"></i>`;
+            btn.disabled = false;
+        }
+
+        muatSenaraiUntukDiundi();
+    </script>
+</body>
+</html>
