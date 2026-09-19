@@ -3,31 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KARAOKE Astri & Rifaie</title>
+    <title>KARAOKE Majlis</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        .bg-wedding {
-            background: linear-gradient(135deg, #f43f5e 0%, #8b5cf6 100%);
-        }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-        }
+        /* Pilihan Tema Warna */
+        .tema-pink { background: linear-gradient(135deg, #f43f5e 0%, #8b5cf6 100%); }
+        .tema-blue { background: linear-gradient(135deg, #3b82f6 0%, #4f46e5 100%); }
+        .tema-emerald { background: linear-gradient(135deg, #10b981 0%, #0d9488 100%); }
+        .tema-gold { background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%); }
+        
+        .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
     </style>
 </head>
 <body class="bg-slate-100 font-sans antialiased text-gray-900">
 
-    <header class="bg-wedding text-white pt-16 pb-20 px-4 shadow-2xl relative overflow-hidden text-center rounded-b-[3rem]">
+    <!-- Latar belakang ini akan bertukar mengikut tema -->
+    <header id="header-bg" class="tema-pink text-white pt-16 pb-20 px-4 shadow-2xl relative overflow-hidden text-center rounded-b-[3rem] transition-all duration-500">
         <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none text-9xl">
             <i class="fas fa-music absolute top-10 left-10 transform -rotate-12"></i>
             <i class="fas fa-heart absolute bottom-10 right-10 transform rotate-12"></i>
         </div>
 
         <div class="relative z-10 container mx-auto max-w-4xl">
-            <p class="text-sm md:text-base font-bold uppercase tracking-[0.3em] mb-4 text-pink-200">Jom Memeriahkan Pertandingan Karaoke!</p>
+            <p class="text-sm md:text-base font-bold uppercase tracking-[0.3em] mb-4 text-white/80">Jom Memeriahkan Pertandingan Karaoke!</p>
             <h2 class="text-xl md:text-2xl font-medium mb-1">Sempena Majlis Perkahwinan</h2>
-            <h1 class="text-5xl md:text-7xl font-black mb-6 drop-shadow-lg text-yellow-300">Astri <span class="text-white">&</span> Rifaie</h1>
+            <h1 id="paparan_nama_majlis" class="text-4xl md:text-6xl font-black mb-6 drop-shadow-lg text-yellow-300">Memuatkan...</h1>
             
             <p class="text-lg md:text-xl font-medium mb-8 max-w-2xl mx-auto leading-relaxed">
                 Sambutan sangat menggalakkan setakat ini! Pelbagai suara hebat bakal beraksi dan menghiburkan semua yang hadir. Bahhh jangan malu-malu, kita gegarkan malam ini! 🎤✨
@@ -38,57 +39,49 @@
                 <div class="glass-card p-6 rounded-2xl shadow-xl transform transition hover:scale-105">
                     <div class="text-pink-600 text-3xl mb-2"><i class="fas fa-microphone-alt"></i></div>
                     <h3 class="font-black text-xl mb-1 uppercase">Sesi Saringan</h3>
-                    <p class="text-sm font-bold text-gray-500 mb-3"><i class="far fa-calendar-alt"></i> 1 Jun 2026 | <i class="far fa-clock"></i> 2.00 Petang</p>
+                    <p class="text-sm font-bold text-gray-500 mb-3">
+                        <i class="far fa-calendar-alt"></i> <span id="paparan_tarikh_saringan">...</span> | 
+                        <i class="far fa-clock"></i> <span id="paparan_masa_saringan">...</span>
+                    </p>
                     <p class="text-sm">Hanya 15 peserta terbaik akan mara ke pusingan akhir pada malam tersebut!</p>
                 </div>
 
                 <div class="glass-card p-6 rounded-2xl shadow-xl transform transition hover:scale-105 border-4 border-yellow-400">
                     <div class="text-yellow-500 text-3xl mb-2"><i class="fas fa-trophy"></i></div>
                     <h3 class="font-black text-xl mb-1 uppercase">Final Karaoke</h3>
-                    <p class="text-sm font-bold text-gray-500 mb-3"><i class="far fa-calendar-alt"></i> 1 Jun 2026 | <i class="far fa-clock"></i> 8.30 Malam</p>
+                    <p class="text-sm font-bold text-gray-500 mb-3">
+                        <i class="far fa-calendar-alt"></i> <span id="paparan_tarikh_final">...</span> | 
+                        <i class="far fa-clock"></i> <span id="paparan_masa_final">...</span>
+                    </p>
                     <p class="text-sm font-bold text-indigo-700">Pertembungan epik vokal terbaik!</p>
                 </div>
 
             </div>
 
             <div class="inline-block bg-black/30 backdrop-blur-sm px-6 py-3 rounded-full border border-white/30 text-sm md:text-base">
-                <i class="fas fa-map-marker-alt text-yellow-300 mr-2"></i> <strong>Lokasi:</strong> Rumah Pengantin Perempuan, Kpg Lot Baru Belawai
+                <i class="fas fa-map-marker-alt text-yellow-300 mr-2"></i> <strong>Lokasi:</strong> <span id="paparan_lokasi">...</span>
             </div>
         </div>
     </header>
 
     <main class="container mx-auto p-4 max-w-5xl -mt-8 relative z-20 space-y-8 mb-16">
         
-        <div class="bg-white rounded-2xl shadow-lg p-6 text-center flex flex-col md:flex-row justify-around gap-4 border border-pink-100">
-            <div><span class="text-2xl block mb-1">🎶</span><span class="font-bold text-sm text-gray-700">Banyak Lagu Best</span></div>
-            <div><span class="text-2xl block mb-1">🎉</span><span class="font-bold text-sm text-gray-700">Suasana Santai & Meriah</span></div>
-            <div><span class="text-2xl block mb-1">👨‍👩‍👧‍👦</span><span class="font-bold text-sm text-gray-700">Hiburan Untuk Semua</span></div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            
+        <!-- (Bahagian butang Hakim & Keputusan kekal sama) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
             <div class="bg-white rounded-2xl shadow-md p-6 border-l-8 border-indigo-600 flex items-center justify-between hover:shadow-lg transition">
                 <div>
                     <h3 class="font-black text-xl text-indigo-900 mb-1">Portal Juri</h3>
                     <p class="text-sm text-gray-500 mb-4">Akses khas untuk panel hakim.</p>
-                    <a href="https://pahanmy.github.io/kareoke/hakim.html" class="text-indigo-600 font-bold text-sm hover:underline"><i class="fas fa-external-link-alt"></i> Buka Pautan</a>
-                </div>
-                <div class="bg-white p-2 border-2 border-gray-100 rounded-xl shadow-sm">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://pahanmy.github.io/kareoke/hakim.html" alt="QR Hakim" class="w-24 h-24">
+                    <a href="hakim.html" class="text-indigo-600 font-bold text-sm hover:underline"><i class="fas fa-external-link-alt"></i> Buka Pautan</a>
                 </div>
             </div>
-
             <div class="bg-white rounded-2xl shadow-md p-6 border-l-8 border-yellow-500 flex items-center justify-between hover:shadow-lg transition">
                 <div>
                     <h3 class="font-black text-xl text-yellow-600 mb-1">Keputusan Rasmi</h3>
                     <p class="text-sm text-gray-500 mb-4">Papan pemenang (LIVE).</p>
-                    <a href="https://pahanmy.github.io/kareoke/rasmi.html" class="text-yellow-600 font-bold text-sm hover:underline"><i class="fas fa-external-link-alt"></i> Buka Pautan</a>
-                </div>
-                <div class="bg-white p-2 border-2 border-gray-100 rounded-xl shadow-sm">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://pahanmy.github.io/kareoke/rasmi.html" alt="QR Keputusan" class="w-24 h-24">
+                    <a href="rasmi.html" class="text-yellow-600 font-bold text-sm hover:underline"><i class="fas fa-external-link-alt"></i> Buka Pautan</a>
                 </div>
             </div>
-
         </div>
 
         <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 mt-8">
@@ -116,15 +109,10 @@
 
     </main>
 
-    <footer class="bg-slate-900 text-center py-6 text-slate-400 text-sm">
-        <p>Hakcipta Terpelihara © 2026 | Dikuasakan untuk Majlis Perkahwinan Astri & Rifaie</p>
-    </footer>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, getDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // GUNA CONFIG ANDA
         const firebaseConfig = {
             apiKey: "AIzaSyCwDP8KCl2r6QL1DOAQTMGx5-pcwub9mYM",
             authDomain: "kareoke-83a74.firebaseapp.com",
@@ -137,6 +125,32 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // 1. Dapatkan Maklumat Majlis & Tema dari Firebase
+        async function muatInfoMajlis() {
+            try {
+                const docSnap = await getDoc(doc(db, "tetapan", "info_majlis"));
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    
+                    document.getElementById('paparan_nama_majlis').innerHTML = data.nama_majlis || "Astri <span class='text-white'>&</span> Rifaie";
+                    document.getElementById('paparan_tarikh_saringan').innerText = data.tarikh_acara || "1 Jun 2026";
+                    document.getElementById('paparan_tarikh_final').innerText = data.tarikh_acara || "1 Jun 2026";
+                    document.getElementById('paparan_masa_saringan').innerText = data.masa_saringan || "2.00 Petang";
+                    document.getElementById('paparan_masa_final').innerText = data.masa_final || "8.30 Malam";
+                    document.getElementById('paparan_lokasi').innerText = data.lokasi || "Kpg Lot Baru Belawai";
+                    
+                    // Tukar tema berdasarkan tetapan
+                    if(data.tema_warna) {
+                        const header = document.getElementById('header-bg');
+                        header.className = `${data.tema_warna} text-white pt-16 pb-20 px-4 shadow-2xl relative overflow-hidden text-center rounded-b-[3rem] transition-all duration-500`;
+                    }
+                }
+            } catch (err) {
+                console.error("Gagal memuat info majlis", err);
+            }
+        }
+
+        // 2. Dapatkan Senarai Peserta (Kekal sama)
         async function muatNaikPaparanAwam() {
             try {
                 const q = query(collection(db, "peserta"), orderBy("no_giliran", "asc"));
@@ -151,7 +165,6 @@
 
                 snap.forEach(d => {
                     let p = d.data();
-                    
                     let imgTag = p.gambar 
                         ? `<img src="${p.gambar}" class="h-10 w-10 object-cover rounded-full mx-auto border-2 border-pink-200 shadow-sm">` 
                         : `<div class="h-10 w-10 bg-slate-200 rounded-full mx-auto flex items-center justify-center text-[10px] text-slate-500"><i class="fas fa-user"></i></div>`;
@@ -177,7 +190,7 @@
             }
         }
 
-        // Muat naik automatik
+        muatInfoMajlis();
         muatNaikPaparanAwam();
     </script>
 </body>
