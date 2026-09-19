@@ -9,49 +9,55 @@
 </head>
 <body class="bg-slate-50 font-sans antialiased text-gray-900 min-h-screen flex flex-col p-4">
 
-    <div class="max-w-3xl mx-auto w-full bg-white p-8 rounded-2xl shadow-lg mt-10 border-t-4 border-indigo-600">
-        <h1 class="text-2xl font-black mb-6 text-slate-800 uppercase tracking-wide"><i class="fas fa-cogs text-indigo-600 mr-2"></i> Tetapan Info Majlis</h1>
+    <!-- Butang Kembali ke Admin -->
+    <div class="max-w-3xl mx-auto w-full mb-4">
+        <a href="admin.html" class="inline-block bg-slate-800 text-white px-4 py-2 rounded-lg font-bold hover:bg-slate-700 transition"><i class="fas fa-arrow-left mr-2"></i> Kembali ke Pusat Kawalan</a>
+    </div>
+
+    <div class="max-w-3xl mx-auto w-full bg-white p-8 rounded-2xl shadow-lg border-t-4 border-indigo-600">
+        <h1 class="text-2xl font-black mb-6 text-slate-800 uppercase tracking-wide"><i class="fas fa-cogs text-indigo-600 mr-2"></i> Tetapan Info Majlis & Penjurian</h1>
         
         <form id="form-info" class="space-y-6">
             <div>
                 <label class="block text-sm font-bold text-gray-700 mb-1">Nama Pasangan / Majlis</label>
-                <input type="text" id="nama_majlis" required class="w-full border-2 border-slate-200 p-3 rounded-xl focus:border-indigo-500 outline-none" placeholder="Contoh: Astri & Rifaie">
+                <input type="text" id="nama_majlis" required class="w-full border-2 border-slate-200 p-3 rounded-xl focus:border-indigo-500 outline-none">
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-1">Tarikh Acara</label>
-                    <input type="text" id="tarikh_acara" required class="w-full border-2 border-slate-200 p-3 rounded-xl focus:border-indigo-500 outline-none" placeholder="Contoh: 1 Jun 2026">
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-1">Lokasi Majlis</label>
-                    <input type="text" id="lokasi" required class="w-full border-2 border-slate-200 p-3 rounded-xl focus:border-indigo-500 outline-none" placeholder="Contoh: Kpg Lot Baru Belawai">
-                </div>
+                <div><label class="block text-sm font-bold text-gray-700 mb-1">Tarikh Acara</label><input type="text" id="tarikh_acara" required class="w-full border-2 border-slate-200 p-3 rounded-xl focus:border-indigo-500 outline-none"></div>
+                <div><label class="block text-sm font-bold text-gray-700 mb-1">Lokasi Majlis</label><input type="text" id="lokasi" required class="w-full border-2 border-slate-200 p-3 rounded-xl focus:border-indigo-500 outline-none"></div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-1">Masa Sesi Saringan</label>
-                    <input type="text" id="masa_saringan" required class="w-full border-2 border-slate-200 p-3 rounded-xl focus:border-indigo-500 outline-none" placeholder="Contoh: 2.00 Petang">
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-1">Masa Sesi Final</label>
-                    <input type="text" id="masa_final" required class="w-full border-2 border-slate-200 p-3 rounded-xl focus:border-indigo-500 outline-none" placeholder="Contoh: 8.30 Malam">
-                </div>
+                <div><label class="block text-sm font-bold text-gray-700 mb-1">Masa Sesi Saringan</label><input type="text" id="masa_saringan" required class="w-full border-2 border-slate-200 p-3 rounded-xl focus:border-indigo-500 outline-none"></div>
+                <div><label class="block text-sm font-bold text-gray-700 mb-1">Masa Sesi Final</label><input type="text" id="masa_final" required class="w-full border-2 border-slate-200 p-3 rounded-xl focus:border-indigo-500 outline-none"></div>
             </div>
 
-            <div>
-                <label class="block text-sm font-bold text-gray-700 mb-2">Tema Warna Muka Depan (index.html)</label>
-                <select id="tema_warna" class="w-full border-2 border-slate-200 p-3 rounded-xl focus:border-indigo-500 outline-none font-bold">
-                    <option value="tema-pink">🌸 Pink & Purple (Tema Asal)</option>
-                    <option value="tema-blue">🌊 Biru & Indigo (Elegan)</option>
-                    <option value="tema-emerald">🍃 Hijau Zamrud (Segar)</option>
-                    <option value="tema-gold">👑 Emas & Kuning (Eksklusif)</option>
-                </select>
+            <div class="border-t-2 border-slate-100 pt-6 mt-4">
+                <label class="block text-sm font-black text-indigo-700 uppercase tracking-wide mb-2"><i class="fas fa-gavel mr-1"></i> Kaedah Penjurian & Tema</label>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-600 mb-1">Pilihan Sistem Penjurian</label>
+                        <select id="kaedah_penjurian" class="w-full border-2 border-indigo-200 bg-indigo-50 p-3 rounded-xl focus:border-indigo-500 outline-none font-bold text-indigo-900">
+                            <option value="juri-100">Juri Profesional 100% (Sistem Asal)</option>
+                            <option value="juri-bebas">Undian Awam / Juri Bebas (Portal Undian)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-600 mb-1">Tema Warna Muka Depan</label>
+                        <select id="tema_warna" class="w-full border-2 border-slate-200 p-3 rounded-xl focus:border-indigo-500 outline-none font-bold">
+                            <option value="tema-pink">🌸 Pink & Purple</option>
+                            <option value="tema-blue">🌊 Biru & Indigo</option>
+                            <option value="tema-emerald">🍃 Hijau Zamrud</option>
+                            <option value="tema-gold">👑 Emas & Kuning</option>
+                        </select>
+                    </div>
+                </div>
             </div>
 
             <button type="submit" id="btn-simpan" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-xl shadow-md transition text-lg uppercase tracking-wider mt-4">
-                <i class="fas fa-save mr-2"></i> Simpan Tetapan
+                <i class="fas fa-save mr-2"></i> Simpan Semua Tetapan
             </button>
         </form>
     </div>
@@ -68,12 +74,10 @@
             messagingSenderId: "740423962434",
             appId: "1:740423962434:web:f3460cc576f33574e802db"
         };
-
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const docRef = doc(db, "tetapan", "info_majlis");
 
-        // Muat turun data sedia ada
         async function muatData() {
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
@@ -84,10 +88,10 @@
                 document.getElementById('masa_saringan').value = data.masa_saringan || "";
                 document.getElementById('masa_final').value = data.masa_final || "";
                 document.getElementById('tema_warna').value = data.tema_warna || "tema-pink";
+                document.getElementById('kaedah_penjurian').value = data.kaedah_penjurian || "juri-100";
             }
         }
 
-        // Simpan data
         document.getElementById('form-info').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-simpan');
@@ -100,13 +104,12 @@
                     lokasi: document.getElementById('lokasi').value,
                     masa_saringan: document.getElementById('masa_saringan').value,
                     masa_final: document.getElementById('masa_final').value,
-                    tema_warna: document.getElementById('tema_warna').value
+                    tema_warna: document.getElementById('tema_warna').value,
+                    kaedah_penjurian: document.getElementById('kaedah_penjurian').value
                 });
-                alert("Tetapan berjaya disimpan! Sila semak halaman utama (index.html).");
-            } catch (error) {
-                alert("Ralat: " + error.message);
-            }
-            btn.innerHTML = `<i class="fas fa-save mr-2"></i> Simpan Tetapan`;
+                alert("Tetapan berjaya disimpan!");
+            } catch (error) { alert("Ralat: " + error.message); }
+            btn.innerHTML = `<i class="fas fa-save mr-2"></i> Simpan Semua Tetapan`;
         });
 
         muatData();
