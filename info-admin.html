@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Info Majlis - Spark</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-slate-50 font-sans antialiased text-gray-900 min-h-screen flex flex-col p-4">
+
+    <div class="max-w-3xl mx-auto w-full bg-white p-8 rounded-2xl shadow-lg mt-10 border-t-4 border-indigo-600">
+        <h1 class="text-2xl font-black mb-6 text-slate-800 uppercase tracking-wide"><i class="fas fa-cogs text-indigo-600 mr-2"></i> Tetapan Info Majlis</h1>
+        
+        <form id="form-info" class="space-y-6">
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-1">Nama Pasangan / Majlis</label>
+                <input type="text" id="nama_majlis" required class="w-full border-2 border-slate-200 p-3 rounded-xl focus:border-indigo-500 outline-none" placeholder="Contoh: Astri & Rifaie">
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Tarikh Acara</label>
+                    <input type="text" id="tarikh_acara" required class="w-full border-2 border-slate-200 p-3 rounded-xl focus:border-indigo-500 outline-none" placeholder="Contoh: 1 Jun 2026">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Lokasi Majlis</label>
+                    <input type="text" id="lokasi" required class="w-full border-2 border-slate-200 p-3 rounded-xl focus:border-indigo-500 outline-none" placeholder="Contoh: Kpg Lot Baru Belawai">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Masa Sesi Saringan</label>
+                    <input type="text" id="masa_saringan" required class="w-full border-2 border-slate-200 p-3 rounded-xl focus:border-indigo-500 outline-none" placeholder="Contoh: 2.00 Petang">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Masa Sesi Final</label>
+                    <input type="text" id="masa_final" required class="w-full border-2 border-slate-200 p-3 rounded-xl focus:border-indigo-500 outline-none" placeholder="Contoh: 8.30 Malam">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-2">Tema Warna Muka Depan (index.html)</label>
+                <select id="tema_warna" class="w-full border-2 border-slate-200 p-3 rounded-xl focus:border-indigo-500 outline-none font-bold">
+                    <option value="tema-pink">🌸 Pink & Purple (Tema Asal)</option>
+                    <option value="tema-blue">🌊 Biru & Indigo (Elegan)</option>
+                    <option value="tema-emerald">🍃 Hijau Zamrud (Segar)</option>
+                    <option value="tema-gold">👑 Emas & Kuning (Eksklusif)</option>
+                </select>
+            </div>
+
+            <button type="submit" id="btn-simpan" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-xl shadow-md transition text-lg uppercase tracking-wider mt-4">
+                <i class="fas fa-save mr-2"></i> Simpan Tetapan
+            </button>
+        </form>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCwDP8KCl2r6QL1DOAQTMGx5-pcwub9mYM",
+            authDomain: "kareoke-83a74.firebaseapp.com",
+            projectId: "kareoke-83a74",
+            storageBucket: "kareoke-83a74.firebasestorage.app",
+            messagingSenderId: "740423962434",
+            appId: "1:740423962434:web:f3460cc576f33574e802db"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const docRef = doc(db, "tetapan", "info_majlis");
+
+        // Muat turun data sedia ada
+        async function muatData() {
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                document.getElementById('nama_majlis').value = data.nama_majlis || "";
+                document.getElementById('tarikh_acara').value = data.tarikh_acara || "";
+                document.getElementById('lokasi').value = data.lokasi || "";
+                document.getElementById('masa_saringan').value = data.masa_saringan || "";
+                document.getElementById('masa_final').value = data.masa_final || "";
+                document.getElementById('tema_warna').value = data.tema_warna || "tema-pink";
+            }
+        }
+
+        // Simpan data
+        document.getElementById('form-info').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-simpan');
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Menyimpan...`;
+            
+            try {
+                await setDoc(docRef, {
+                    nama_majlis: document.getElementById('nama_majlis').value,
+                    tarikh_acara: document.getElementById('tarikh_acara').value,
+                    lokasi: document.getElementById('lokasi').value,
+                    masa_saringan: document.getElementById('masa_saringan').value,
+                    masa_final: document.getElementById('masa_final').value,
+                    tema_warna: document.getElementById('tema_warna').value
+                });
+                alert("Tetapan berjaya disimpan! Sila semak halaman utama (index.html).");
+            } catch (error) {
+                alert("Ralat: " + error.message);
+            }
+            btn.innerHTML = `<i class="fas fa-save mr-2"></i> Simpan Tetapan`;
+        });
+
+        muatData();
+    </script>
+</body>
+</html>
